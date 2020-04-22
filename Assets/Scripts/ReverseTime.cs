@@ -11,19 +11,20 @@ public class ReverseTime : MonoBehaviour
 
     private bool timeFoward;
     private ArrayList[] paths; // list of vector3s
-    
-    
+    private Vector3[] startPoses;
 
     // Start is called before the first frame update
     void Start()
     {
         timeFoward = true;
         paths = new ArrayList[reversables.Length];
+        startPoses = new Vector3[reversables.Length];
         int i = 0;
         foreach (GameObject go in reversables)
         {
             paths[i] = new ArrayList();
             paths[i].Add(go.transform.position);
+            startPoses[i] = (Vector3) paths[i][0];
             i++;
         }
     }
@@ -31,21 +32,25 @@ public class ReverseTime : MonoBehaviour
     // 30 times a second
     void FixedUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            StartCoroutine("Reverse");
-        }
+        
         if (timeFoward)
         {
-            int i = 0;
-            foreach (GameObject go in reversables)
+            if (Input.GetKeyDown(KeyCode.R))
             {
-                Vector3 goPos = go.transform.position;
-                if (goPos != (Vector3) paths[i][0])
+                StartCoroutine("Reverse");
+            }
+            else
+            {
+                int i = 0;
+                foreach (GameObject go in reversables)
                 {
-                    paths[i].Add(goPos);
+                    Vector3 goPos = go.transform.position;
+                    if (goPos != (Vector3)paths[i][0])
+                    {
+                        paths[i].Add(goPos);
+                    }
+                    i++;
                 }
-                i++;
             }
         }
     }
@@ -83,7 +88,8 @@ public class ReverseTime : MonoBehaviour
                     go.transform.Translate(Vector3.forward * dist);
                     go.transform.rotation = rot;
                     //go.transform.position = (Vector3) paths[j][i];
-                    paths[j].RemoveAt(i);
+                    //paths[j].Remove(paths[j][i]);
+                    //paths[j].RemoveAt(i);
                     j++;
                 }
             }
@@ -96,7 +102,9 @@ public class ReverseTime : MonoBehaviour
         int k = 0;
         foreach (GameObject go in reversables)
         {
-            paths[k].Add(go.transform.position);
+            paths[k].Clear();
+            Debug.Log("This should be 0: " + paths[k].Count);
+            paths[k].Add(startPoses[k]);
             //go.GetComponent<Collider>().enabled = true;
             go.GetComponent<Collider>().isTrigger = false;
             go.GetComponent<Rigidbody>().isKinematic = false;
