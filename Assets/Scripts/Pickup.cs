@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class Pickup : MonoBehaviour
 {
+    // Allows the player to pickup boxes
+    // TODO: change this entire script to be pushing instead?
 
-    private bool holding;
-    private GameObject heldObj;
+    // Attached to player
+
+    private bool holding; // whether player is holding something
+    private GameObject heldObj; // what player is holding (null if nothing)
 
     // Start is called before the first frame update
     void Start()
@@ -21,20 +25,22 @@ public class Pickup : MonoBehaviour
         {
             if (!holding)
             {
-                GameObject obj = TestHit();
+                GameObject obj = TestHit(); // looks 3 units straight from where looking
                 if (obj != null)
                 {
-                    Debug.Log("Got " + obj.name);
-                    if (obj.name == "Box")
+                    //Debug.Log("Got " + obj.name);
+                    if (obj.name == "Box") // TODO: implement actual tag feature of pickup-ables
                     {
                         heldObj = obj;
                         heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                        // want object to be able to be moved around freely, so no physics stuff
                     }
                 }
             }
             else
             {
                 heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+                // object can have physics again, now that not in hand
                 heldObj = null;
             }
         }
@@ -43,6 +49,8 @@ public class Pickup : MonoBehaviour
 
     GameObject TestHit()
     {
+        // Sees if object is within 3 units of player's looking, returns if so (otherwise null)
+
         RaycastHit rchit;
 
         bool hit = Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out rchit, 3.0f);
@@ -58,6 +66,8 @@ public class Pickup : MonoBehaviour
 
     void HandleHolding()
     {
+        // Convert heldObj to boolean
+        // TODO: is this boolean even useful?
         if (heldObj == null)
         {
             holding = false;
@@ -67,6 +77,7 @@ public class Pickup : MonoBehaviour
             holding = true;
         }
 
+        // Move held object in front of player so they can move it
         if (holding)
         {
             heldObj.transform.position = transform.position;

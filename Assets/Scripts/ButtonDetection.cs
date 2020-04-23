@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class ButtonDetection : MonoBehaviour
 {
+    // Gives buttons functionality, including a hook up to door
 
-    public GameObject[] pressables;
-    public Material pressedMat;
-    public GameObject door;
+    // Attached to any button pokey bit (IE "Button" child of "Red Button")
 
-    private bool pressed;
-    private Vector3 unpressedPos;
-    private Vector3 pressedPos;
-    private Material unpressedMat;
+    public GameObject[] pressables; // all objects that are allowed to press this button IE Player, Box...
+    public Material pressedMat; // for different color when pressed (optional)
+    public GameObject door; // a door to be hooked onto this button
+
+    private bool pressed; // whether the button is currently pressed
+    private Vector3 unpressedPos; // where the button should be when not pressed
+    private Vector3 pressedPos; // where the button should be when pressed
+    private Material unpressedMat; // default color (taken at start)
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +23,12 @@ public class ButtonDetection : MonoBehaviour
         pressed = false;
         unpressedPos = transform.position;
         pressedPos = new Vector3(unpressedPos.x, unpressedPos.y - 0.2f, unpressedPos.z);
+        // pressed is simply 0.2f units down
         unpressedMat = GetComponent<Renderer>().material;
+        if (pressedMat == null)
+        {
+            pressedMat = unpressedMat;
+        }
     }
 
     private void OnTriggerEnter(Collider col)
@@ -51,6 +59,16 @@ public class ButtonDetection : MonoBehaviour
             }
         }
     }
+
+    // Doors are of the following hiearchy from left to right:
+    /* X Door {
+     *      Out Left
+     *      In Left
+     *      In Right
+     *      Out Right
+     * }
+    */
+    // this is important when viewing Press() and Unpress()
 
     void Press()
     {
