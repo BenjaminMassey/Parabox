@@ -10,7 +10,7 @@ public class ButtonDetection : MonoBehaviour
 
     public GameObject[] pressables; // all objects that are allowed to press this button IE Player, Box...
     public Material pressedMat; // for different color when pressed (optional)
-    public GameObject door; // a door to be hooked onto this button
+    public GameObject[] doors; // doors to be hooked onto this button
 
     private bool pressed; // whether the button is currently pressed
     private Vector3 unpressedPos; // where the button should be when not pressed
@@ -75,16 +75,21 @@ public class ButtonDetection : MonoBehaviour
         pressed = true;
         transform.position = pressedPos;
         GetComponent<Renderer>().material = pressedMat;
-        for (int i = 0; i < door.transform.childCount; i++)
+        foreach (GameObject door in doors)
         {
-            Transform child = door.transform.GetChild(i);
-            if (child.gameObject.name == "In Left")
+            Debug.Log(door.name);
+            Debug.Log(door.transform.childCount);
+            for (int i = 0; i < door.transform.childCount; i++)
             {
-                child.Translate(Vector3.left * 2.25f);
-            }
-            if (child.gameObject.name == "In Right")
-            {
-                child.Translate(Vector3.right * 2.25f);
+                Transform child = door.transform.GetChild(i);
+                if (child.gameObject.name == "In Left")
+                {
+                    child.Translate(Vector3.left * 2.25f);
+                }
+                if (child.gameObject.name == "In Right")
+                {
+                    child.Translate(Vector3.right * 2.25f);
+                }
             }
         }
     }
@@ -94,16 +99,19 @@ public class ButtonDetection : MonoBehaviour
         pressed = false;
         transform.position = unpressedPos;
         GetComponent<Renderer>().material = unpressedMat;
-        for (int i = 0; i < door.transform.childCount; i++)
+        foreach (GameObject door in doors)
         {
-            Transform child = door.transform.GetChild(i);
-            if (child.gameObject.name == "In Left")
+            for (int i = 0; i < door.transform.childCount; i++)
             {
-                child.Translate(Vector3.right * 2.25f);
-            }
-            if (child.gameObject.name == "In Right")
-            {
-                child.Translate(Vector3.left * 2.25f);
+                Transform child = door.transform.GetChild(i);
+                if (child.gameObject.name == "In Left")
+                {
+                    child.Translate(Vector3.right * 2.25f);
+                }
+                if (child.gameObject.name == "In Right")
+                {
+                    child.Translate(Vector3.left * 2.25f);
+                }
             }
         }
     }
