@@ -42,31 +42,36 @@ public class ReverseTime : MonoBehaviour
         }
     }
 
-    // 30 times a second
-    void FixedUpdate()
+    // Every frame
+    void Update()
     {
-        
         if (timeFoward)
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
                 StartCoroutine("Reverse");
             }
-            else
+        }
+    }
+
+    // 30 times a second
+    void FixedUpdate()
+    {
+        
+        if (timeFoward)
+        {
+            int i = 0;
+            foreach (GameObject go in reversables)
             {
-                int i = 0;
-                foreach (GameObject go in reversables)
+                if (go != null)
                 {
-                    if (go != null)
+                    Vector3 goPos = go.transform.position;
+                    if (goPos != startPoses[i]) // ignore sitting in start pos
                     {
-                        Vector3 goPos = go.transform.position;
-                        if (goPos != startPoses[i]) // ignore sitting in start pos
-                        {
-                            paths[i].Add(goPos);
-                        }
+                        paths[i].Add(goPos);
                     }
-                    i++;
                 }
+                i++;
             }
         }
     }
