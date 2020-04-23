@@ -21,6 +21,8 @@ public class ReverseTime : MonoBehaviour
     //parallel with reversables: reversables[2] described by paths[2]
     //paths[1][3] refers to the position of object 1 on frame 3
 
+    // TODO: should be transforms to keep rotations
+
     private Vector3[] startPoses; // starting positions of all reversables
     //parallel with reversables: startPoses[4] is the start pos of reversables[4]
 
@@ -55,10 +57,13 @@ public class ReverseTime : MonoBehaviour
                 int i = 0;
                 foreach (GameObject go in reversables)
                 {
-                    Vector3 goPos = go.transform.position;
-                    if (goPos != startPoses[i]) // ignore sitting in start pos
+                    if (go != null)
                     {
-                        paths[i].Add(goPos);
+                        Vector3 goPos = go.transform.position;
+                        if (goPos != startPoses[i]) // ignore sitting in start pos
+                        {
+                            paths[i].Add(goPos);
+                        }
                     }
                     i++;
                 }
@@ -79,7 +84,10 @@ public class ReverseTime : MonoBehaviour
         int l = 0;
         foreach (GameObject go in reversables)
         {
-            endPoses[l] = go.transform.position;
+            if (go != null)
+            {
+                endPoses[l] = go.transform.position;
+            }
             l++;
         }
 
@@ -92,22 +100,25 @@ public class ReverseTime : MonoBehaviour
             int j = 0; // gameobject (reversables) iterator
             foreach (GameObject go in reversables)
             {
-                if ((Vector3)paths[j][i] != endPoses[j]) // check for diff
+                if (go != null)
                 {
-                    diff = true; // was different than end
-                    go.GetComponent<Collider>().isTrigger = true; // allow to go through (TEMPORARY??)
-                    go.GetComponent<Rigidbody>().isKinematic = true; // toggle off physics kinda (TEMPORARY??)
-                    Quaternion rot = go.transform.rotation; // remember starting rotation
-                    go.transform.LookAt((Vector3)paths[j][i]); // face towards previous frame
-                    float dist = Vector3.Distance(go.transform.position, (Vector3)paths[j][i]); // get distance to travel
-                    go.transform.Translate(Vector3.forward * dist); // travel to previous frame
-                    go.transform.rotation = rot; // reset rotation (since facing towards botched it)
-                    // Wanted to remove itmes as below, but instead clearing all after (same?)
-                        //go.transform.position = (Vector3) paths[j][i];
-                        //paths[j].Remove(paths[j][i]);
-                        //paths[j].RemoveAt(i);
-                    j++;
+                    if ((Vector3)paths[j][i] != endPoses[j]) // check for diff
+                    {
+                        diff = true; // was different than end
+                        go.GetComponent<Collider>().isTrigger = true; // allow to go through (TEMPORARY??)
+                        go.GetComponent<Rigidbody>().isKinematic = true; // toggle off physics kinda (TEMPORARY??)
+                        Quaternion rot = go.transform.rotation; // remember starting rotation
+                        go.transform.LookAt((Vector3)paths[j][i]); // face towards previous frame
+                        float dist = Vector3.Distance(go.transform.position, (Vector3)paths[j][i]); // get distance to travel
+                        go.transform.Translate(Vector3.forward * dist); // travel to previous frame
+                        go.transform.rotation = rot; // reset rotation (since facing towards botched it)
+                                                     // Wanted to remove itmes as below, but instead clearing all after (same?)
+                                                     //go.transform.position = (Vector3) paths[j][i];
+                                                     //paths[j].Remove(paths[j][i]);
+                                                     //paths[j].RemoveAt(i);
+                    }
                 }
+                j++;
             }
             if (diff) // only if not redoing end for no reason
             {
@@ -120,12 +131,15 @@ public class ReverseTime : MonoBehaviour
         int k = 0;
         foreach (GameObject go in reversables)
         {
-            paths[k].Clear(); // would rather have removed, see above
-            //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
-            paths[k].Add(startPoses[k]); // replace our staring pos in our list
-            //go.GetComponent<Collider>().enabled = true;
-            go.GetComponent<Collider>().isTrigger = false; // turn back to collide-able (TEMPORARY??)
-            go.GetComponent<Rigidbody>().isKinematic = false; // turn back to physics-able (TEMPORARY??)
+            if (go != null)
+            {
+                paths[k].Clear(); // would rather have removed, see above
+                                  //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
+                paths[k].Add(startPoses[k]); // replace our staring pos in our list
+                                             //go.GetComponent<Collider>().enabled = true;
+                go.GetComponent<Collider>().isTrigger = false; // turn back to collide-able (TEMPORARY??)
+                go.GetComponent<Rigidbody>().isKinematic = false; // turn back to physics-able (TEMPORARY??)
+            }
             k++;
         }
 
