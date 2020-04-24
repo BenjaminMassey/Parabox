@@ -125,6 +125,21 @@ public class ReverseTime : MonoBehaviour
                     if ((Vector3) datum[0] != endPoses[j]) // check for diff
                     {
                         diff = true; // was different than end
+
+                        //Vector3 objectsVelocity = go.GetComponent<Rigidbody>().velocity;
+                        Vector3 objectsPos = go.transform.position;
+                        Vector3 desiredPos = (Vector3) datum[0];
+
+                        Vector3 calc = (desiredPos - objectsPos) / Time.deltaTime;
+                        calc = calc * 0.3f;
+                        go.GetComponent<Rigidbody>().velocity = calc;
+
+                        go.transform.rotation = Quaternion.RotateTowards(go.transform.rotation,
+                                                                         (Quaternion)datum[1],
+                                                                         90.0f/*Time.deltaTime*/);
+
+
+                        /* OLD CODE WITH BASICALLY TELEPORT
                         //go.GetComponent<Collider>().isTrigger = true; // allow to go through (TEMPORARY??)
                         go.GetComponent<Rigidbody>().useGravity = false;
                         //go.GetComponent<Rigidbody>().isKinematic = true; // toggle off physics kinda (TEMPORARY??)
@@ -142,6 +157,7 @@ public class ReverseTime : MonoBehaviour
                                                      //go.transform.position = (Vector3) paths[j][i];
                                                      //paths[j].Remove(paths[j][i]);
                                                      //paths[j].RemoveAt(i);
+                        */
                     }
                 }
                 j++;
@@ -161,6 +177,8 @@ public class ReverseTime : MonoBehaviour
             {
                 if (!go.tag.Equals("Frozen"))
                 {
+                    go.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
                     paths[k].Clear(); // would rather have removed, see above
                                       //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
                     paths[k].Add(startPoses[k]); // replace our staring pos in our list
