@@ -98,7 +98,11 @@ public class ReverseTime : MonoBehaviour
         int l = 0;
         foreach (GameObject go in reversables)
         {
-            go.GetComponent<Rigidbody>().velocity = Vector3.zero; // TODO: Move this somewhere more rational
+            if (!go.tag.Equals("Frozen"))
+            {
+                go.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            }
+            // TODO: Move this somewhere more rational
             if (go != null)
             {
                 endPoses[l] = go.transform.position;
@@ -155,10 +159,13 @@ public class ReverseTime : MonoBehaviour
         {
             if (go != null)
             {
-                paths[k].Clear(); // would rather have removed, see above
-                                  //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
-                paths[k].Add(startPoses[k]); // replace our staring pos in our list
-                                             //go.GetComponent<Collider>().enabled = true;
+                if (!go.tag.Equals("Frozen"))
+                {
+                    paths[k].Clear(); // would rather have removed, see above
+                                      //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
+                    paths[k].Add(startPoses[k]); // replace our staring pos in our list
+                                                 //go.GetComponent<Collider>().enabled = true;
+                }
                 //go.GetComponent<Collider>().isTrigger = false; // turn back to collide-able (TEMPORARY??)
                 go.GetComponent<Rigidbody>().useGravity = true;
                 //go.GetComponent<Rigidbody>().isKinematic = false; // turn back to physics-able (TEMPORARY??)
