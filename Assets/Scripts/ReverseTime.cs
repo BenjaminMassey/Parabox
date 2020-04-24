@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,7 +24,7 @@ public class ReverseTime : MonoBehaviour
 
     // TODO: should be transforms to keep rotations
 
-    private Vector3[] startPoses; // starting positions of all reversables
+    private ArrayList[] startPoses; // starting positions of all reversables
     //parallel with reversables: startPoses[4] is the start pos of reversables[4]
 
     // Start is called before the first frame update
@@ -31,13 +32,16 @@ public class ReverseTime : MonoBehaviour
     {
         timeFoward = true;
         paths = new ArrayList[reversables.Length]; 
-        startPoses = new Vector3[reversables.Length];
+        startPoses = new ArrayList[reversables.Length];
         int i = 0;
         foreach (GameObject go in reversables)
         {
             paths[i] = new ArrayList();
-            paths[i].Add(go.transform.position);
-            startPoses[i] = (Vector3) paths[i][0];
+            ArrayList instance = new ArrayList(2);
+            instance.Add(go.transform.position);
+            instance.Add(go.transform.rotation);
+            paths[i].Add(instance);
+            startPoses[i] = instance;
             i++;
         }
     }
@@ -65,11 +69,10 @@ public class ReverseTime : MonoBehaviour
             {
                 if (go != null)
                 {
-                    Vector3 goPos = go.transform.position;
-                    if (goPos != startPoses[i]) // ignore sitting in start pos
-                    {
-                        paths[i].Add(goPos);
-                    }
+                    ArrayList instance = new ArrayList(2);
+                    instance.Add(go.transform.position);
+                    instance.Add(go.transform.rotation);
+                    paths[i].Add(instance);
                 }
                 i++;
             }
@@ -78,6 +81,12 @@ public class ReverseTime : MonoBehaviour
 
     IEnumerator Reverse()
     {
+        for (int pp = 0; pp < paths[0].Count; pp++)
+        {
+            ArrayList x = (ArrayList) paths[0][pp];
+            Debug.Log(x[0] + ", " + x[1]);
+        }
+
         GameObject.Find("Text").GetComponent<Text>().text = "REVERSING TIME";
         timeFoward = false;
         FreezePlayer(true);
@@ -89,6 +98,7 @@ public class ReverseTime : MonoBehaviour
         int l = 0;
         foreach (GameObject go in reversables)
         {
+            go.GetComponent<Rigidbody>().velocity = Vector3.zero; // TODO: Move this somewhere more rational
             if (go != null)
             {
                 endPoses[l] = go.transform.position;
@@ -105,18 +115,25 @@ public class ReverseTime : MonoBehaviour
             int j = 0; // gameobject (reversables) iterator
             foreach (GameObject go in reversables)
             {
-                if (go != null)
+                if (go != null && !go.tag.Equals("Frozen"))
                 {
-                    if ((Vector3)paths[j][i] != endPoses[j]) // check for diff
+                    ArrayList datum = (ArrayList)paths[j][i]; // datum[0] will be pos, datum[1] will be rot
+                    if ((Vector3) datum[0] != endPoses[j]) // check for diff
                     {
                         diff = true; // was different than end
-                        go.GetComponent<Collider>().isTrigger = true; // allow to go through (TEMPORARY??)
-                        go.GetComponent<Rigidbody>().isKinematic = true; // toggle off physics kinda (TEMPORARY??)
-                        Quaternion rot = go.transform.rotation; // remember starting rotation
-                        go.transform.LookAt((Vector3)paths[j][i]); // face towards previous frame
-                        float dist = Vector3.Distance(go.transform.position, (Vector3)paths[j][i]); // get distance to travel
+                        //go.GetComponent<Collider>().isTrigger = true; // allow to go through (TEMPORARY??)
+                        go.GetComponent<Rigidbody>().useGravity = false;
+                        //go.GetComponent<Rigidbody>().isKinematic = true; // toggle off physics kinda (TEMPORARY??)
+                        Quaternion rot = (Quaternion) datum[1]; // remember starting rotation
+                        go.transform.LookAt((Vector3) datum[0]); // face towards previous frame
+                        float dist = Vector3.Distance(go.transform.position, (Vector3)datum[0]); // get distance to travel
                         go.transform.Translate(Vector3.forward * dist); // travel to previous frame
-                        go.transform.rotation = rot; // reset rotation (since facing towards botched it)
+                        go.transform.rotation = rot;
+                        go.transform.rotation = Quaternion.RotateTowards(go.transform.rotation,
+                                                                         (Quaternion) datum[1],
+                                                                         Time.deltaTime);
+
+                        //go.transform.rotation = rot; // reset rotation (since facing towards botched it)
                                                      // Wanted to remove itmes as below, but instead clearing all after (same?)
                                                      //go.transform.position = (Vector3) paths[j][i];
                                                      //paths[j].Remove(paths[j][i]);
@@ -142,8 +159,9 @@ public class ReverseTime : MonoBehaviour
                                   //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
                 paths[k].Add(startPoses[k]); // replace our staring pos in our list
                                              //go.GetComponent<Collider>().enabled = true;
-                go.GetComponent<Collider>().isTrigger = false; // turn back to collide-able (TEMPORARY??)
-                go.GetComponent<Rigidbody>().isKinematic = false; // turn back to physics-able (TEMPORARY??)
+                //go.GetComponent<Collider>().isTrigger = false; // turn back to collide-able (TEMPORARY??)
+                go.GetComponent<Rigidbody>().useGravity = true;
+                //go.GetComponent<Rigidbody>().isKinematic = false; // turn back to physics-able (TEMPORARY??)
             }
             k++;
         }
@@ -162,17 +180,22 @@ public class ReverseTime : MonoBehaviour
     {
         // TODO: currently disabling controller altogether, maybe allow looking with mouse?
 
-        Rigidbody rb = GameObject.Find("Player").GetComponent<Rigidbody>();
+        Rigidbody rb = GetComponent<Rigidbody>();
         
         if (freeze)
         {
+            
             rb.constraints = RigidbodyConstraints.FreezePosition;
-            GameObject.Find("Player").GetComponent<FirstPersonController>().enabled = false;
+            GetComponent<FirstPersonController>().m_RunSpeed = 0.0f;
+            GetComponent<FirstPersonController>().m_WalkSpeed = 0.0f;
+            //GetComponent<FirstPersonController>().enabled = false;
         }
         else
         {
             rb.constraints = RigidbodyConstraints.None;
-            GameObject.Find("Player").GetComponent<FirstPersonController>().enabled = true;
+            GetComponent<FirstPersonController>().m_RunSpeed = 10.0f;
+            GetComponent<FirstPersonController>().m_WalkSpeed = 5.0f;
+            //GetComponent<FirstPersonController>().enabled = true;
         }
     }
 }

@@ -32,14 +32,16 @@ public class Pickup : MonoBehaviour
                     if (obj.name == "Box") // TODO: implement actual tag feature of pickup-ables
                     {
                         heldObj = obj;
-                        heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                        heldObj.gameObject.GetComponent<Rigidbody>().useGravity = false;
+                        //heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = true;
                         // want object to be able to be moved around freely, so no physics stuff
                     }
                 }
             }
             else
             {
-                heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+                heldObj.gameObject.GetComponent<Rigidbody>().useGravity = true;
+                //heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = false;
                 // object can have physics again, now that not in hand
                 heldObj = null;
             }
@@ -80,9 +82,25 @@ public class Pickup : MonoBehaviour
         // Move held object in front of player so they can move it
         if (holding)
         {
+            Vector3 objectsVelocity = heldObj.GetComponent<Rigidbody>().velocity;
+            Vector3 objectsPos = heldObj.transform.position;
+
+            Vector3 origPos = transform.position;
+            Transform t = transform;
+            t.Translate(Vector3.forward * 3.0f);
+            Vector3 desiredPos = t.position;
+            transform.position = origPos;
+
+            Vector3 calc = /*Vector3.Normalize(*/(desiredPos - objectsPos/*)*/) / Time.deltaTime;
+            calc = calc * 0.3f;
+            heldObj.GetComponent<Rigidbody>().velocity = calc;
+
+            heldObj.transform.LookAt(transform);
+            /*
             heldObj.transform.position = transform.position;
             heldObj.transform.rotation = transform.rotation;
             heldObj.transform.Translate(Vector3.forward * 3.0f);
+            */
         }
     }
 }
