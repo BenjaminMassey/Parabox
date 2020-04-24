@@ -50,7 +50,8 @@ public class Freezer : MonoBehaviour
             }
             else
             {
-                GameObject obj = TestHit();
+                //GameObject obj = TestHit();
+                GameObject obj = GlobalMethods.TestHit(transform, 10.0f, 0.25f);
                 if (obj != null && obj.name == "Box") // TODO: better than just == name check
                 {
                     origMat = obj.GetComponent<Renderer>().material;
@@ -76,23 +77,6 @@ public class Freezer : MonoBehaviour
                     GetComponent<ReverseTime>().reversables = newRev;
                 }
             }
-        }
-    }
-
-    GameObject TestHit()
-    {
-        // Sees if object is within 10 units of player's looking, returns if so (otherwise null)
-
-        RaycastHit rchit;
-
-        bool hit = Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out rchit, 10.0f);
-        if (!hit)
-        {
-            return null;
-        }
-        else
-        {
-            return rchit.collider.gameObject;
         }
     }
 }

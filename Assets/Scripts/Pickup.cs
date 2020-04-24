@@ -25,10 +25,11 @@ public class Pickup : MonoBehaviour
         {
             if (!holding)
             {
-                GameObject obj = TestHit(); // looks 3 units straight from where looking
+                //GameObject obj = TestHit(); // looks 3 units straight from where looking
+                GameObject obj = GlobalMethods.TestHit(transform, 3.0f, 0.25f);
                 if (obj != null)
                 {
-                    //Debug.Log("Got " + obj.name);
+                    Debug.Log("Got " + obj.name);
                     if (obj.name == "Box") // TODO: implement actual tag feature of pickup-ables
                     {
                         heldObj = obj;
@@ -47,23 +48,6 @@ public class Pickup : MonoBehaviour
             }
         }
         HandleHolding();
-    }
-
-    GameObject TestHit()
-    {
-        // Sees if object is within 3 units of player's looking, returns if so (otherwise null)
-
-        RaycastHit rchit;
-
-        bool hit = Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out rchit, 3.0f);
-        if (!hit)
-        {
-            return null;
-        }
-        else
-        {
-            return rchit.collider.gameObject;
-        }
     }
 
     void HandleHolding()

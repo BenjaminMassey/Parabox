@@ -19,13 +19,14 @@ public class ReverseTime : MonoBehaviour
     private bool timeFoward; // whether time is normal or being reversed
 
     private ArrayList[] paths; // list of vector3s
-    //parallel with reversables: reversables[2] described by paths[2]
-    //paths[1][3] refers to the position of object 1 on frame 3
+    // parallel with reversables: reversables[2] described by paths[2]
+    // paths[1][3][0] refers to the position of object 1 on frame 3
+    // paths[1][3][1] refers to the rotation of object 1 on frame 3
 
     // TODO: should be transforms to keep rotations
 
     private ArrayList[] startPoses; // starting positions of all reversables
-    //parallel with reversables: startPoses[4] is the start pos of reversables[4]
+    // see paths for structure
 
     // Start is called before the first frame update
     void Start()
@@ -64,28 +65,51 @@ public class ReverseTime : MonoBehaviour
         
         if (timeFoward)
         {
+            bool anyDiff = false;
             int i = 0;
             foreach (GameObject go in reversables)
             {
-                if (go != null)
+                if (!go.transform.position.ToString().Equals(((Vector3) startPoses[i][0]).ToString()) ||
+                    !go.transform.rotation.ToString().Equals(((Quaternion)startPoses[i][1]).ToString()))
                 {
-                    ArrayList instance = new ArrayList(2);
-                    instance.Add(go.transform.position);
-                    instance.Add(go.transform.rotation);
-                    paths[i].Add(instance);
+                    anyDiff = true;
                 }
                 i++;
+            }
+            if (anyDiff)
+            {
+                //Debug.Log("AHHHH");
+                String textStr = "WEEEE" + " : " + reversables[0].transform.position + " vs " + (Vector3) startPoses[0][0] + " : " + reversables[0].transform.rotation + " vs " + (Quaternion) startPoses[0][1];
+                GameObject.Find("Text").GetComponent<Text>().text = textStr;
+                int j = 0;
+                foreach (GameObject go in reversables)
+                {
+                    if (go != null)
+                    {
+                        ArrayList instance = new ArrayList(2);
+                        instance.Add(go.transform.position);
+                        instance.Add(go.transform.rotation);
+                        paths[j].Add(instance);
+                    }
+                    j++;
+                }
+            }
+            else
+            {
+                GameObject.Find("Text").GetComponent<Text>().text = "WOOOO";
             }
         }
     }
 
     IEnumerator Reverse()
     {
+        /*
         for (int pp = 0; pp < paths[0].Count; pp++)
         {
             ArrayList x = (ArrayList) paths[0][pp];
             Debug.Log(x[0] + ", " + x[1]);
         }
+        */
 
         GameObject.Find("Text").GetComponent<Text>().text = "REVERSING TIME";
         timeFoward = false;
@@ -113,15 +137,18 @@ public class ReverseTime : MonoBehaviour
         // Now we are going to cycle through all our captured frames
         //  to go back through what happened in time
         // TODO: perhaps not all frames? might be diff length for different objects?
+        ArrayList datum = new ArrayList() { Vector3.zero, null }; // declared here so prevDatum works
         int i = paths[0].Count - 1; // number of captured frames
         while (i >= 0) {
             bool diff = false; // whether this new frame is actually different from the end frame
+            bool sdiff = false;
             int j = 0; // gameobject (reversables) iterator
             foreach (GameObject go in reversables)
             {
                 if (go != null && !go.tag.Equals("Frozen"))
                 {
-                    ArrayList datum = (ArrayList)paths[j][i]; // datum[0] will be pos, datum[1] will be rot
+                    Vector3 prevDatum = (Vector3) datum[0];
+                    datum = (ArrayList)paths[j][i]; // datum[0] will be pos, datum[1] will be rot
                     if ((Vector3) datum[0] != endPoses[j]) // check for diff
                     {
                         diff = true; // was different than end
@@ -138,6 +165,23 @@ public class ReverseTime : MonoBehaviour
                                                                          (Quaternion)datum[1],
                                                                          90.0f/*Time.deltaTime*/);
 
+                        /*
+
+                        Vector3 a = new Vector3(Mathf.Round(((Vector3)datum[0]).x * 10.0f) / 10.0f,
+                                                Mathf.Round(((Vector3)datum[0]).y * 10.0f) / 10.0f,
+                                                Mathf.Round(((Vector3)datum[0]).z * 10.0f) / 10.0f);
+                        Vector3 b = new Vector3(Mathf.Round(((Vector3)startPoses[j][0]).x * 10) / 10.0f,
+                                                Mathf.Round(((Vector3)startPoses[j][0]).y * 10) / 10.0f,
+                                                Mathf.Round(((Vector3)startPoses[j][0]).z * 10) / 10.0f);
+                        Vector3 c = new Vector3(Mathf.Round(prevDatum.x * 10) / 10.0f,
+                                                Mathf.Round(prevDatum.y * 10) / 10.0f,
+                                                Mathf.Round(prevDatum.z * 10) / 10.0f);
+
+                        if (go.transform.rotation == (Quaternion) datum[1] && a == b && a == c)
+                        {
+                            sdiff = true;
+                        }
+                        */
 
                         /* OLD CODE WITH BASICALLY TELEPORT
                         //go.GetComponent<Collider>().isTrigger = true; // allow to go through (TEMPORARY??)
@@ -164,7 +208,14 @@ public class ReverseTime : MonoBehaviour
             }
             if (diff) // only if not redoing end for no reason
             {
-                yield return new WaitForSeconds(1.0f / 30.0f); // wait 1/30th sec (same time as FixedUpdate IE our capture)
+                if (sdiff)
+                {
+                    //yield return new WaitForSeconds(1.0f / 480.0f);
+                }
+                else
+                {
+                    yield return new WaitForSeconds(1.0f / 30.0f); // wait 1/30th sec (same time as FixedUpdate IE our capture)
+                }
             }
             i--;
         }
@@ -180,8 +231,19 @@ public class ReverseTime : MonoBehaviour
                     go.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
                     paths[k].Clear(); // would rather have removed, see above
-                                      //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
-                    paths[k].Add(startPoses[k]); // replace our staring pos in our list
+                    //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
+                    /* This should be the same start pos
+                    ArrayList instance = new ArrayList(2);
+                    instance.Add(go.transform.position);
+                    instance.Add(go.transform.rotation);
+                    paths[k].Add(instance);
+                    //but hasn't been, so doing the jank below */
+                    go.transform.position = (Vector3) startPoses[k][0];
+                    go.transform.rotation = (Quaternion) startPoses[k][1];
+                    go.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                    paths[k].Add(startPoses[k]);
+
+                     // replace our staring pos in our list
                                                  //go.GetComponent<Collider>().enabled = true;
                 }
                 //go.GetComponent<Collider>().isTrigger = false; // turn back to collide-able (TEMPORARY??)
