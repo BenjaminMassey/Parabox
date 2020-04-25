@@ -5,7 +5,9 @@ using UnityEngine;
 public class Pusher : MonoBehaviour
 {
     // From here: https://docs.unity3d.com/ScriptReference/CharacterController.OnControllerColliderHit.html
-    float pushPower = 2.0f;
+
+    public float pushPower;
+
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         Rigidbody body = hit.collider.attachedRigidbody;
