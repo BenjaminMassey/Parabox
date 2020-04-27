@@ -30,7 +30,7 @@ public class LevelEnder : MonoBehaviour
             
             if (SceneManager.GetActiveScene().name == "Level1")
             {
-                SceneManager.LoadScene("Level2");
+                //SceneManager.LoadScene("Level2"); broken, so omitted
                 Destroy(gameObject);
             }
             else if (SceneManager.GetActiveScene().name == "Scenes/Level2")
