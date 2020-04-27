@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelEnder : MonoBehaviour
 {
@@ -25,7 +26,16 @@ public class LevelEnder : MonoBehaviour
     {
         if (other.gameObject.name == "Player")
         {
-            Destroy(gameObject);
+            //Debug.Log(SceneManager.GetActiveScene().name);
+            if (SceneManager.GetActiveScene().name == "Level1")
+            {
+                SceneManager.LoadScene("Level2");
+            }
+            if (SceneManager.GetActiveScene().name == "Scenes/Level2")
+            {
+                SceneManager.LoadScene("Level1");
+            }
+            //Destroy(gameObject);
         }
     }
 }

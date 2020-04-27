@@ -26,7 +26,7 @@ public class Freezer : MonoBehaviour
         {
             if (hasFrozen)
             {
-                GameObject[] oldRev = GetComponent<ReverseTime>().reversables;
+                GameObject[] oldRev = GameObject.Find("Player").GetComponent<ReverseTime>().reversables;
                 GameObject[] newRev = new GameObject[oldRev.Length];
                 int i = 0;
                 foreach (GameObject oldRevEntry in oldRev)
@@ -42,7 +42,7 @@ public class Freezer : MonoBehaviour
                     }
                     i++;
                 }
-                GetComponent<ReverseTime>().reversables = newRev;
+                GameObject.Find("Player").GetComponent<ReverseTime>().reversables = newRev;
                 frozenObj.GetComponent<Renderer>().material = origMat;
                 origMat = null;
                 hasFrozen = false;
@@ -52,13 +52,15 @@ public class Freezer : MonoBehaviour
             {
                 //GameObject obj = TestHit();
                 GameObject obj = GlobalMethods.TestHit(transform, 10.0f, 0.25f);
-                if (obj != null && obj.name == "Box") // TODO: better than just == name check
+                if (obj != null) { Debug.Log("AHHH " + obj.name); }
+                
+                if (obj != null && obj.name.Contains("Box")) // TODO: better than just == name check
                 {
                     origMat = obj.GetComponent<Renderer>().material;
                     obj.GetComponent<Renderer>().material = frozenMat;
                     hasFrozen = true;
                     frozenObj = obj;
-                    GameObject[] oldRev = GetComponent<ReverseTime>().reversables;
+                    GameObject[] oldRev = GameObject.Find("Player").GetComponent<ReverseTime>().reversables;
                     GameObject[] newRev = new GameObject[oldRev.Length];
                     int i = 0;
                     foreach (GameObject oldRevEntry in oldRev)
@@ -74,7 +76,7 @@ public class Freezer : MonoBehaviour
                         }
                         i++;
                     }
-                    GetComponent<ReverseTime>().reversables = newRev;
+                    GameObject.Find("Player").GetComponent<ReverseTime>().reversables = newRev;
                 }
             }
         }

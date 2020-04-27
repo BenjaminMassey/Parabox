@@ -79,8 +79,8 @@ public class ReverseTime : MonoBehaviour
             if (anyDiff)
             {
                 //Debug.Log("AHHHH");
-                String textStr = "WEEEE" + " : " + reversables[0].transform.position + " vs " + (Vector3) startPoses[0][0] + " : " + reversables[0].transform.rotation + " vs " + (Quaternion) startPoses[0][1];
-                GameObject.Find("Text").GetComponent<Text>().text = textStr;
+                //String textStr = "WEEEE" + " : " + reversables[0].transform.position + " vs " + (Vector3) startPoses[0][0] + " : " + reversables[0].transform.rotation + " vs " + (Quaternion) startPoses[0][1];
+                //GameObject.Find("Text").GetComponent<Text>().text = textStr;
                 int j = 0;
                 foreach (GameObject go in reversables)
                 {
@@ -96,7 +96,7 @@ public class ReverseTime : MonoBehaviour
             }
             else
             {
-                GameObject.Find("Text").GetComponent<Text>().text = "WOOOO";
+                //GameObject.Find("Text").GetComponent<Text>().text = "WOOOO";
             }
         }
     }
