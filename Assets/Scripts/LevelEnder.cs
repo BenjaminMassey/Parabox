@@ -27,10 +27,12 @@ public class LevelEnder : MonoBehaviour
         if (other.gameObject.name == "Player")
         {
             //Debug.Log(SceneManager.GetActiveScene().name);
+            /* level 2 is busted from weird physics so not for now
             if (SceneManager.GetActiveScene().name == "Level1")
             {
                 SceneManager.LoadScene("Level2");
             }
+            */
             if (SceneManager.GetActiveScene().name == "Scenes/Level2")
             {
                 SceneManager.LoadScene("Level1");

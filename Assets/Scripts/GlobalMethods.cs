@@ -34,4 +34,22 @@ public static class GlobalMethods
             return rchit.collider.gameObject;
         }
     }
+
+    public static void VelocityMove(GameObject go, Vector3 dest, Quaternion desiredRot)
+    {
+        // if want no new rotation, then run with an all zero quaternion
+        Vector3 start = go.transform.position;
+
+        Vector3 calc = (dest - start) / Time.deltaTime;
+        calc = calc * 0.3f; // arbitrary force amount
+        go.GetComponent<Rigidbody>().velocity = calc;
+
+        if (!desiredRot.Equals(new Quaternion(0, 0, 0, 0)))
+        {
+            Debug.Log("rotation given");
+            go.transform.rotation = Quaternion.RotateTowards(go.transform.rotation,
+                                                             desiredRot,
+                                                             90.0f/*Time.deltaTime*/);
+        }
+    }
 }

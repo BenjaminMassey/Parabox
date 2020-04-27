@@ -154,6 +154,8 @@ public class ReverseTime : MonoBehaviour
                         diff = true; // was different than end
 
                         //Vector3 objectsVelocity = go.GetComponent<Rigidbody>().velocity;
+
+                        /* DONE IN GLOBALMETHODS
                         Vector3 objectsPos = go.transform.position;
                         Vector3 desiredPos = (Vector3) datum[0];
 
@@ -163,7 +165,10 @@ public class ReverseTime : MonoBehaviour
 
                         go.transform.rotation = Quaternion.RotateTowards(go.transform.rotation,
                                                                          (Quaternion)datum[1],
-                                                                         90.0f/*Time.deltaTime*/);
+                                                                         90.0f);
+                        */
+                        GlobalMethods.VelocityMove(go, (Vector3)datum[0], (Quaternion)datum[1]);
+                        
 
                         /*
 
@@ -238,9 +243,19 @@ public class ReverseTime : MonoBehaviour
                     instance.Add(go.transform.rotation);
                     paths[k].Add(instance);
                     //but hasn't been, so doing the jank below */
+                    // teleport to position: LAZY
                     go.transform.position = (Vector3) startPoses[k][0];
                     go.transform.rotation = (Quaternion) startPoses[k][1];
+                    
+                    // \/ better, but working? NO
+                    /*
+                    GlobalMethods.VelocityMove(go, (Vector3)startPoses[k][0], (Quaternion)startPoses[k][1]);
                     go.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                    startPoses[k] = new ArrayList();
+                    startPoses[k].Add(go.transform.position);
+                    startPoses[k].Add(go.transform.rotation);
+                    */
+                    // /\ better, but working? NO
                     paths[k].Add(startPoses[k]);
 
                      // replace our staring pos in our list
