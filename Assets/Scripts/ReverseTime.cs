@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.Characters.FirstPerson;
+using UnityEngine.SceneManagement;
 
 public class ReverseTime : MonoBehaviour
 {
@@ -56,6 +57,10 @@ public class ReverseTime : MonoBehaviour
             {
                 StartCoroutine("Reverse");
             }
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
