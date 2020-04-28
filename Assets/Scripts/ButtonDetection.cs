@@ -50,12 +50,32 @@ public class ButtonDetection : MonoBehaviour
         //Debug.Log("Exit");
         CapsuleCollider myCap = GetComponent<CapsuleCollider>();
         Vector3 pos = transform.position;
-        Collider[] cols = Physics.OverlapCapsule(new Vector3(pos.x, pos.y - myCap.height, pos.z),
+        Collider[] colsA = Physics.OverlapCapsule(new Vector3(pos.x, pos.y - myCap.height, pos.z),
                                                  new Vector3(pos.x, pos.y + myCap.height, pos.z),
                                                  myCap.radius);
 
-        //Debug.Log("cols length: " + cols.Length);
-        if (cols.Length < 3)
+        ArrayList bads = new ArrayList();
+        ArrayList colsAL = new ArrayList(colsA);
+        foreach (object colAL in colsAL)
+        {
+            string name = ((Collider)colAL).gameObject.name;
+            if (name.Equals("Floor") || name.Equals("Button") || name.Equals("Player"))
+            {
+                bads.Add(colAL);
+            }
+        }
+        foreach (object bad in bads)
+        {
+            colsAL.Remove(bad);
+        }
+        foreach (object colAL in colsAL)
+        {
+            string name = ((Collider)colAL).gameObject.name;
+            Debug.Log("FIEW " + name);
+        }
+
+        Debug.Log("colsAL count: " + colsAL.Count);
+        if (colsAL.Count == 0)
         {
             foreach (GameObject pressable in pressables)
             {
