@@ -17,6 +17,8 @@ public class ButtonDetection : MonoBehaviour
     private Vector3 pressedPos; // where the button should be when pressed
     private Material unpressedMat; // default color (taken at start)
 
+    //private int pressing; // num objs pressing
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +31,7 @@ public class ButtonDetection : MonoBehaviour
         {
             pressedMat = unpressedMat;
         }
+        //pressing = 0;
     }
 
     private void OnTriggerEnter(Collider col)
@@ -47,47 +50,56 @@ public class ButtonDetection : MonoBehaviour
 
     private void OnTriggerExit(Collider col)
     {
+        /*
         //Debug.Log("Exit");
+        
         CapsuleCollider myCap = GetComponent<CapsuleCollider>();
         Vector3 pos = transform.position;
         Collider[] colsA = Physics.OverlapCapsule(new Vector3(pos.x, pos.y - myCap.height, pos.z),
                                                  new Vector3(pos.x, pos.y + myCap.height, pos.z),
                                                  myCap.radius);
-
+        
         ArrayList bads = new ArrayList();
         ArrayList colsAL = new ArrayList(colsA);
+        
         foreach (object colAL in colsAL)
         {
             string name = ((Collider)colAL).gameObject.name;
-            if (name.Equals("Floor") || name.Equals("Button") || name.Equals("Player"))
+            if (!name.Equals("Push Box") || !name.Equals("Box"))
             {
                 bads.Add(colAL);
             }
         }
-        foreach (object bad in bads)
-        {
-            colsAL.Remove(bad);
-        }
+
         foreach (object colAL in colsAL)
         {
             string name = ((Collider)colAL).gameObject.name;
             Debug.Log("FIEW " + name);
         }
 
-        Debug.Log("colsAL count: " + colsAL.Count);
-        if (colsAL.Count == 0)
+        foreach (object bad in bads)
         {
-            foreach (GameObject pressable in pressables)
+            colsAL.Remove(bad);
+        }
+
+        Debug.Log("colsAL count: " + colsAL.Count);
+        pressing = colsAL.Count;
+        if (colsAL.Count <= 0)
+        {
+            Unpress();
+        }
+        */
+        foreach (GameObject pressable in pressables)
+        {
+            if (pressable == col.gameObject)
             {
-                if (pressable == col.gameObject)
+                if (pressed)
                 {
-                    if (pressed)
-                    {
-                        Unpress();
-                    }
+                    Unpress();
                 }
             }
         }
+        
     }
 
     // Doors are of the following hiearchy from left to right:
@@ -102,6 +114,10 @@ public class ButtonDetection : MonoBehaviour
 
     void Press()
     {
+        /*
+        Debug.Log("Press() " + pressing);
+        pressing++;
+        */
         pressed = true;
         transform.position = pressedPos;
         GetComponent<Renderer>().material = pressedMat;
@@ -126,23 +142,32 @@ public class ButtonDetection : MonoBehaviour
 
     void Unpress()
     {
-        pressed = false;
-        transform.position = unpressedPos;
-        GetComponent<Renderer>().material = unpressedMat;
-        foreach (GameObject door in doors)
+        /*
+        Debug.Log("Unpress() " + pressing);
+        pressing--;
+        if (pressing <= 0)
         {
-            for (int i = 0; i < door.transform.childCount; i++)
+            if (pressing < 0) { pressing = 0; }
+            Debug.Log("Actual unpress");
+            */
+            pressed = false;
+            transform.position = unpressedPos;
+            GetComponent<Renderer>().material = unpressedMat;
+            foreach (GameObject door in doors)
             {
-                Transform child = door.transform.GetChild(i);
-                if (child.gameObject.name == "In Left")
+                for (int i = 0; i < door.transform.childCount; i++)
                 {
-                    child.Translate(Vector3.right * 2.25f);
-                }
-                if (child.gameObject.name == "In Right")
-                {
-                    child.Translate(Vector3.left * 2.25f);
+                    Transform child = door.transform.GetChild(i);
+                    if (child.gameObject.name == "In Left")
+                    {
+                        child.Translate(Vector3.right * 2.25f);
+                    }
+                    if (child.gameObject.name == "In Right")
+                    {
+                        child.Translate(Vector3.left * 2.25f);
+                    }
                 }
             }
-        }
+        //}
     }
 }

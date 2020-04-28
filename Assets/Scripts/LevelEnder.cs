@@ -30,9 +30,11 @@ public class LevelEnder : MonoBehaviour
             
             if (SceneManager.GetActiveScene().name == "Level1")
             {
-                SceneManager.LoadScene("Level2");
+                //SceneManager.LoadScene("Level2");
+                SceneManager.LoadScene("BenLevel");
             }
-            else if (SceneManager.GetActiveScene().name == "Level2")
+            //else if (SceneManager.GetActiveScene().name == "Level2")
+            else if (SceneManager.GetActiveScene().name == "BenLevel")
             {
                 SceneManager.LoadScene("Level1");
             }
