@@ -10,6 +10,8 @@ public class Freezer : MonoBehaviour
     private bool hasFrozen;
     private GameObject frozenObj;
     private Material origMat;
+    private ReverseTime rt;
+    private bool forward;
 
     // Start is called before the first frame update
     void Start()
@@ -17,12 +19,15 @@ public class Freezer : MonoBehaviour
         hasFrozen = false;
         frozenObj = null;
         origMat = null;
+        rt = GameObject.Find("Player").GetComponent<ReverseTime>();
+        forward = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        forward = rt.GetTimeForward();
+        if (Input.GetKeyDown(KeyCode.Mouse1) && forward)
         {
             if (hasFrozen)
             {

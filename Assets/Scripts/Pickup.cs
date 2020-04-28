@@ -11,17 +11,22 @@ public class Pickup : MonoBehaviour
 
     private bool holding; // whether player is holding something
     private GameObject heldObj; // what player is holding (null if nothing)
+    private ReverseTime rt;
+    private bool forward;
 
     // Start is called before the first frame update
     void Start()
     {
         holding = false;
+        rt = GameObject.Find("Player").GetComponent<ReverseTime>();
+        forward = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        forward = rt.GetTimeForward();
+        if (Input.GetKeyDown(KeyCode.Mouse0) && forward)
         {
             if (!holding)
             {

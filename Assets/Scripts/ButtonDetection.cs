@@ -48,13 +48,23 @@ public class ButtonDetection : MonoBehaviour
     private void OnTriggerExit(Collider col)
     {
         //Debug.Log("Exit");
-        foreach (GameObject pressable in pressables)
+        CapsuleCollider myCap = GetComponent<CapsuleCollider>();
+        Vector3 pos = transform.position;
+        Collider[] cols = Physics.OverlapCapsule(new Vector3(pos.x, pos.y - myCap.height, pos.z),
+                                                 new Vector3(pos.x, pos.y + myCap.height, pos.z),
+                                                 myCap.radius);
+
+        //Debug.Log("cols length: " + cols.Length);
+        if (cols.Length < 3)
         {
-            if (pressable == col.gameObject)
+            foreach (GameObject pressable in pressables)
             {
-                if (pressed)
+                if (pressable == col.gameObject)
                 {
-                    Unpress();
+                    if (pressed)
+                    {
+                        Unpress();
+                    }
                 }
             }
         }

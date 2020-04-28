@@ -46,7 +46,7 @@ public static class GlobalMethods
 
         if (!desiredRot.Equals(new Quaternion(0, 0, 0, 0)))
         {
-            Debug.Log("rotation given");
+            //Debug.Log("rotation given");
             go.transform.rotation = Quaternion.RotateTowards(go.transform.rotation,
                                                              desiredRot,
                                                              90.0f/*Time.deltaTime*/);

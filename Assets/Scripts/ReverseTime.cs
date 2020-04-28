@@ -296,6 +296,8 @@ public class ReverseTime : MonoBehaviour
             GetComponent<FirstPersonController>().m_RunSpeed = 0.0f;
             GetComponent<FirstPersonController>().m_WalkSpeed = 0.0f;
             GetComponent<FirstPersonController>().m_JumpSpeed = 0.0f;
+            GetComponent<CapsuleCollider>().enabled = false;
+            GetComponent<CharacterController>().enabled = false;
             //GetComponent<FirstPersonController>().enabled = false;
         }
         else
@@ -304,7 +306,14 @@ public class ReverseTime : MonoBehaviour
             GetComponent<FirstPersonController>().m_RunSpeed = 10.0f;
             GetComponent<FirstPersonController>().m_WalkSpeed = 5.0f;
             GetComponent<FirstPersonController>().m_JumpSpeed = 10.0f;
+            GetComponent<CapsuleCollider>().enabled = true;
+            GetComponent<CharacterController>().enabled = true;
             //GetComponent<FirstPersonController>().enabled = true;
         }
+    }
+
+    public bool GetTimeForward()
+    {
+        return timeFoward;
     }
 }
