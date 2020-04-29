@@ -119,6 +119,7 @@ public class ReverseTime : MonoBehaviour
         GameObject.Find("Text").GetComponent<Text>().text = "REVERSING TIME";
         timeFoward = false;
         FreezePlayer(true);
+        GameObject.Find("FirstPersonCharacter").GetComponent<Pickup>().StopHolding();
 
         // Want end position of each object so we can just start rather
         //  than being stuck where the player has left us for a while

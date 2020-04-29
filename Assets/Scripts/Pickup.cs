@@ -92,4 +92,14 @@ public class Pickup : MonoBehaviour
             */
         }
     }
+
+    public void StopHolding()
+    {
+        if (holding)
+        {
+            holding = false;
+            heldObj.gameObject.GetComponent<Rigidbody>().useGravity = true;
+            heldObj = null;
+        }
+    }
 }

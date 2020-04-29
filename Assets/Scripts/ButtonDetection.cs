@@ -31,9 +31,11 @@ public class ButtonDetection : MonoBehaviour
         {
             pressedMat = unpressedMat;
         }
+        StartCoroutine("ButtonChecker");
         //pressing = 0;
     }
 
+    /*
     private void OnTriggerEnter(Collider col)
     {
         //Debug.Log("Enter");
@@ -88,7 +90,7 @@ public class ButtonDetection : MonoBehaviour
         {
             Unpress();
         }
-        */
+        *//*
         foreach (GameObject pressable in pressables)
         {
             if (pressable == col.gameObject)
@@ -100,7 +102,7 @@ public class ButtonDetection : MonoBehaviour
             }
         }
         
-    }
+    }*/
 
     // Doors are of the following hiearchy from left to right:
     /* X Door {
@@ -111,6 +113,39 @@ public class ButtonDetection : MonoBehaviour
      * }
     */
     // this is important when viewing Press() and Unpress()
+
+    IEnumerator ButtonChecker()
+    {
+        Collider[] cols;
+        CapsuleCollider myCap = GetComponent<CapsuleCollider>();
+        Vector3 pos = transform.position;
+        bool press = false;
+        while (true)
+        {
+            
+            cols = Physics.OverlapCapsule(myCap.bounds.min,
+                                          myCap.bounds.max,
+                                          myCap.radius);
+            press = false;
+            foreach (Collider col in cols)
+            {
+                if (!col.gameObject.name.Equals("Button") && !col.gameObject.name.Equals("Floor"))
+                {
+                    press = true;
+                    break;
+                }
+            }
+            if (press && !pressed)
+            {
+                Press();
+            }
+            if (!press && pressed)
+            {
+                Unpress();
+            }
+            yield return new WaitForSeconds(1.0f / 10.0f);
+        }
+    }
 
     void Press()
     {
