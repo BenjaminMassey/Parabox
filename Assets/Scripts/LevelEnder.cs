@@ -27,13 +27,15 @@ public class LevelEnder : MonoBehaviour
         if (other.gameObject.name == "Player")
         {
             //Debug.Log(SceneManager.GetActiveScene().name);
-            // NOTE: Level2 is currently broken, so skipping
+
             if (SceneManager.GetActiveScene().name == "Level1")
             {
-                //SceneManager.LoadScene("Level2");
+                SceneManager.LoadScene("Level2");
+            }
+            else if (SceneManager.GetActiveScene().name == "Level2")
+            {
                 SceneManager.LoadScene("Level3");
             }
-            //else if (SceneManager.GetActiveScene().name == "Level2")
             else if (SceneManager.GetActiveScene().name == "Level3")
             {
                 SceneManager.LoadScene("Level1");
