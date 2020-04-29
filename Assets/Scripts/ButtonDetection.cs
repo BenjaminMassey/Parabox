@@ -123,8 +123,8 @@ public class ButtonDetection : MonoBehaviour
         while (true)
         {
             
-            cols = Physics.OverlapCapsule(myCap.bounds.min,
-                                          myCap.bounds.max,
+            cols = Physics.OverlapCapsule(unpressedPos + new Vector3(0f, myCap.height / 2f) + myCap.center,
+                                          unpressedPos - new Vector3(0f, myCap.height / 2f) + myCap.center,
                                           myCap.radius);
             press = false;
             foreach (Collider col in cols)
