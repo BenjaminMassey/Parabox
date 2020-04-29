@@ -225,7 +225,12 @@ public class ReverseTime : MonoBehaviour
                 }
                 else
                 {
-                    yield return new WaitForSeconds(1.0f / 30.0f); // wait 1/30th sec (same time as FixedUpdate IE our capture)
+                    if (Input.GetKey(KeyCode.F))
+                    {
+                        i -= 2; // super speed (questionable?)
+                    }
+                    //yield return new WaitForSeconds(1.0f / 30.0f); // wait 1/30th sec (same time as FixedUpdate IE our capture)
+                    yield return new WaitForFixedUpdate(); // ooooo
                 }
             }
             i--;
