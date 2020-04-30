@@ -78,6 +78,7 @@ public class ReverseTime : MonoBehaviour
                     !go.transform.rotation.ToString().Equals(((Quaternion)startPoses[i][1]).ToString()))
                 {
                     anyDiff = true;
+                    break;
                 }
                 i++;
             }
@@ -108,13 +109,6 @@ public class ReverseTime : MonoBehaviour
 
     IEnumerator Reverse()
     {
-        /*
-        for (int pp = 0; pp < paths[0].Count; pp++)
-        {
-            ArrayList x = (ArrayList) paths[0][pp];
-            Debug.Log(x[0] + ", " + x[1]);
-        }
-        */
 
         GameObject.Find("Text").GetComponent<Text>().text = "REVERSING TIME";
         timeFoward = false;
@@ -143,87 +137,54 @@ public class ReverseTime : MonoBehaviour
         // Now we are going to cycle through all our captured frames
         //  to go back through what happened in time
         // TODO: perhaps not all frames? might be diff length for different objects?
-        ArrayList datum = new ArrayList() { Vector3.zero, null }; // declared here so prevDatum works
+        ArrayList datum = new ArrayList() { Vector3.zero, null };
+        ArrayList currInfo;
+        ArrayList prevInfo;
         int i = paths[0].Count - 1; // number of captured frames
         while (i >= 0) {
-            bool diff = false; // whether this new frame is actually different from the end frame
+            // START TAKE OUT OF UNNECESSARY FRAMES
+            bool anyDiff = false;
+            int iter = 0;
+            // currInfo and prevInfo are ArrayLists (see before while)
+            foreach (GameObject go in reversables)
+            {
+                currInfo = (ArrayList)paths[iter][i];
+                if (i < paths[iter].Count - 1) { prevInfo = (ArrayList)paths[iter][i + 1]; }
+                else { continue; }
+                if (!((Vector3)currInfo[0]).ToString().Equals(((Vector3)prevInfo[0]).ToString()) ||
+                    !((Quaternion)currInfo[1]).Equals(((Quaternion)prevInfo[1])))
+                {
+                    anyDiff = true;
+                    break;
+                }
+                iter++;
+            }
+            if (!anyDiff)
+            {
+                i--;
+                continue;
+            }
+            // END TAKE OUT OF UNNECESSARY FRAMES
+
+            bool ediff = false; // whether this new frame is different from the end frame
             bool sdiff = false;
             int j = 0; // gameobject (reversables) iterator
             foreach (GameObject go in reversables)
             {
                 if (go != null && !go.tag.Equals("Frozen"))
                 {
-                    Vector3 prevDatum = (Vector3) datum[0];
                     datum = (ArrayList)paths[j][i]; // datum[0] will be pos, datum[1] will be rot
                     if ((Vector3) datum[0] != endPoses[j]) // check for diff
                     {
-                        diff = true; // was different than end
-
-                        //Vector3 objectsVelocity = go.GetComponent<Rigidbody>().velocity;
-
-                        /* DONE IN GLOBALMETHODS
-                        Vector3 objectsPos = go.transform.position;
-                        Vector3 desiredPos = (Vector3) datum[0];
-
-                        Vector3 calc = (desiredPos - objectsPos) / Time.deltaTime;
-                        calc = calc * 0.3f;
-                        go.GetComponent<Rigidbody>().velocity = calc;
-
-                        go.transform.rotation = Quaternion.RotateTowards(go.transform.rotation,
-                                                                         (Quaternion)datum[1],
-                                                                         90.0f);
-                        */
+                        ediff = true; // was different than end
                         GlobalMethods.VelocityMove(go, (Vector3)datum[0], (Quaternion)datum[1]);
-                        
-
-                        /*
-
-                        Vector3 a = new Vector3(Mathf.Round(((Vector3)datum[0]).x * 10.0f) / 10.0f,
-                                                Mathf.Round(((Vector3)datum[0]).y * 10.0f) / 10.0f,
-                                                Mathf.Round(((Vector3)datum[0]).z * 10.0f) / 10.0f);
-                        Vector3 b = new Vector3(Mathf.Round(((Vector3)startPoses[j][0]).x * 10) / 10.0f,
-                                                Mathf.Round(((Vector3)startPoses[j][0]).y * 10) / 10.0f,
-                                                Mathf.Round(((Vector3)startPoses[j][0]).z * 10) / 10.0f);
-                        Vector3 c = new Vector3(Mathf.Round(prevDatum.x * 10) / 10.0f,
-                                                Mathf.Round(prevDatum.y * 10) / 10.0f,
-                                                Mathf.Round(prevDatum.z * 10) / 10.0f);
-
-                        if (go.transform.rotation == (Quaternion) datum[1] && a == b && a == c)
-                        {
-                            sdiff = true;
-                        }
-                        */
-
-                        /* OLD CODE WITH BASICALLY TELEPORT
-                        //go.GetComponent<Collider>().isTrigger = true; // allow to go through (TEMPORARY??)
-                        go.GetComponent<Rigidbody>().useGravity = false;
-                        //go.GetComponent<Rigidbody>().isKinematic = true; // toggle off physics kinda (TEMPORARY??)
-                        Quaternion rot = (Quaternion) datum[1]; // remember starting rotation
-                        go.transform.LookAt((Vector3) datum[0]); // face towards previous frame
-                        float dist = Vector3.Distance(go.transform.position, (Vector3)datum[0]); // get distance to travel
-                        go.transform.Translate(Vector3.forward * dist); // travel to previous frame
-                        go.transform.rotation = rot;
-                        go.transform.rotation = Quaternion.RotateTowards(go.transform.rotation,
-                                                                         (Quaternion) datum[1],
-                                                                         Time.deltaTime);
-
-                        //go.transform.rotation = rot; // reset rotation (since facing towards botched it)
-                                                     // Wanted to remove itmes as below, but instead clearing all after (same?)
-                                                     //go.transform.position = (Vector3) paths[j][i];
-                                                     //paths[j].Remove(paths[j][i]);
-                                                     //paths[j].RemoveAt(i);
-                        */
                     }
                 }
                 j++;
             }
-            if (diff) // only if not redoing end for no reason
+            if (ediff) // only if not redoing end for no reason
             {
-                if (sdiff)
-                {
-                    //yield return new WaitForSeconds(1.0f / 480.0f);
-                }
-                else
+                if (!sdiff)
                 {
                     if (Input.GetKey(KeyCode.F))
                     {
@@ -248,33 +209,14 @@ public class ReverseTime : MonoBehaviour
 
                     paths[k].Clear(); // would rather have removed, see above
                     //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
-                    /* This should be the same start pos
-                    ArrayList instance = new ArrayList(2);
-                    instance.Add(go.transform.position);
-                    instance.Add(go.transform.rotation);
-                    paths[k].Add(instance);
-                    //but hasn't been, so doing the jank below */
                     // teleport to position: LAZY
                     go.transform.position = (Vector3) startPoses[k][0];
                     go.transform.rotation = (Quaternion) startPoses[k][1];
-                    
-                    // \/ better, but working? NO
-                    /*
-                    GlobalMethods.VelocityMove(go, (Vector3)startPoses[k][0], (Quaternion)startPoses[k][1]);
-                    go.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                    startPoses[k] = new ArrayList();
-                    startPoses[k].Add(go.transform.position);
-                    startPoses[k].Add(go.transform.rotation);
-                    */
-                    // /\ better, but working? NO
-                    paths[k].Add(startPoses[k]);
 
-                     // replace our staring pos in our list
-                                                 //go.GetComponent<Collider>().enabled = true;
+                    paths[k].Add(startPoses[k]); // replace our staring pos in our list
                 }
-                //go.GetComponent<Collider>().isTrigger = false; // turn back to collide-able (TEMPORARY??)
+
                 go.GetComponent<Rigidbody>().useGravity = true;
-                //go.GetComponent<Rigidbody>().isKinematic = false; // turn back to physics-able (TEMPORARY??)
             }
             k++;
         }
