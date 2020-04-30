@@ -29,6 +29,10 @@ public class GeneralHandling : MonoBehaviour
         t.text = "MOUSE IS FREE";
         t.fontSize = defaultFont + 6;
         yield return new WaitForSeconds(10.0f);
+        if (t.text.Equals("MOUSE IS FREE"))
+        {
+            t.text = "";
+        }
         t.fontSize = defaultFont - 6;
     }
 }
