@@ -19,31 +19,31 @@ public class ReverseTime : MonoBehaviour
 
     private bool timeFoward; // whether time is normal or being reversed
 
-    private ArrayList[] paths; // list of vector3s
+    private List<(Vector3 pos, Quaternion rot)>[] paths; // list of vector3s
     // parallel with reversables: reversables[2] described by paths[2]
     // paths[1][3][0] refers to the position of object 1 on frame 3
     // paths[1][3][1] refers to the rotation of object 1 on frame 3
 
     // TODO: should be transforms to keep rotations
 
-    private ArrayList[] startPoses; // starting positions of all reversables
+    private List<(Vector3 pos, Quaternion rot)> starts; // starting positions of all reversables
     // see paths for structure
 
     // Start is called before the first frame update
     void Start()
     {
         timeFoward = true;
-        paths = new ArrayList[reversables.Length]; 
-        startPoses = new ArrayList[reversables.Length];
+        paths = new List<(Vector3 pos, Quaternion rot)>[reversables.Length];
+        starts = new List<(Vector3 pos, Quaternion rot)>(reversables.Length);
+
+        (Vector3 pos, Quaternion rot) instance;
         int i = 0;
         foreach (GameObject go in reversables)
         {
-            paths[i] = new ArrayList();
-            ArrayList instance = new ArrayList(2);
-            instance.Add(go.transform.position);
-            instance.Add(go.transform.rotation);
+            paths[i] = new List<(Vector3 pos, Quaternion rot)>();
+            instance = (go.transform.position, go.transform.rotation);
             paths[i].Add(instance);
-            startPoses[i] = instance;
+            starts.Add(instance);
             i++;
         }
     }
@@ -74,8 +74,8 @@ public class ReverseTime : MonoBehaviour
             int i = 0;
             foreach (GameObject go in reversables)
             {
-                if (!go.transform.position.ToString().Equals(((Vector3) startPoses[i][0]).ToString()) ||
-                    !go.transform.rotation.ToString().Equals(((Quaternion)startPoses[i][1]).ToString()))
+                if (!go.transform.position.ToString().Equals(starts[i].pos.ToString()) ||
+                    !go.transform.rotation.ToString().Equals(starts[i].rot.ToString()))
                 {
                     anyDiff = true;
                     break;
@@ -87,14 +87,13 @@ public class ReverseTime : MonoBehaviour
                 //Debug.Log("AHHHH");
                 //String textStr = "WEEEE" + " : " + reversables[0].transform.position + " vs " + (Vector3) startPoses[0][0] + " : " + reversables[0].transform.rotation + " vs " + (Quaternion) startPoses[0][1];
                 //GameObject.Find("Text").GetComponent<Text>().text = textStr;
+                (Vector3 pos, Quaternion rot) instance;
                 int j = 0;
                 foreach (GameObject go in reversables)
                 {
                     if (go != null)
                     {
-                        ArrayList instance = new ArrayList(2);
-                        instance.Add(go.transform.position);
-                        instance.Add(go.transform.rotation);
+                        instance = (go.transform.position, go.transform.rotation);
                         paths[j].Add(instance);
                     }
                     j++;
@@ -137,50 +136,51 @@ public class ReverseTime : MonoBehaviour
         // Now we are going to cycle through all our captured frames
         //  to go back through what happened in time
         // TODO: perhaps not all frames? might be diff length for different objects?
-        ArrayList datum = new ArrayList() { Vector3.zero, null };
-        ArrayList currInfo;
-        ArrayList prevInfo;
-        int i = paths[0].Count - 1; // number of captured frames
-        while (i >= 0) {
+        (Vector3 pos, Quaternion rot) datum = (Vector3.zero, new Quaternion(0,0,0,0));
+        (Vector3 pos, Quaternion rot) currInfo;
+        (Vector3 pos, Quaternion rot) prevInfo;
+        int go_iter;
+        int frame_iter = paths[0].Count - 1; // number of captured frames
+        while (frame_iter >= 0) {
             // START TAKE OUT OF UNNECESSARY FRAMES
             bool anyDiff = false;
-            int iter = 0;
+            go_iter = 0;
             // currInfo and prevInfo are ArrayLists (see before while)
             foreach (GameObject go in reversables)
             {
-                currInfo = (ArrayList)paths[iter][i];
-                if (i < paths[iter].Count - 1) { prevInfo = (ArrayList)paths[iter][i + 1]; }
+                currInfo = paths[go_iter][frame_iter];
+                if (frame_iter < paths[go_iter].Count - 1) { prevInfo = paths[go_iter][frame_iter + 1]; }
                 else { continue; }
-                if (!((Vector3)currInfo[0]).ToString().Equals(((Vector3)prevInfo[0]).ToString()) ||
-                    !((Quaternion)currInfo[1]).Equals(((Quaternion)prevInfo[1])))
+                if (!currInfo.pos.ToString().Equals(prevInfo.pos.ToString()) ||
+                    !currInfo.rot.Equals(prevInfo.rot))
                 {
                     anyDiff = true;
                     break;
                 }
-                iter++;
+                go_iter++;
             }
             if (!anyDiff)
             {
-                i--;
+                frame_iter--;
                 continue;
             }
             // END TAKE OUT OF UNNECESSARY FRAMES
 
             bool ediff = false; // whether this new frame is different from the end frame
             bool sdiff = false;
-            int j = 0; // gameobject (reversables) iterator
+            go_iter = 0; // gameobject (reversables) iterator
             foreach (GameObject go in reversables)
             {
                 if (go != null && !go.tag.Equals("Frozen"))
                 {
-                    datum = (ArrayList)paths[j][i]; // datum[0] will be pos, datum[1] will be rot
-                    if ((Vector3) datum[0] != endPoses[j]) // check for diff
+                    datum = paths[go_iter][frame_iter]; // datum.pos will be pos, datum.rot will be rot
+                    if (datum.pos != endPoses[go_iter]) // check for diff
                     {
                         ediff = true; // was different than end
-                        GlobalMethods.VelocityMove(go, (Vector3)datum[0], (Quaternion)datum[1]);
+                        GlobalMethods.VelocityMove(go, datum.pos, datum.rot);
                     }
                 }
-                j++;
+                go_iter++;
             }
             if (ediff) // only if not redoing end for no reason
             {
@@ -188,17 +188,17 @@ public class ReverseTime : MonoBehaviour
                 {
                     if (Input.GetKey(KeyCode.F))
                     {
-                        i -= 2; // super speed (questionable?)
+                        frame_iter -= 2; // super speed (questionable?)
                     }
                     //yield return new WaitForSeconds(1.0f / 30.0f); // wait 1/30th sec (same time as FixedUpdate IE our capture)
                     yield return new WaitForFixedUpdate(); // ooooo
                 }
             }
-            i--;
+            frame_iter--;
         }
 
         // Reset things for our next time reversal
-        int k = 0;
+        go_iter = 0;
         foreach (GameObject go in reversables)
         {
             if (go != null)
@@ -207,18 +207,16 @@ public class ReverseTime : MonoBehaviour
                 {
                     go.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
-                    paths[k].Clear(); // would rather have removed, see above
+                    paths[go_iter].Clear(); // would rather have removed, see above
                     //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
                     // teleport to position: LAZY
-                    go.transform.position = (Vector3) startPoses[k][0];
-                    go.transform.rotation = (Quaternion) startPoses[k][1];
-
-                    paths[k].Add(startPoses[k]); // replace our staring pos in our list
+                    go.transform.position = starts[go_iter].pos;
+                    go.transform.rotation = starts[go_iter].rot;
                 }
 
                 go.GetComponent<Rigidbody>().useGravity = true;
             }
-            k++;
+            go_iter++;
         }
 
         GameObject.Find("Text").GetComponent<Text>().text = "Done!";
