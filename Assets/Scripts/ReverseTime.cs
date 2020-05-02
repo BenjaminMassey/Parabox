@@ -199,8 +199,6 @@ public class ReverseTime : MonoBehaviour
 
     void FreezePlayer(bool freeze)
     {
-        // TODO: currently disabling controller altogether, maybe allow looking with mouse?
-
         Rigidbody rb = GetComponent<Rigidbody>();
         
         if (freeze)
