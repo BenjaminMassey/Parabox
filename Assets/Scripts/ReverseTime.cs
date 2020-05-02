@@ -21,10 +21,8 @@ public class ReverseTime : MonoBehaviour
 
     private List<(Vector3 pos, Quaternion rot)>[] paths; // list of vector3s
     // parallel with reversables: reversables[2] described by paths[2]
-    // paths[1][3][0] refers to the position of object 1 on frame 3
-    // paths[1][3][1] refers to the rotation of object 1 on frame 3
-
-    // TODO: should be transforms to keep rotations
+    // paths[1][3].pos refers to the position of object 1 on frame 3
+    // paths[1][3].rot refers to the rotation of object 1 on frame 3
 
     private List<(Vector3 pos, Quaternion rot)> starts; // starting positions of all reversables
     // see paths for structure
@@ -114,38 +112,18 @@ public class ReverseTime : MonoBehaviour
         FreezePlayer(true);
         GameObject.Find("FirstPersonCharacter").GetComponent<Pickup>().StopHolding();
 
-        // Want end position of each object so we can just start rather
-        //  than being stuck where the player has left us for a while
-        Vector3[] endPoses;
-        endPoses = new Vector3[reversables.Length];
-        int l = 0;
-        foreach (GameObject go in reversables)
-        {
-            if (!go.tag.Equals("Frozen"))
-            {
-                go.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            }
-            // TODO: Move this somewhere more rational
-            if (go != null)
-            {
-                endPoses[l] = go.transform.position;
-            }
-            l++;
-        }
-
         // Now we are going to cycle through all our captured frames
         //  to go back through what happened in time
         // TODO: perhaps not all frames? might be diff length for different objects?
-        (Vector3 pos, Quaternion rot) datum = (Vector3.zero, new Quaternion(0,0,0,0));
-        (Vector3 pos, Quaternion rot) currInfo;
-        (Vector3 pos, Quaternion rot) prevInfo;
-        int go_iter;
+        (Vector3 pos, Quaternion rot) datum; // main path data used throughout
+        (Vector3 pos, Quaternion rot) currInfo; // only used in taking out unnecessary frames
+        (Vector3 pos, Quaternion rot) prevInfo; // only used in taking out unnecessary frames
+        int go_iter; // gameobject (reversables) iterator
         int frame_iter = paths[0].Count - 1; // number of captured frames
         while (frame_iter >= 0) {
             // START TAKE OUT OF UNNECESSARY FRAMES
             bool anyDiff = false;
             go_iter = 0;
-            // currInfo and prevInfo are ArrayLists (see before while)
             foreach (GameObject go in reversables)
             {
                 currInfo = paths[go_iter][frame_iter];
@@ -165,35 +143,25 @@ public class ReverseTime : MonoBehaviour
                 continue;
             }
             // END TAKE OUT OF UNNECESSARY FRAMES
-
-            bool ediff = false; // whether this new frame is different from the end frame
-            bool sdiff = false;
-            go_iter = 0; // gameobject (reversables) iterator
+            
+            go_iter = 0;
             foreach (GameObject go in reversables)
             {
                 if (go != null && !go.tag.Equals("Frozen"))
                 {
                     datum = paths[go_iter][frame_iter]; // datum.pos will be pos, datum.rot will be rot
-                    if (datum.pos != endPoses[go_iter]) // check for diff
-                    {
-                        ediff = true; // was different than end
-                        GlobalMethods.VelocityMove(go, datum.pos, datum.rot);
-                    }
+                    GlobalMethods.VelocityMove(go, datum.pos, datum.rot);
                 }
                 go_iter++;
             }
-            if (ediff) // only if not redoing end for no reason
+            
+            if (Input.GetKey(KeyCode.F))
             {
-                if (!sdiff)
-                {
-                    if (Input.GetKey(KeyCode.F))
-                    {
-                        frame_iter -= 2; // super speed (questionable?)
-                    }
-                    //yield return new WaitForSeconds(1.0f / 30.0f); // wait 1/30th sec (same time as FixedUpdate IE our capture)
-                    yield return new WaitForFixedUpdate(); // ooooo
-                }
+                frame_iter -= 2; // super speed (questionable?)
             }
+            //yield return new WaitForSeconds(1.0f / 30.0f); // wait 1/30th sec (same time as FixedUpdate IE our capture)
+            yield return new WaitForFixedUpdate(); // ooooo
+            
             frame_iter--;
         }
 
