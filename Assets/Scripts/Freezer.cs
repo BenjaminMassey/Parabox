@@ -10,6 +10,7 @@ public class Freezer : MonoBehaviour
     private bool hasFrozen;
     private GameObject frozenObj;
     private Material origMat;
+    private ObjectLists objLists;
     private ReverseTime rt;
     private bool forward;
 
@@ -19,6 +20,7 @@ public class Freezer : MonoBehaviour
         hasFrozen = false;
         frozenObj = null;
         origMat = null;
+        objLists = GameObject.Find("GlobalLists").GetComponent<ObjectLists>();
         rt = GameObject.Find("Player").GetComponent<ReverseTime>();
         forward = true;
     }
@@ -31,8 +33,8 @@ public class Freezer : MonoBehaviour
         {
             if (hasFrozen)
             {
-                GameObject[] oldRev = GameObject.Find("Player").GetComponent<ReverseTime>().reversables;
-                GameObject[] newRev = new GameObject[oldRev.Length];
+                List <GameObject> oldRev = objLists.Reversables;
+                List <GameObject> newRev = new List<GameObject>(oldRev.Count);
                 int i = 0;
                 foreach (GameObject oldRevEntry in oldRev)
                 {
@@ -47,7 +49,7 @@ public class Freezer : MonoBehaviour
                     }
                     i++;
                 }
-                GameObject.Find("Player").GetComponent<ReverseTime>().reversables = newRev;
+                objLists.Reversables = newRev;
                 frozenObj.GetComponent<Renderer>().material = origMat;
                 origMat = null;
                 hasFrozen = false;
@@ -59,14 +61,14 @@ public class Freezer : MonoBehaviour
                 GameObject obj = GlobalMethods.TestHit(transform, 10.0f, 0.25f);
                 if (obj != null) { Debug.Log("AHHH " + obj.name); }
                 
-                if (obj != null && obj.name.Contains("Box")) // TODO: better than just == name check
+                if (obj != null && objLists.Reversables.Contains(obj))
                 {
                     origMat = obj.GetComponent<Renderer>().material;
                     obj.GetComponent<Renderer>().material = frozenMat;
                     hasFrozen = true;
                     frozenObj = obj;
-                    GameObject[] oldRev = GameObject.Find("Player").GetComponent<ReverseTime>().reversables;
-                    GameObject[] newRev = new GameObject[oldRev.Length];
+                    List<GameObject> oldRev = objLists.Reversables;
+                    List<GameObject> newRev = new List<GameObject>(oldRev.Count);
                     int i = 0;
                     foreach (GameObject oldRevEntry in oldRev)
                     {
@@ -81,7 +83,7 @@ public class Freezer : MonoBehaviour
                         }
                         i++;
                     }
-                    GameObject.Find("Player").GetComponent<ReverseTime>().reversables = newRev;
+                    objLists.Reversables = newRev;
                 }
             }
         }

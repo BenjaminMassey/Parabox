@@ -15,7 +15,7 @@ public class ReverseTime : MonoBehaviour
 
     // Attached to player
     
-    public GameObject[] reversables; // all objects in scene able to be reversed
+    private List<GameObject> reversables;
 
     private bool timeFoward; // whether time is normal or being reversed
 
@@ -30,9 +30,10 @@ public class ReverseTime : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        reversables = GameObject.Find("GlobalLists").GetComponent<ObjectLists>().Reversables;
         timeFoward = true;
-        paths = new List<(Vector3 pos, Quaternion rot)>[reversables.Length];
-        starts = new List<(Vector3 pos, Quaternion rot)>(reversables.Length);
+        paths = new List<(Vector3 pos, Quaternion rot)>[reversables.Count];
+        starts = new List<(Vector3 pos, Quaternion rot)>(reversables.Count);
 
         (Vector3 pos, Quaternion rot) instance;
         int i = 0;
