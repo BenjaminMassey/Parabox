@@ -29,6 +29,7 @@ public class Pusher : MonoBehaviour
         // push the object whichever direction we are heading in more
         float movex = hit.moveDirection.x;
         float movez = hit.moveDirection.z;
+
         if (System.Math.Abs(movex) >= System.Math.Abs(movez))
         {
             movez = 0;
