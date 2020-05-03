@@ -129,16 +129,19 @@ public class ReverseTime : MonoBehaviour
             go_iter = 0;
             foreach (GameObject go in reversables)
             {
-                currInfo = paths[go_iter][frame_iter];
-                if (frame_iter < paths[go_iter].Count - 1) { prevInfo = paths[go_iter][frame_iter + 1]; }
-                else { continue; }
-                if (!currInfo.pos.ToString().Equals(prevInfo.pos.ToString()) ||
-                    !currInfo.rot.Equals(prevInfo.rot))
+                if (go != null)
                 {
-                    anyDiff = true;
-                    break;
+                    currInfo = paths[go_iter][frame_iter];
+                    if (frame_iter < paths[go_iter].Count - 1) { prevInfo = paths[go_iter][frame_iter + 1]; }
+                    else { continue; }
+                    if (!currInfo.pos.ToString().Equals(prevInfo.pos.ToString()) ||
+                        !currInfo.rot.Equals(prevInfo.rot))
+                    {
+                        anyDiff = true;
+                        break;
+                    }
+                    go_iter++;
                 }
-                go_iter++;
             }
             if (!anyDiff)
             {
@@ -177,7 +180,7 @@ public class ReverseTime : MonoBehaviour
 
                 go.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
-                paths[go_iter].Clear(); // would rather have removed, see above
+                paths[  go_iter].Clear(); // would rather have removed, see above
                 //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
                 // teleport to position: LAZY
                 go.transform.position = starts[go_iter].pos;

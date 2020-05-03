@@ -38,7 +38,7 @@ public class Freezer : MonoBehaviour
 
                 if (obj == frozenObj)
                 {
-                    reversables.Add(frozenObj);
+                    reversables[reversables.IndexOf(null)] = frozenObj;
                     frozenObj.GetComponent<Renderer>().material = origMat;
                     origMat = null;
                     frozenObj = null;
@@ -56,7 +56,7 @@ public class Freezer : MonoBehaviour
                     origMat = obj.GetComponent<Renderer>().material;
                     obj.GetComponent<Renderer>().material = frozenMat;
                     frozenObj = obj;
-                    reversables.Remove(obj);
+                    reversables[reversables.IndexOf(obj)] = null;
                 }
             }
         }
