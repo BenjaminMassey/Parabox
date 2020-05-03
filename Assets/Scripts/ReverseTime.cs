@@ -15,7 +15,8 @@ public class ReverseTime : MonoBehaviour
 
     // Attached to player
     
-    public GameObject[] reversables; // all objects in scene able to be reversed
+    private List<GameObject> reversables;
+    private GameObject frozenObj;
 
     private bool timeFoward; // whether time is normal or being reversed
 
@@ -30,9 +31,11 @@ public class ReverseTime : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        reversables = GameObject.Find("GlobalLists").GetComponent<ObjectLists>().Reversables;
+        frozenObj = GameObject.Find("GlobalLists").GetComponent<ObjectLists>().FrozenObject;
         timeFoward = true;
-        paths = new List<(Vector3 pos, Quaternion rot)>[reversables.Length];
-        starts = new List<(Vector3 pos, Quaternion rot)>(reversables.Length);
+        paths = new List<(Vector3 pos, Quaternion rot)>[reversables.Count];
+        starts = new List<(Vector3 pos, Quaternion rot)>(reversables.Count);
 
         (Vector3 pos, Quaternion rot) instance;
         int i = 0;
@@ -126,16 +129,19 @@ public class ReverseTime : MonoBehaviour
             go_iter = 0;
             foreach (GameObject go in reversables)
             {
-                currInfo = paths[go_iter][frame_iter];
-                if (frame_iter < paths[go_iter].Count - 1) { prevInfo = paths[go_iter][frame_iter + 1]; }
-                else { continue; }
-                if (!currInfo.pos.ToString().Equals(prevInfo.pos.ToString()) ||
-                    !currInfo.rot.Equals(prevInfo.rot))
+                if (go != null)
                 {
-                    anyDiff = true;
-                    break;
+                    currInfo = paths[go_iter][frame_iter];
+                    if (frame_iter < paths[go_iter].Count - 1) { prevInfo = paths[go_iter][frame_iter + 1]; }
+                    else { continue; }
+                    if (!currInfo.pos.ToString().Equals(prevInfo.pos.ToString()) ||
+                        !currInfo.rot.Equals(prevInfo.rot))
+                    {
+                        anyDiff = true;
+                        break;
+                    }
+                    go_iter++;
                 }
-                go_iter++;
             }
             if (!anyDiff)
             {
@@ -147,7 +153,7 @@ public class ReverseTime : MonoBehaviour
             go_iter = 0;
             foreach (GameObject go in reversables)
             {
-                if (go != null && !go.tag.Equals("Frozen"))
+                if (go != null)
                 {
                     datum = paths[go_iter][frame_iter]; // datum.pos will be pos, datum.rot will be rot
                     GlobalMethods.VelocityMove(go, datum.pos, datum.rot);
@@ -171,16 +177,15 @@ public class ReverseTime : MonoBehaviour
         {
             if (go != null)
             {
-                if (!go.tag.Equals("Frozen"))
-                {
-                    go.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
-                    paths[go_iter].Clear(); // would rather have removed, see above
-                    //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
-                    // teleport to position: LAZY
-                    go.transform.position = starts[go_iter].pos;
-                    go.transform.rotation = starts[go_iter].rot;
-                }
+                go.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+                paths[go_iter].Clear(); // would rather have removed, see above
+                //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
+                // teleport to position: LAZY
+                go.transform.position = starts[go_iter].pos;
+                go.transform.rotation = starts[go_iter].rot;
+                
 
                 go.GetComponent<Rigidbody>().useGravity = true;
             }

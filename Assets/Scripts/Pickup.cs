@@ -19,6 +19,7 @@ public class Pickup : MonoBehaviour
     private bool holding; // whether player is holding something
     private GameObject heldObj; // what player is holding (null if nothing)
     private ReverseTime rt;
+    private ObjectLists objLists;
     private bool forward;
 
     // Start is called before the first frame update
@@ -28,6 +29,7 @@ public class Pickup : MonoBehaviour
         holding = false;
         origMat = null;
         rt = GameObject.Find("Player").GetComponent<ReverseTime>();
+        objLists = GameObject.Find("GlobalLists").GetComponent<ObjectLists>();
         forward = true;
     }
 
@@ -41,9 +43,12 @@ public class Pickup : MonoBehaviour
             {
                 //GameObject obj = TestHit(); // looks 3 units straight from where looking
                 GameObject obj = GlobalMethods.TestHit(transform, 3.0f, 0.25f);
+
+                // TODO: If an object flies in front of the camera while highlighting, probably will not unhighlight the original
+                // highlighted box (impossible to occur atm i think)
                 if (obj != null && !highlighting)
                 {
-                    if (obj.name == "Box") // TODO: implement actual tag feature of pickup-ables
+                    if (objLists.Pickupables.Contains(obj)) // TODO: implement actual tag feature of pickup-ables
                     {
                         Highlight(obj);
                     }

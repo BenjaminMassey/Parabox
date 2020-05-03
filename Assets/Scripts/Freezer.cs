@@ -7,18 +7,18 @@ public class Freezer : MonoBehaviour
 
     public Material frozenMat;
 
-    private bool hasFrozen;
     private GameObject frozenObj;
     private Material origMat;
+    private List<GameObject> reversables;
     private ReverseTime rt;
     private bool forward;
 
     // Start is called before the first frame update
     void Start()
     {
-        hasFrozen = false;
-        frozenObj = null;
         origMat = null;
+        reversables = GameObject.Find("GlobalLists").GetComponent<ObjectLists>().Reversables;
+        frozenObj = GameObject.Find("GlobalLists").GetComponent<ObjectLists>().FrozenObject;
         rt = GameObject.Find("Player").GetComponent<ReverseTime>();
         forward = true;
     }
@@ -29,59 +29,34 @@ public class Freezer : MonoBehaviour
         forward = rt.GetTimeForward();
         if (Input.GetKeyDown(KeyCode.Mouse1) && forward)
         {
-            if (hasFrozen)
+            // Wasn't sure if you wanted it to unfreeze while not targeting the object
+            // Makes sense either way, seems unintuitive for it to be able to but
+            // more puzzles are possible if you can.
+            GameObject obj = GlobalMethods.TestHit(transform, 10.0f, 0.25f);
+            if (frozenObj != null)
             {
-                GameObject[] oldRev = GameObject.Find("Player").GetComponent<ReverseTime>().reversables;
-                GameObject[] newRev = new GameObject[oldRev.Length];
-                int i = 0;
-                foreach (GameObject oldRevEntry in oldRev)
+
+                if (obj == frozenObj)
                 {
-                    if (!oldRevEntry.tag.Equals("Frozen"))
-                    {
-                        newRev[i] = oldRevEntry;
-                    }
-                    else
-                    {
-                        frozenObj.tag = "Untagged"; // TODO: store old, don't assume none
-                        newRev[i] = frozenObj;
-                    }
-                    i++;
+                    reversables[reversables.IndexOf(null)] = frozenObj;
+                    frozenObj.GetComponent<Renderer>().material = origMat;
+                    origMat = null;
+                    frozenObj = null;
+                    
                 }
-                GameObject.Find("Player").GetComponent<ReverseTime>().reversables = newRev;
-                frozenObj.GetComponent<Renderer>().material = origMat;
-                origMat = null;
-                hasFrozen = false;
-                frozenObj = null;
+            
+
             }
             else
             {
-                //GameObject obj = TestHit();
-                GameObject obj = GlobalMethods.TestHit(transform, 10.0f, 0.25f);
                 if (obj != null) { Debug.Log("AHHH " + obj.name); }
                 
-                if (obj != null && obj.name.Contains("Box")) // TODO: better than just == name check
+                if (obj != null && reversables.Contains(obj))
                 {
                     origMat = obj.GetComponent<Renderer>().material;
                     obj.GetComponent<Renderer>().material = frozenMat;
-                    hasFrozen = true;
                     frozenObj = obj;
-                    GameObject[] oldRev = GameObject.Find("Player").GetComponent<ReverseTime>().reversables;
-                    GameObject[] newRev = new GameObject[oldRev.Length];
-                    int i = 0;
-                    foreach (GameObject oldRevEntry in oldRev)
-                    {
-                        if (oldRevEntry != obj)
-                        {
-                            newRev[i] = oldRevEntry;
-                        }
-                        else
-                        {
-                            oldRevEntry.tag = "Frozen";
-                            newRev[i] = oldRevEntry;
-                        }
-                        i++;
-                    }
-                    GameObject.Find("Player").GetComponent<ReverseTime>().reversables = newRev;
+                    reversables[reversables.IndexOf(obj)] = null;
                 }
             }
         }
