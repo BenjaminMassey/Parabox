@@ -220,6 +220,7 @@ public class ReverseTime : MonoBehaviour
         else
         {
             rb.constraints = RigidbodyConstraints.None;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
             //GetComponent<FirstPersonController>().m_RunSpeed = 10.0f;
             //GetComponent<FirstPersonController>().m_WalkSpeed = 5.0f;
             //GetComponent<FirstPersonController>().m_JumpSpeed = 10.0f;
