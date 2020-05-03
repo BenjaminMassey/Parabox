@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 1728781400430723579}
   - component: {fileID: 221433001681024835}
   - component: {fileID: 8200000}
+  - component: {fileID: 7259133334972291820}
+  - component: {fileID: 8410425681113773197}
   m_Layer: 0
   m_Name: FPSController
   m_TagString: Untagged
@@ -77,9 +79,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18f374e53e6031e4d86e378f25da023f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  speed: 10
-  jumpForce: 10
+  rb: {fileID: 5400000}
+  speed: 7.5
+  jumpForce: 5
 --- !u!82 &8200000
 AudioSource:
   m_ObjectHideFlags: 0
@@ -176,6 +178,32 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &7259133334972291820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3daeae6ce50840743b49355081c55e07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8410425681113773197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 424a7191bf7e0c94ebe8c0b8ab302784, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reversables:
+  - {fileID: 0}
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,6 +216,7 @@ GameObject:
   - component: {fileID: 2000000}
   - component: {fileID: 8100000}
   - component: {fileID: 12474086}
+  - component: {fileID: 5348161626136978481}
   m_Layer: 0
   m_Name: FirstPersonCharacter
   m_TagString: MainCamera
@@ -268,3 +297,17 @@ Behaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
+--- !u!114 &5348161626136978481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c66b449f47fc43244b9b964651787218, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 400000}
+  mouseSensitivity: 5
