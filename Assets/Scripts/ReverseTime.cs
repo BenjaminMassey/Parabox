@@ -16,6 +16,7 @@ public class ReverseTime : MonoBehaviour
     // Attached to player
     
     private List<GameObject> reversables;
+    private GameObject frozenObj;
 
     private bool timeFoward; // whether time is normal or being reversed
 
@@ -31,6 +32,7 @@ public class ReverseTime : MonoBehaviour
     void Start()
     {
         reversables = GameObject.Find("GlobalLists").GetComponent<ObjectLists>().Reversables;
+        frozenObj = GameObject.Find("GlobalLists").GetComponent<ObjectLists>().FrozenObject;
         timeFoward = true;
         paths = new List<(Vector3 pos, Quaternion rot)>[reversables.Count];
         starts = new List<(Vector3 pos, Quaternion rot)>(reversables.Count);
@@ -148,7 +150,7 @@ public class ReverseTime : MonoBehaviour
             go_iter = 0;
             foreach (GameObject go in reversables)
             {
-                if (go != null && !go.tag.Equals("Frozen"))
+                if (go != null)
                 {
                     datum = paths[go_iter][frame_iter]; // datum.pos will be pos, datum.rot will be rot
                     GlobalMethods.VelocityMove(go, datum.pos, datum.rot);
@@ -172,16 +174,15 @@ public class ReverseTime : MonoBehaviour
         {
             if (go != null)
             {
-                if (!go.tag.Equals("Frozen"))
-                {
-                    go.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
-                    paths[go_iter].Clear(); // would rather have removed, see above
-                    //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
-                    // teleport to position: LAZY
-                    go.transform.position = starts[go_iter].pos;
-                    go.transform.rotation = starts[go_iter].rot;
-                }
+                go.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+                paths[go_iter].Clear(); // would rather have removed, see above
+                //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
+                // teleport to position: LAZY
+                go.transform.position = starts[go_iter].pos;
+                go.transform.rotation = starts[go_iter].rot;
+                
 
                 go.GetComponent<Rigidbody>().useGravity = true;
             }
