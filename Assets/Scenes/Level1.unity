@@ -153,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Reversables:
   - {fileID: 599111748}
+  FrozenObject: {fileID: 0}
   Pickupables:
   - {fileID: 599111748}
 --- !u!4 &25385109
@@ -781,6 +782,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 994887c3f6689714485ea99dd1934e31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  holding: 0
+--- !u!114 &482116474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482116467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ad9c860d17ecc341b7c2fbea2f15b87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   highlightMat: {fileID: 2100000, guid: 21b81dd7a333b1f42be5417ca54ac55d, type: 2}
@@ -2186,7 +2200,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
       propertyPath: m_IsKinematic
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 14300000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
       propertyPath: m_Enabled
