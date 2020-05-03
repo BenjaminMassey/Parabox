@@ -180,7 +180,7 @@ public class ReverseTime : MonoBehaviour
 
                 go.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
-                paths[  go_iter].Clear(); // would rather have removed, see above
+                paths[go_iter].Clear(); // would rather have removed, see above
                 //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
                 // teleport to position: LAZY
                 go.transform.position = starts[go_iter].pos;
