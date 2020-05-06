@@ -4,6 +4,9 @@ using UnityEngine;
 
 public static class GlobalMethods
 {
+
+    public static ObjectLists OL = null;
+
     public static Vector3 getVectorInFront(Transform t, float amount)
     {
         Vector3 origPos = t.position;
@@ -51,5 +54,31 @@ public static class GlobalMethods
                                                              desiredRot,
                                                              90.0f/*Time.deltaTime*/);
         }
+    }
+
+    private static void InitializeOL() {
+        OL = GameObject.Find("GlobalLists").GetComponent<ObjectLists>();
+    }
+
+    public static GameObject[] GetReversables() {
+        if (OL == null) { InitializeOL(); }
+        return OL.Reversables;
+    }
+
+    public static GameObject[] GetPickupables()
+    {
+        if (OL == null) { InitializeOL(); }
+        return OL.Pickupables;
+    }
+
+    public static bool ObjectInArray<T>(T a, T[] b) {
+        for (int i = 0; i < b.Length; i++)
+        {
+            if (b[i].Equals(a))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

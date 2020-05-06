@@ -15,7 +15,6 @@ public class Highlighter : MonoBehaviour
     
     private ReverseTime rt;
     private bool forward;
-    private ObjectLists objLists;
     private Pickup pu;
     private bool holding;
 
@@ -26,7 +25,6 @@ public class Highlighter : MonoBehaviour
         origMat = null;
         rt = GameObject.Find("Player").GetComponent<ReverseTime>();
         pu = GameObject.Find("FirstPersonCharacter").GetComponent<Pickup>();
-        objLists = GameObject.Find("GlobalLists").GetComponent<ObjectLists>();
         forward = true;
         holding = false;
     }
@@ -52,7 +50,7 @@ public class Highlighter : MonoBehaviour
                 }
                 else if (obj != null && highlightedObj == null)
                 {
-                    if (objLists.Pickupables.Contains(obj)) // TODO: add functionality for nonpickupables, and for frozen objects
+                    if (GlobalMethods.ObjectInArray(obj, GlobalMethods.GetPickupables())) // TODO: add functionality for nonpickupables, and for frozen objects
                                                             // (need another material for all possible cases)
                     {
                         Highlight(obj);

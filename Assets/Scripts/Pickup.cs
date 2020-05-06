@@ -15,7 +15,6 @@ public class Pickup : MonoBehaviour
 
     private GameObject heldObj; // what player is holding (null if nothing)
     private ReverseTime rt;
-    private List<GameObject> pickupables;
     private bool forward;
 
     // Start is called before the first frame update
@@ -23,7 +22,6 @@ public class Pickup : MonoBehaviour
     {
         holding = false;
         rt = GameObject.Find("Player").GetComponent<ReverseTime>();
-        pickupables = GameObject.Find("GlobalLists").GetComponent<ObjectLists>().Pickupables;
         forward = true;
     }
 
@@ -39,7 +37,7 @@ public class Pickup : MonoBehaviour
                 if (!holding)
                 {
                     GameObject obj = GlobalMethods.TestHit(transform, 3.0f, 0.25f);
-                    if (pickupables.Contains(obj))
+                    if (GlobalMethods.ObjectInArray(obj, GlobalMethods.GetPickupables()))
                     {
                         Debug.Log("Got " + obj.name);
                         heldObj = obj;
