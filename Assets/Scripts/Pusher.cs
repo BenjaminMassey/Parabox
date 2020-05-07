@@ -10,6 +10,8 @@ public class Pusher : MonoBehaviour
     {
         Rigidbody rb = collision.rigidbody;
 
+        if (!rb.gameObject.name.Contains("Push")) { return; }
+
         // no rigidbody
         if (rb == null || rb.isKinematic)
         {
