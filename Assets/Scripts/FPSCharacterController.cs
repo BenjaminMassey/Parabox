@@ -20,7 +20,7 @@ public class FPSCharacterController : MonoBehaviour
 
     private void Start()
     {
-        rb = this.GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         distanceToGround = GetComponent<Collider>().bounds.extents.y;
     }
 

@@ -10,6 +10,7 @@ public class Pusher : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        Debug.Log("LWEFIW");
         if (!hit.gameObject.name.Contains("Push")) { return; }
 
         Rigidbody body = hit.collider.attachedRigidbody;

@@ -7,11 +7,11 @@ public static class GlobalMethods
 
     public static ObjectLists OL = null;
 
-    public static Vector3 getVectorInFront(Transform t, float amount)
+    public static Vector3 GetVectorInDirection(Transform t, float amount, Vector3 direction)
     {
         Vector3 origPos = t.position;
         Quaternion origRot = t.rotation;
-        t.Translate(Vector3.forward);
+        t.Translate(direction * amount);
         Vector3 result = t.position;
         t.position = origPos;
         t.rotation = origRot;
@@ -19,12 +19,17 @@ public static class GlobalMethods
         return result;
     }
 
+    public static Vector3 GetVectorInFront(Transform t, float amount)
+    {
+        return GetVectorInDirection(t, amount, Vector3.forward);
+    }
+
     public static GameObject TestHit(Transform t, float distance, float offset = 0.0f)
     {
-        // Sees if object is within distance units of player's looking, returns if so (otherwise null)
+        // Sees if object is within distance units of transform's looking, returns if so (otherwise null)
 
         RaycastHit rchit;
-        bool hit = Physics.Raycast(getVectorInFront(t, offset),
+        bool hit = Physics.Raycast(GetVectorInFront(t, offset),
                                    t.TransformDirection(Vector3.forward),
                                    out rchit,
                                    distance);

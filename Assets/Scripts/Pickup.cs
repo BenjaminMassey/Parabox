@@ -10,9 +10,7 @@ public class Pickup : MonoBehaviour
     // Attached to player camera
 
 
-    public bool holding; // whether player is holding something
-
-
+    private bool holding; // whether player is holding something
     private GameObject heldObj; // what player is holding (null if nothing)
     private ReverseTime rt;
     private bool forward;
@@ -106,5 +104,9 @@ public class Pickup : MonoBehaviour
             heldObj.gameObject.GetComponent<Rigidbody>().useGravity = true;
             heldObj = null;
         }
+    }
+
+    public bool GetHolding() {
+        return holding;
     }
 }

@@ -112,7 +112,9 @@ public class ReverseTime : MonoBehaviour
         GameObject.Find("Text").GetComponent<Text>().text = "REVERSING TIME";
         timeFoward = false;
         FreezePlayer(true);
-        GameObject.Find("FirstPersonCharacter").GetComponent<Pickup>().StopHolding();
+        Pickup p = GameObject.Find("FirstPersonCharacter").GetComponent<Pickup>();
+        if (p != null) { p.StopHolding(); }
+        
 
         // Now we are going to cycle through all our captured frames
         //  to go back through what happened in time
@@ -136,8 +138,11 @@ public class ReverseTime : MonoBehaviour
                     if (!currInfo.pos.ToString().Equals(prevInfo.pos.ToString()) ||
                         !currInfo.rot.Equals(prevInfo.rot))
                     {
-                        anyDiff = true;
-                        break;
+                        if (!go.tag.Equals("Frozen"))
+                        {
+                            anyDiff = true;
+                            break;
+                        }
                     }
                     go_iter++;
                 }
@@ -152,7 +157,7 @@ public class ReverseTime : MonoBehaviour
             go_iter = 0;
             foreach (GameObject go in reversables)
             {
-                if (go != null)
+                if (go != null && !go.tag.Equals("Frozen"))
                 {
                     datum = paths[go_iter][frame_iter]; // datum.pos will be pos, datum.rot will be rot
                     GlobalMethods.VelocityMove(go, datum.pos, datum.rot);
@@ -174,7 +179,7 @@ public class ReverseTime : MonoBehaviour
         go_iter = 0;
         foreach (GameObject go in reversables)
         {
-            if (go != null)
+            if (go != null && !go.tag.Equals("Frozen"))
             {
 
                 go.GetComponent<Rigidbody>().velocity = Vector3.zero;

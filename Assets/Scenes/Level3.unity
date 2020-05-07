@@ -937,9 +937,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424a7191bf7e0c94ebe8c0b8ab302784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reversables:
-  - {fileID: 599111748}
-  - {fileID: 462723606}
+--- !u!114 &296049314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 296049310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cda212f1a406494999d92e04aa059e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1
+  jumpForce: 45
 --- !u!1 &322414226
 GameObject:
   m_ObjectHideFlags: 0
@@ -1153,7 +1164,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 994887c3f6689714485ea99dd1934e31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  holding: 0
 --- !u!1 &458517586
 GameObject:
   m_ObjectHideFlags: 0
@@ -1273,7 +1283,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 462723606}
   serializedVersion: 2
-  m_Mass: 100
+  m_Mass: 200
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1630,7 +1640,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 599111748}
   serializedVersion: 2
-  m_Mass: 100
+  m_Mass: 200
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -3331,7 +3341,6 @@ MonoBehaviour:
   Reversables:
   - {fileID: 599111748}
   - {fileID: 462723606}
-  FrozenObject: {fileID: 0}
   Pickupables: []
 --- !u!1 &1414826016
 GameObject:
@@ -3722,7 +3731,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
       propertyPath: m_IsKinematic
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
+      propertyPath: m_Mass
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}

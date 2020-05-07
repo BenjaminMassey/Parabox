@@ -35,7 +35,7 @@ public class Highlighter : MonoBehaviour
         forward = rt.GetTimeForward();
         if (forward)
         {
-            holding = pu.holding;
+            holding = pu.GetHolding();
             if (!holding)
             {
                 //GameObject obj = TestHit(); // looks 3 units straight from where looking
@@ -50,7 +50,8 @@ public class Highlighter : MonoBehaviour
                 }
                 else if (obj != null && highlightedObj == null)
                 {
-                    if (GlobalMethods.ObjectInArray(obj, GlobalMethods.GetPickupables())) // TODO: add functionality for nonpickupables, and for frozen objects
+                    Debug.Log("hi");
+                    if (GlobalMethods.ObjectInArray(obj, GlobalMethods.GetReversables())) // TODO: add functionality for nonpickupables, and for frozen objects
                                                             // (need another material for all possible cases)
                     {
                         Highlight(obj);
