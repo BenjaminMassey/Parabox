@@ -4,22 +4,20 @@ using UnityEngine;
 
 public class Pusher : MonoBehaviour
 {
-    // From here: https://docs.unity3d.com/ScriptReference/CharacterController.OnControllerColliderHit.html
-
     public float pushPower;
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
+    void OnCollisionStay(Collision collision)
     {
-        Rigidbody body = hit.collider.attachedRigidbody;
+        Rigidbody rb = collision.rigidbody;
 
         // no rigidbody
-        if (body == null || body.isKinematic)
+        if (rb == null || rb.isKinematic)
         {
             return;
         }
 
         // We dont want to push objects below us
-        if (hit.moveDirection.y < -0.3)
+        if (collision.impulse.y < -0.3)
         {
             return;
         }
@@ -27,8 +25,8 @@ public class Pusher : MonoBehaviour
         // Calculate push direction from move direction,
         // we only push objects to the sides never up and down
         // push the object whichever direction we are heading in more
-        float movex = hit.moveDirection.x;
-        float movez = hit.moveDirection.z;
+        float movex = collision.impulse.x;
+        float movez = collision.impulse.z;
 
         if (System.Math.Abs(movex) >= System.Math.Abs(movez))
         {
@@ -44,6 +42,6 @@ public class Pusher : MonoBehaviour
         // then you can also multiply the push velocity by that.
 
         // Apply the push
-        body.velocity = pushDir * pushPower;
+        rb.velocity = pushDir * pushPower;
     }
 }

@@ -37,10 +37,32 @@ public class FPSCharacterController : MonoBehaviour
             {
                 prevX = x;
             }
+            else if (prevX != 0)
+            {
+                if (prevX < 0)
+                {
+                    prevX += 0.01f;
+                }
+                else
+                {
+                    prevX -= 0.01f;
+                }
+            }
 
             if (z != 0 && Mathf.Abs(z) > Mathf.Abs(prevZ))
             {
                 prevZ = z;
+            }
+            else if (prevZ != 0)
+            {
+                if (prevZ < 0)
+                {
+                    prevZ += 0.01f;
+                }
+                else
+                {
+                    prevZ -= 0.01f;
+                }
             }
         }
         else
