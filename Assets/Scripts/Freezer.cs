@@ -9,18 +9,20 @@ public class Freezer : MonoBehaviour
 
     private bool hasFrozen;
     private GameObject frozenObj;
-    private Material origMat;
+    //private Material origMat;
     private ReverseTime rt;
     private bool forward;
+    private Color frozenColor;
 
     // Start is called before the first frame update
     void Start()
     {
         hasFrozen = false;
         frozenObj = null;
-        origMat = null;
+        //origMat = null;
         rt = GameObject.Find("Player").GetComponent<ReverseTime>();
         forward = true;
+        frozenColor = new Color(0.0f, 1.0f, 1.0f, 0.0f);
     }
 
     // Update is called once per frame
@@ -31,28 +33,11 @@ public class Freezer : MonoBehaviour
         {
             if (hasFrozen)
             {
-                /*
-                GameObject[] oldRev = GameObject.Find("Player").GetComponent<ReverseTime>().reversables;
-                GameObject[] newRev = new GameObject[oldRev.Length];
-                int i = 0;
-                foreach (GameObject oldRevEntry in oldRev)
-                {
-                    if (!oldRevEntry.tag.Equals("Frozen"))
-                    {
-                        newRev[i] = oldRevEntry;
-                    }
-                    else
-                    {
-                        frozenObj.tag = "Untagged"; // TODO: store old, don't assume none
-                        newRev[i] = frozenObj;
-                    }
-                    i++;
-                }
-                GameObject.Find("Player").GetComponent<ReverseTime>().reversables = newRev;
-                */
-                frozenObj.GetComponent<Renderer>().material = origMat;
+                //frozenObj.GetComponent<Renderer>().material = origMat;
+                Renderer r_obj = frozenObj.GetComponent<Renderer>();
+                r_obj.material.SetColor("_Color", r_obj.material.color - frozenColor);
                 frozenObj.tag = "Untagged"; // TODO: store old, don't assume none
-                origMat = null;
+                //origMat = null;
                 hasFrozen = false;
                 frozenObj = null;
             }
@@ -64,30 +49,13 @@ public class Freezer : MonoBehaviour
 
                 if (obj != null && obj.name.Contains("Box")) // TODO: better than just == name check
                 {
-                    origMat = obj.GetComponent<Renderer>().material;
-                    obj.GetComponent<Renderer>().material = frozenMat;
+                    //origMat = obj.GetComponent<Renderer>().material;
+                    Renderer r_obj = obj.GetComponent<Renderer>();
+                    r_obj.material.SetColor("_Color", r_obj.material.color + frozenColor);
+                    //obj.GetComponent<Renderer>().material = frozenMat;
                     hasFrozen = true;
                     frozenObj = obj;
                     frozenObj.tag = "Frozen";
-                    /*
-                    GameObject[] oldRev = GameObject.Find("Player").GetComponent<ReverseTime>().reversables;
-                    GameObject[] newRev = new GameObject[oldRev.Length];
-                    int i = 0;
-                    foreach (GameObject oldRevEntry in oldRev)
-                    {
-                        if (oldRevEntry != obj)
-                        {
-                            newRev[i] = oldRevEntry;
-                        }
-                        else
-                        {
-                            oldRevEntry.tag = "Frozen";
-                            newRev[i] = oldRevEntry;
-                        }
-                        i++;
-                    }
-                    GameObject.Find("Player").GetComponent<ReverseTime>().reversables = newRev;
-                    */
                 }
             }
         }

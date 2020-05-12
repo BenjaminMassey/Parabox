@@ -61,11 +61,13 @@ public static class GlobalMethods
         }
     }
 
-    private static void InitializeOL() {
+    private static void InitializeOL()
+    {
         OL = GameObject.Find("GlobalLists").GetComponent<ObjectLists>();
     }
 
-    public static GameObject[] GetReversables() {
+    public static GameObject[] GetReversables()
+    {
         if (OL == null) { InitializeOL(); }
         return OL.Reversables;
     }
@@ -76,7 +78,8 @@ public static class GlobalMethods
         return OL.Pickupables;
     }
 
-    public static bool ObjectInArray<T>(T a, T[] b) {
+    public static bool ObjectInArray<T>(T a, T[] b)
+    {
         for (int i = 0; i < b.Length; i++)
         {
             if (b[i].Equals(a))

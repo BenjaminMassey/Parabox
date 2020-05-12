@@ -106,7 +106,8 @@ public class Pickup : MonoBehaviour
         }
     }
 
-    public bool GetHolding() {
+    public bool IsHolding()
+    {
         return holding;
     }
 }
