@@ -34,7 +34,7 @@ public class Pickup : MonoBehaviour
             {
                 if (!holding)
                 {
-                    GameObject obj = GlobalMethods.TestHit(transform, 3.0f, 0.25f);
+                    GameObject obj = GlobalMethods.TestHit(transform, 5.0f, 0.25f);
                     if (GlobalMethods.ObjectInArray(obj, GlobalMethods.GetPickupables()))
                     {
                         Debug.Log("Got " + obj.name);
