@@ -32,87 +32,7 @@ public class ButtonDetection : MonoBehaviour
             pressedMat = unpressedMat;
         }
         StartCoroutine("ButtonChecker");
-        //pressing = 0;
     }
-
-    /*
-    private void OnTriggerEnter(Collider col)
-    {
-        //Debug.Log("Enter");
-        foreach (GameObject pressable in pressables) 
-        {
-            if (pressable == col.gameObject) {
-                if (!pressed)
-                {
-                    Press();
-                }
-            }
-        }
-    }
-
-    private void OnTriggerExit(Collider col)
-    {
-        /*
-        //Debug.Log("Exit");
-        
-        CapsuleCollider myCap = GetComponent<CapsuleCollider>();
-        Vector3 pos = transform.position;
-        Collider[] colsA = Physics.OverlapCapsule(new Vector3(pos.x, pos.y - myCap.height, pos.z),
-                                                 new Vector3(pos.x, pos.y + myCap.height, pos.z),
-                                                 myCap.radius);
-        
-        ArrayList bads = new ArrayList();
-        ArrayList colsAL = new ArrayList(colsA);
-        
-        foreach (object colAL in colsAL)
-        {
-            string name = ((Collider)colAL).gameObject.name;
-            if (!name.Equals("Push Box") || !name.Equals("Box"))
-            {
-                bads.Add(colAL);
-            }
-        }
-
-        foreach (object colAL in colsAL)
-        {
-            string name = ((Collider)colAL).gameObject.name;
-            Debug.Log("FIEW " + name);
-        }
-
-        foreach (object bad in bads)
-        {
-            colsAL.Remove(bad);
-        }
-
-        Debug.Log("colsAL count: " + colsAL.Count);
-        pressing = colsAL.Count;
-        if (colsAL.Count <= 0)
-        {
-            Unpress();
-        }
-        *//*
-        foreach (GameObject pressable in pressables)
-        {
-            if (pressable == col.gameObject)
-            {
-                if (pressed)
-                {
-                    Unpress();
-                }
-            }
-        }
-        
-    }*/
-
-    // Doors are of the following hiearchy from left to right:
-    /* X Door {
-     *      Out Left
-     *      In Left
-     *      In Right
-     *      Out Right
-     * }
-    */
-    // this is important when viewing Press() and Unpress()
 
     IEnumerator ButtonChecker()
     {
@@ -129,7 +49,7 @@ public class ButtonDetection : MonoBehaviour
             press = false;
             foreach (Collider col in cols)
             {
-                if (!col.gameObject.name.Equals("Button") && !col.gameObject.name.Equals("Floor"))
+                if (!col.gameObject.name.Equals("Button") && !col.gameObject.name.Contains("Floor"))
                 {
                     press = true;
                     break;
@@ -149,13 +69,53 @@ public class ButtonDetection : MonoBehaviour
 
     void Press()
     {
-        /*
-        Debug.Log("Press() " + pressing);
-        pressing++;
-        */
         pressed = true;
         transform.position = pressedPos;
         GetComponent<Renderer>().material = pressedMat;
+
+        StartCoroutine("OpenDoor");
+        
+    }
+
+    void Unpress()
+    {
+        pressed = false;
+        transform.position = unpressedPos;
+        GetComponent<Renderer>().material = unpressedMat;
+
+        StartCoroutine("CloseDoor");
+    }
+
+    IEnumerator OpenDoor()
+    {
+        float seconds = 0.0005f;
+        float length = 2.25f;
+        float rate = 10.0f;
+        for (int frame = 0; frame < rate; frame++)
+        {
+            MoveDoor(false, length / rate);
+            yield return new WaitForSecondsRealtime(seconds / rate);
+        }
+    }
+
+    IEnumerator CloseDoor()
+    {
+        float seconds = 0.0005f;
+        float length = 2.25f;
+        float rate = 10.0f;
+        for (int frame = 0; frame < rate; frame++)
+        {
+            MoveDoor(true, length / rate);
+            yield return new WaitForSecondsRealtime(seconds / rate);
+        }
+    }
+
+    void MoveDoor(bool close, float amount)
+    {
+        if (close)
+        {
+            amount *= -1.0f;
+        }
         foreach (GameObject door in doors)
         {
             Debug.Log(door.name);
@@ -165,44 +125,13 @@ public class ButtonDetection : MonoBehaviour
                 Transform child = door.transform.GetChild(i);
                 if (child.gameObject.name == "In Left")
                 {
-                    child.Translate(Vector3.left * 2.25f);
+                    child.Translate(Vector3.left * amount);
                 }
                 if (child.gameObject.name == "In Right")
                 {
-                    child.Translate(Vector3.right * 2.25f);
+                    child.Translate(Vector3.right * amount);
                 }
             }
         }
-    }
-
-    void Unpress()
-    {
-        /*
-        Debug.Log("Unpress() " + pressing);
-        pressing--;
-        if (pressing <= 0)
-        {
-            if (pressing < 0) { pressing = 0; }
-            Debug.Log("Actual unpress");
-            */
-            pressed = false;
-            transform.position = unpressedPos;
-            GetComponent<Renderer>().material = unpressedMat;
-            foreach (GameObject door in doors)
-            {
-                for (int i = 0; i < door.transform.childCount; i++)
-                {
-                    Transform child = door.transform.GetChild(i);
-                    if (child.gameObject.name == "In Left")
-                    {
-                        child.Translate(Vector3.right * 2.25f);
-                    }
-                    if (child.gameObject.name == "In Right")
-                    {
-                        child.Translate(Vector3.left * 2.25f);
-                    }
-                }
-            }
-        //}
     }
 }
