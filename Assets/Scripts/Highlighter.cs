@@ -77,8 +77,18 @@ public class Highlighter : MonoBehaviour
         Debug.Log("highlighted " + obj.name);
         //origMat = obj.GetComponent<Renderer>().material;
         //obj.GetComponent<Renderer>().material = highlightMat;
-        Renderer r_obj = obj.GetComponent<Renderer>();
-        r_obj.material.SetColor("_Color", r_obj.material.color + highlightColor);
+        int childCount = obj.GetComponent<Transform>().childCount;
+        for (int side_iter = 0; side_iter < childCount; side_iter++)
+        {
+            GameObject side = obj.GetComponent<Transform>().GetChild(side_iter).gameObject;
+            int subChildCount = side.GetComponent<Transform>().childCount;
+            for (int sidePart_iter = 0; sidePart_iter < subChildCount; sidePart_iter++)
+            {
+                GameObject sidePart = side.GetComponent<Transform>().GetChild(sidePart_iter).gameObject;
+                Renderer r_sp = sidePart.GetComponent<Renderer>();
+                r_sp.material.SetColor("_Color", r_sp.material.color + highlightColor);
+            }
+        }
         highlightedObj = obj;
         //highlightedObj.GetComponent<Renderer>().material.SetColor("__EmissionColor", Color.red);
 
@@ -89,8 +99,22 @@ public class Highlighter : MonoBehaviour
         Debug.Log("unhighlighted " + highlightedObj.name);
         //highlightedObj.GetComponent<Renderer>().material = origMat;
         //origMat = null;
-        Renderer r_obj = highlightedObj.GetComponent<Renderer>();
-        r_obj.material.SetColor("_Color", r_obj.material.color - highlightColor);
+
+        GameObject obj = highlightedObj;
+
+        int childCount = obj.GetComponent<Transform>().childCount;
+        for (int side_iter = 0; side_iter < childCount; side_iter++)
+        {
+            GameObject side = obj.GetComponent<Transform>().GetChild(side_iter).gameObject;
+            int subChildCount = side.GetComponent<Transform>().childCount;
+            for (int sidePart_iter = 0; sidePart_iter < subChildCount; sidePart_iter++)
+            {
+                GameObject sidePart = side.GetComponent<Transform>().GetChild(sidePart_iter).gameObject;
+                Renderer r_sp = sidePart.GetComponent<Renderer>();
+                r_sp.material.SetColor("_Color", r_sp.material.color - highlightColor);
+            }
+        }
+
         highlightedObj = null;
     }
 

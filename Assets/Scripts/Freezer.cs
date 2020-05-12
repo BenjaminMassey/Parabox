@@ -5,7 +5,7 @@ using UnityEngine;
 public class Freezer : MonoBehaviour
 {
 
-    public Material frozenMat;
+    //public Material frozenMat;
 
     private bool hasFrozen;
     private GameObject frozenObj;
