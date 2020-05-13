@@ -385,31 +385,6 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &296049312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 296049310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3daeae6ce50840743b49355081c55e07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &296049313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 296049310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 424a7191bf7e0c94ebe8c0b8ab302784, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AlwaysVisibleShader: {fileID: 4800000, guid: c6bfa8e864336c842bab42ec92ba47be, type: 3}
 --- !u!114 &296049321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -992,6 +967,11 @@ PrefabInstance:
       propertyPath: jumpForce
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 8410425681113773197, guid: 5e9e851c0e142814dac026a256ba2ac0,
+        type: 3}
+      propertyPath: AlwaysVisibleShader
+      value: 
+      objectReference: {fileID: 4800000, guid: c6bfa8e864336c842bab42ec92ba47be, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
 --- !u!1001 &1578942201
