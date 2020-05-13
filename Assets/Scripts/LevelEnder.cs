@@ -19,7 +19,21 @@ public class LevelEnder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (SceneManager.GetActiveScene().name == "Level1")
+            {
+                SceneManager.LoadScene("Level2");
+            }
+            else if (SceneManager.GetActiveScene().name == "Level2")
+            {
+                SceneManager.LoadScene("Level3");
+            }
+            else if (SceneManager.GetActiveScene().name == "Level3")
+            {
+                SceneManager.LoadScene("Level1");
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
