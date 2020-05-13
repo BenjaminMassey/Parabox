@@ -14,8 +14,12 @@ public class ReverseTime : MonoBehaviour
     // Reversing time handled in coroutine, see Reverse()
 
     // Attached to player
+
+    public Shader AlwaysVisibleShader;
     
     private GameObject[] reversables;
+
+    private Shader[] origShaders;
 
     private bool timeFoward; // whether time is normal or being reversed
 
@@ -26,6 +30,7 @@ public class ReverseTime : MonoBehaviour
 
     private List<(Vector3 pos, Quaternion rot)> starts; // starting positions of all reversables
     // see paths for structure
+
 
     // Start is called before the first frame update
     void Start()
@@ -124,6 +129,9 @@ public class ReverseTime : MonoBehaviour
         (Vector3 pos, Quaternion rot) prevInfo; // only used in taking out unnecessary frames
         int go_iter; // gameobject (reversables) iterator
         int frame_iter = paths[0].Count - 1; // number of captured frames
+
+        startAlwaysVisible();
+
         while (frame_iter >= 0) {
             // START TAKE OUT OF UNNECESSARY FRAMES
             bool anyDiff = false;
@@ -204,6 +212,8 @@ public class ReverseTime : MonoBehaviour
             go_iter++;
         }
 
+        stopAlwaysVisible();
+
         GameObject.Find("Text").GetComponent<Text>().text = "Done!";
 
         yield return new WaitForSeconds(1.0f); // just an extra second of frozen since I think it's nice
@@ -239,6 +249,29 @@ public class ReverseTime : MonoBehaviour
             GetComponent<CapsuleCollider>().enabled = true;
             //GetComponent<CharacterController>().enabled = true;
             //GetComponent<FirstPersonController>().enabled = true;
+        }
+    }
+
+    void startAlwaysVisible()
+    {
+        foreach (GameObject go in reversables)
+        {
+            go.GetComponent<Renderer>().sharedMaterial.shader = AlwaysVisibleShader;
+        }
+    }
+
+    void stopAlwaysVisible()
+    {
+
+        foreach (GameObject go in reversables)
+        {
+            //go.GetComponent<Renderer>().sharedMaterial.EnableKeyword("_ALPHATEST_ON");
+            //go.GetComponent<Renderer>().sharedMaterial.EnableKeyword("_ALPHABLEND_ON");
+
+            go.GetComponent<Renderer>().sharedMaterial.shader = Shader.Find("Standard");
+            go.GetComponent<Renderer>().sharedMaterial.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+            go.GetComponent<Renderer>().sharedMaterial.renderQueue = 3000;
+
         }
     }
 

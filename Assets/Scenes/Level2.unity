@@ -2863,6 +2863,11 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 8410425681113773197, guid: 5e9e851c0e142814dac026a256ba2ac0,
+        type: 3}
+      propertyPath: AlwaysVisibleShader
+      value: 
+      objectReference: {fileID: 4800000, guid: c6bfa8e864336c842bab42ec92ba47be, type: 3}
     m_RemovedComponents:
     - {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
