@@ -189,7 +189,15 @@ public class ReverseTime : MonoBehaviour
                 // teleport to position: LAZY
                 go.transform.position = starts[go_iter].pos;
                 go.transform.rotation = starts[go_iter].rot;
-                
+
+                /* Attempts at non teleport end
+                GlobalMethods.VelocityMove(go, starts[go_iter].pos, starts[go_iter].rot);
+
+                go.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+                (Vector3 pos, Quaternion rot) instance = (go.transform.position, go.transform.rotation);
+                starts[go_iter] = instance;
+                */
 
                 go.GetComponent<Rigidbody>().useGravity = true;
             }
