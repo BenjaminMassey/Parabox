@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1508961076970199459}
   - component: {fileID: 1508961076970199458}
   - component: {fileID: 2921393557194690296}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d70564cef6a0e294399b9191dc5497a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frozenMat: {fileID: 2100000, guid: 6c6c261d0f1109d4cb4df6992a75628a, type: 2}
 --- !u!114 &2921393557194690296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,10 +122,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c66b449f47fc43244b9b964651787218, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseXInputName: Mouse X
-  mouseYInputName: Mouse Y
+  player: {fileID: 0}
   mouseSensitivity: 2
-  playerBody: {fileID: 1508961077323631147}
 --- !u!1 &1508961077323631151
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,7 +139,7 @@ GameObject:
   - component: {fileID: 3593770098274497877}
   - component: {fileID: 2544963486272476741}
   - component: {fileID: 3998340925480035055}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -176,7 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424a7191bf7e0c94ebe8c0b8ab302784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reversables: []
+  AlwaysVisibleShader: {fileID: 0}
 --- !u!114 &1508961077323631156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,35 +231,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18f374e53e6031e4d86e378f25da023f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizontalInputName: Horizontal
-  verticalInputName: Vertical
-  movementSpeed: 5
-  jumpFallOff:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0.017728984
-      outSlope: 0.017728984
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.08468177
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  jumpMultiplier: 20
-  jumpKey: 32
+  rb: {fileID: 0}
+  speed: 10
+  jumpForce: 10
 --- !u!54 &3998340925480035055
 Rigidbody:
   m_ObjectHideFlags: 0
