@@ -110,4 +110,9 @@ public class Pickup : MonoBehaviour
     {
         return holding;
     }
+
+    public GameObject getHeldObj()
+    {
+        return heldObj;
+    }
 }

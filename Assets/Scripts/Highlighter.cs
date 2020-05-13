@@ -41,7 +41,14 @@ public class Highlighter : MonoBehaviour
             {
                 holding = pu.IsHolding();
             }
-            if (!holding)
+            if (holding)
+            {
+                if (highlightedObj == null)
+                {
+                    Highlight(pu.getHeldObj());
+                }
+            }
+            else if (!holding)
             {
                 //GameObject obj = TestHit(); // looks 3 units straight from where looking
                 GameObject obj = GlobalMethods.TestHit(transform, 5.0f, 0.25f);
@@ -49,6 +56,7 @@ public class Highlighter : MonoBehaviour
                 // TODO: If an object flies in front of the camera while highlighting, probably will not unhighlight the original
                 // highlighted box (impossible to occur atm i think)
                 // can fix this by just storing what obje
+            
                 if (obj != highlightedObj && highlightedObj != null)
                 {
                     Unhighlight();
