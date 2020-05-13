@@ -232,23 +232,15 @@ public class ReverseTime : MonoBehaviour
         {
             
             rb.constraints = RigidbodyConstraints.FreezePosition;
-            //GetComponent<FirstPersonController>().m_RunSpeed = 0.0f;
-            //GetComponent<FirstPersonController>().m_WalkSpeed = 0.0f;
-            //GetComponent<FirstPersonController>().m_JumpSpeed = 0.0f;
+            rb.isKinematic = true;
             GetComponent<CapsuleCollider>().enabled = false;
-            //GetComponent<CharacterController>().enabled = false;
-            //GetComponent<FirstPersonController>().enabled = false;
         }
         else
         {
             rb.constraints = RigidbodyConstraints.None;
             rb.constraints = RigidbodyConstraints.FreezeRotation;
-            //GetComponent<FirstPersonController>().m_RunSpeed = 10.0f;
-            //GetComponent<FirstPersonController>().m_WalkSpeed = 5.0f;
-            //GetComponent<FirstPersonController>().m_JumpSpeed = 10.0f;
+            rb.isKinematic = false;
             GetComponent<CapsuleCollider>().enabled = true;
-            //GetComponent<CharacterController>().enabled = true;
-            //GetComponent<FirstPersonController>().enabled = true;
         }
     }
 
