@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 50
-  jumpForce: 45
+  jumpForce: 40
 --- !u!1 &123462383
 GameObject:
   m_ObjectHideFlags: 0
@@ -1353,6 +1353,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 13400000, guid: 3df8c05a2cc672748b9a9468287d25f0,
         type: 2}
+    - target: {fileID: 7457205069976534820, guid: 2e27bfdbacf14a340bd6c9e208a026c7,
+        type: 3}
+      propertyPath: m_Mass
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e27bfdbacf14a340bd6c9e208a026c7, type: 3}
 --- !u!1 &791118216 stripped
@@ -3176,6 +3181,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Drag
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7457205069976534820, guid: 2e27bfdbacf14a340bd6c9e208a026c7,
+        type: 3}
+      propertyPath: m_Mass
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e27bfdbacf14a340bd6c9e208a026c7, type: 3}
