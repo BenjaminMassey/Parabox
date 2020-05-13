@@ -40,6 +40,7 @@ public class Pickup : MonoBehaviour
                         Debug.Log("Got " + obj.name);
                         heldObj = obj;
                         heldObj.gameObject.GetComponent<Rigidbody>().useGravity = false;
+                        heldObj.layer = 8;
                         //heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = true;
                         // want object to be able to be moved around freely, so no physics stuff
 
@@ -51,6 +52,7 @@ public class Pickup : MonoBehaviour
                     heldObj.gameObject.GetComponent<Rigidbody>().useGravity = true;
                     //heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = false;
                     // object can have physics again, now that not in hand
+                    heldObj.layer = 0;
                     heldObj = null;
                 }
             }
