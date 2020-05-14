@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BenCharacter : MonoBehaviour
 {
-    public float speed = 1.0f;
+    public float moveSpeed = 1.0f;
     public float jumpForce = 45.0f;
 
     private Rigidbody rb;
@@ -30,6 +30,7 @@ public class BenCharacter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float speed = moveSpeed * Time.deltaTime;
 
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
         {
