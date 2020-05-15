@@ -97,7 +97,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
     m_ExportTrainingData: 0
-  m_LightingDataAsset: {fileID: 112000000, guid: c47446abca5baa14ca0e77174bea315f,
+  m_LightingDataAsset: {fileID: 112000000, guid: 914da8016bc73bd42882b9aaec4a9190,
     type: 2}
   m_UseShadowmask: 0
 --- !u!196 &4
@@ -2037,24 +2037,24 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8410425681113773197, guid: 5e9e851c0e142814dac026a256ba2ac0,
         type: 3}
       propertyPath: AlwaysVisibleShader
       value: 
       objectReference: {fileID: 4800000, guid: c6bfa8e864336c842bab42ec92ba47be, type: 3}
-    - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
-      propertyPath: m_UseHeadBob
+    - target: {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0,
+        type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1728781400430723579, guid: 5e9e851c0e142814dac026a256ba2ac0,
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
+      propertyPath: m_UseHeadBob
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}

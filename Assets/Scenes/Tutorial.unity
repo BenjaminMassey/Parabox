@@ -97,7 +97,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ShowResolutionOverlay: 1
     m_ExportTrainingData: 0
-  m_LightingDataAsset: {fileID: 112000000, guid: bc7794124ad29f94f88ffee1a1456fd7,
+  m_LightingDataAsset: {fileID: 112000000, guid: 58bd2023bace1e1448546dbe05afc3c1,
     type: 2}
   m_UseShadowmask: 0
 --- !u!196 &4
@@ -1297,16 +1297,6 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0,
-        type: 3}
-      propertyPath: jumpForce
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 8410425681113773197, guid: 5e9e851c0e142814dac026a256ba2ac0,
         type: 3}
       propertyPath: AlwaysVisibleShader
@@ -1316,6 +1306,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0,
+        type: 3}
+      propertyPath: jumpForce
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
       propertyPath: m_UseHeadBob
