@@ -36,6 +36,16 @@ public class MenuClicker : MonoBehaviour
                 {
                     SceneManager.LoadScene("LevelSelect");
                 }
+                else if (objectHit.name.Contains("Level"))
+                {
+                    string name = objectHit.name.Replace(" ", "");
+                    name = name.Replace("Collider", "");
+                    SceneManager.LoadScene(name);
+                }
+                if (objectHit.name.Contains("Go Back"))
+                {
+                    SceneManager.LoadScene("MainMenu");
+                }
             }
         }
     }
