@@ -22,16 +22,6 @@ public class FancyText : MonoBehaviour
         text.enabled = false;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            Message("Left Click to pickup boxes", 3f);
-            //Message("this is going to be a very very long message on the first line\nthen not", 3f);
-            //Message("very\nvery\nvery\nvery\nvery\ntall", 3f);
-        }
-    }
-
     public bool Message(string s, float time, bool force = false) {
         if (force)
         {

@@ -21,18 +21,7 @@ public class LevelEnder : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            if (SceneManager.GetActiveScene().name == "Level1")
-            {
-                SceneManager.LoadScene("Level2");
-            }
-            else if (SceneManager.GetActiveScene().name == "Level2")
-            {
-                SceneManager.LoadScene("Level3");
-            }
-            else if (SceneManager.GetActiveScene().name == "Level3")
-            {
-                SceneManager.LoadScene("Level1");
-            }
+            NextLevel();
         }
     }
 
@@ -41,23 +30,39 @@ public class LevelEnder : MonoBehaviour
         if (other.gameObject.name == "Player")
         {
             //Debug.Log(SceneManager.GetActiveScene().name);
+            NextLevel();
+        }
+    }
 
-            if (SceneManager.GetActiveScene().name == "Level1")
-            {
-                SceneManager.LoadScene("Level2");
-            }
-            else if (SceneManager.GetActiveScene().name == "Level2")
-            {
-                SceneManager.LoadScene("Level3");
-            }
-            else if (SceneManager.GetActiveScene().name == "Level3")
-            {
-                SceneManager.LoadScene("Level1");
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+    void NextLevel()
+    {
+        if (SceneManager.GetActiveScene().name == "Tutorial")
+        {
+            SceneManager.LoadScene("Level1");
+        }
+        else if (SceneManager.GetActiveScene().name == "Level1")
+        {
+            SceneManager.LoadScene("Level2");
+        }
+        else if (SceneManager.GetActiveScene().name == "Level2")
+        {
+            SceneManager.LoadScene("Level3");
+        }
+        else if (SceneManager.GetActiveScene().name == "Level3")
+        {
+            SceneManager.LoadScene("Level4");
+        }
+        else if (SceneManager.GetActiveScene().name == "Level4")
+        {
+            SceneManager.LoadScene("Level5");
+        }
+        else if (SceneManager.GetActiveScene().name == "Level5")
+        {
+            SceneManager.LoadScene("Tutorial");
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 }
