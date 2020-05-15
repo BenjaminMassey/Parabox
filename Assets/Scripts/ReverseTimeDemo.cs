@@ -53,7 +53,7 @@ public class ReverseTimeDemo : MonoBehaviour
         }
 
         StartCoroutine("ResetPos");
-        InvokeRepeating("Demo", 7.5f, 11.0f);
+        InvokeRepeating("Demo", 7.5f, 12.0f);
     }
 
     // 30 times a second
