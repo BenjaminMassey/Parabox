@@ -31,24 +31,25 @@ public class Freezer : MonoBehaviour
         forward = rt.GetTimeForward();
         if (Input.GetKeyDown(KeyCode.Mouse1) && forward)
         {
-            if (hasFrozen)
+            GameObject obj = GlobalMethods.TestHit(transform, 5.0f, 0.25f);
+            if (obj != null && GlobalMethods.ObjectInArray(obj, GlobalMethods.GetReversables()))
             {
-                //frozenObj.GetComponent<Renderer>().material = origMat;
-                Renderer r_obj = frozenObj.GetComponent<Renderer>();
-                r_obj.material.SetColor("_Color", r_obj.material.color - frozenColor);
-                frozenObj.tag = "Untagged"; // TODO: store old, don't assume none
-                //origMat = null;
-                hasFrozen = false;
-                frozenObj = null;
-            }
-            else
-            {
-                //GameObject obj = TestHit();
-                GameObject obj = GlobalMethods.TestHit(transform, 10.0f, 0.25f);
-                if (obj != null) { Debug.Log("AHHH " + obj.name); }
+                GameObject unfrozenObj = null;
 
-                if (obj != null && obj.name.Contains("Box")) // TODO: better than just == name check
+                if (hasFrozen)
                 {
+                    // unfreezes
+                    Renderer r_obj = frozenObj.GetComponent<Renderer>();
+                    r_obj.material.SetColor("_Color", r_obj.material.color - frozenColor);
+                    frozenObj.tag = "Untagged"; // TODO: store old, don't assume none
+                    hasFrozen = false;
+                    unfrozenObj = frozenObj;
+                    frozenObj = null;
+                }
+
+                if (!hasFrozen && unfrozenObj != obj) // TODO: better than just == name check
+                {
+                    // freezes
                     //origMat = obj.GetComponent<Renderer>().material;
                     Renderer r_obj = obj.GetComponent<Renderer>();
                     r_obj.material.SetColor("_Color", r_obj.material.color + frozenColor);
@@ -57,6 +58,7 @@ public class Freezer : MonoBehaviour
                     frozenObj = obj;
                     frozenObj.tag = "Frozen";
                 }
+
             }
         }
     }
