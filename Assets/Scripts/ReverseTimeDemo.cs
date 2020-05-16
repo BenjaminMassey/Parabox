@@ -275,10 +275,9 @@ public class ReverseTimeDemo : MonoBehaviour
     {
         return timeFoward;
     }
-    /*
+    
     private void OnApplicationQuit()
     {
         stopAlwaysVisible();
     }
-    */
 }
