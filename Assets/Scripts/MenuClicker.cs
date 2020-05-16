@@ -7,7 +7,10 @@ public class MenuClicker : MonoBehaviour
 {
     // https://docs.unity3d.com/Manual/CameraRays.html
 
-    public Camera camera;
+    public Camera cam;
+
+    private string lvlname;
+    private Transform obj;
 
     void Start()
     {
@@ -19,34 +22,49 @@ public class MenuClicker : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             RaycastHit hit;
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out hit))
             {
                 Transform objectHit = hit.transform;
-                if (objectHit.name.Contains("Box"))
+                if (objectHit != null)
                 {
-                    objectHit.gameObject.GetComponent<Renderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
-                }
-                if (objectHit.name.Contains("New Game"))
-                {
-                    SceneManager.LoadScene("Tutorial");
-                }
-                if (objectHit.name.Contains("Level Select"))
-                {
-                    SceneManager.LoadScene("LevelSelect");
-                }
-                else if (objectHit.name.Contains("Level"))
-                {
-                    string name = objectHit.name.Replace(" ", "");
-                    name = name.Replace("Collider", "");
-                    SceneManager.LoadScene(name);
-                }
-                if (objectHit.name.Contains("Go Back"))
-                {
-                    SceneManager.LoadScene("MainMenu");
+                    obj = objectHit;
+                    if (objectHit.name.Contains("Box"))
+                    {
+                        objectHit.gameObject.GetComponent<Renderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
+                        return;
+                    }
+                    if (objectHit.name.Contains("New Game"))
+                    {
+                        lvlname = "Tutorial";
+                    }
+                    else if (objectHit.name.Contains("Level"))
+                    {
+                        string x = objectHit.name.Replace(" ", "");
+                        x = x.Replace("Collider", "");
+                        lvlname = x;
+                    }
+                    if (objectHit.name.Contains("Go Back"))
+                    {
+                        lvlname = "MainMenu";
+                    }
+                    StartCoroutine("Press");
                 }
             }
         }
+    }
+
+    IEnumerator Press()
+    {
+        Color orig_col = obj.GetComponent<Renderer>().material.color;
+        Color new_col = Color.white;
+        // Use obj to change to press color
+        obj.GetComponent<Renderer>().material.color = new_col;
+        yield return new WaitForSecondsRealtime(1.0f / 10.0f);
+        // Use obj to change back
+        obj.GetComponent<Renderer>().material.color = orig_col;
+        yield return new WaitForSecondsRealtime(1.0f / 10.0f);
+        SceneManager.LoadScene(lvlname);
     }
 }
