@@ -35,6 +35,7 @@ public class FPSCameraController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 active = false;
+                Cursor.lockState = CursorLockMode.None;
             }
         }
         else
@@ -42,6 +43,7 @@ public class FPSCameraController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Mouse0) && IsMouseOverGameWindow)
             {
                 active = true;
+                Cursor.lockState = CursorLockMode.Locked;
             }
         }
     }
