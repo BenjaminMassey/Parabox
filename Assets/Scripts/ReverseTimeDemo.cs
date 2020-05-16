@@ -52,6 +52,8 @@ public class ReverseTimeDemo : MonoBehaviour
             i++;
         }
 
+        stopAlwaysVisible();
+
         StartCoroutine("ResetPos");
         InvokeRepeating("Demo", 7.5f, 12.0f);
     }
@@ -113,6 +115,7 @@ public class ReverseTimeDemo : MonoBehaviour
                 go.transform.position = starts[go_iter].pos;
                 go.transform.rotation = starts[go_iter].rot;
                 go.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                go.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                 yield return new WaitForFixedUpdate();
             }
             go_iter++;
@@ -272,4 +275,10 @@ public class ReverseTimeDemo : MonoBehaviour
     {
         return timeFoward;
     }
+    /*
+    private void OnApplicationQuit()
+    {
+        stopAlwaysVisible();
+    }
+    */
 }

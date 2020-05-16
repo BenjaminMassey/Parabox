@@ -51,6 +51,8 @@ public class ReverseTime : MonoBehaviour
             starts.Add(instance);
             i++;
         }
+
+        stopAlwaysVisible();
     }
 
     // Every frame
@@ -270,5 +272,10 @@ public class ReverseTime : MonoBehaviour
     public bool GetTimeForward()
     {
         return timeFoward;
+    }
+
+    private void OnApplicationQuit()
+    {
+        stopAlwaysVisible();
     }
 }
