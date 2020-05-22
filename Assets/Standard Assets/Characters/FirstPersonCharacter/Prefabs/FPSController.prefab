@@ -202,6 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424a7191bf7e0c94ebe8c0b8ab302784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlwaysVisibleShader: {fileID: 0}
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0
@@ -308,4 +309,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 400000}
-  mouseSensitivity: 5
+  mouseSensitivity: 1.5
