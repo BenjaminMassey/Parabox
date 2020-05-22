@@ -11,6 +11,7 @@ public class MenuClicker : MonoBehaviour
 
     private string lvlname;
     private Transform obj;
+    private bool verified;
 
     void Start()
     {
@@ -26,6 +27,7 @@ public class MenuClicker : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
+                verified = false;
                 Transform objectHit = hit.transform;
                 if (objectHit != null)
                 {
@@ -33,23 +35,28 @@ public class MenuClicker : MonoBehaviour
                     if (objectHit.name.Contains("Box"))
                     {
                         objectHit.gameObject.GetComponent<Renderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
-                        return;
                     }
                     if (objectHit.name.Contains("New Game"))
                     {
                         lvlname = "Tutorial";
+                        verified = true;
                     }
                     else if (objectHit.name.Contains("Level"))
                     {
                         string x = objectHit.name.Replace(" ", "");
                         x = x.Replace("Collider", "");
                         lvlname = x;
+                        verified = true;
                     }
                     if (objectHit.name.Contains("Go Back"))
                     {
                         lvlname = "MainMenu";
+                        verified = true;
                     }
-                    StartCoroutine("Press");
+                    if (verified)
+                    {
+                        StartCoroutine("Press");
+                    }
                 }
             }
         }
