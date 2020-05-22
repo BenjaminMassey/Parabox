@@ -15,7 +15,7 @@ TagManager:
   - 
   - 
   - HeldObject
-  - Player
+  - HeldNoCollision
   - 
   - 
   - 

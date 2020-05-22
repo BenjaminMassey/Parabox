@@ -41,6 +41,11 @@ public class Pickup : MonoBehaviour
                         heldObj = obj;
                         heldObj.gameObject.GetComponent<Rigidbody>().useGravity = false;
                         heldObj.layer = 8;
+                        GameObject[] revs = GlobalMethods.GetReversables();
+                        foreach (GameObject rev in revs)
+                        {
+                            if (rev.name.Contains("Push")) { rev.layer = 9; }
+                        }
                         //heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = true;
                         // want object to be able to be moved around freely, so no physics stuff
 
@@ -51,6 +56,11 @@ public class Pickup : MonoBehaviour
                 {
                     heldObj.gameObject.GetComponent<Rigidbody>().useGravity = true;
                     heldObj.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                    GameObject[] revs = GlobalMethods.GetReversables();
+                    foreach (GameObject rev in revs)
+                    {
+                        if (rev.name.Contains("Push")) { rev.layer = 0; }
+                    }
                     //heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = false;
                     // object can have physics again, now that not in hand
                     heldObj.layer = 0;
