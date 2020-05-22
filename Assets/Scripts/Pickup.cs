@@ -50,6 +50,7 @@ public class Pickup : MonoBehaviour
                 else
                 {
                     heldObj.gameObject.GetComponent<Rigidbody>().useGravity = true;
+                    heldObj.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     //heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = false;
                     // object can have physics again, now that not in hand
                     heldObj.layer = 0;
