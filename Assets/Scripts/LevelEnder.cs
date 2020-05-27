@@ -58,7 +58,7 @@ public class LevelEnder : MonoBehaviour
         }
         else if (SceneManager.GetActiveScene().name == "Level5")
         {
-            SceneManager.LoadScene("Tutorial");
+            SceneManager.LoadScene("MainMenu");
         }
         else
         {

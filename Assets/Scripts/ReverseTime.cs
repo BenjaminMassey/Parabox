@@ -119,9 +119,10 @@ public class ReverseTime : MonoBehaviour
         GameObject.Find("Text").GetComponent<Text>().text = "REVERSING TIME";
         timeFoward = false;
         FreezePlayer(true);
+        startAlwaysVisible();
+
         Pickup p = GameObject.Find("FirstPersonCharacter").GetComponent<Pickup>();
         if (p != null) { p.StopHolding(); }
-        
 
         // Now we are going to cycle through all our captured frames
         //  to go back through what happened in time
@@ -129,18 +130,22 @@ public class ReverseTime : MonoBehaviour
         (Vector3 pos, Quaternion rot) datum; // main path data used throughout
         (Vector3 pos, Quaternion rot) currInfo; // only used in taking out unnecessary frames
         (Vector3 pos, Quaternion rot) prevInfo; // only used in taking out unnecessary frames
-        int go_iter; // gameobject (reversables) iterator
         int frame_iter = paths[0].Count - 1; // number of captured frames
-
-        startAlwaysVisible();
-
+        /*
+        int frame_iter = 0; // 
+        for(int i = 0; i < reversables.Length; i++)
+        {
+            frame_iter = Mathf.Max(frame_iter, paths[i].Count - 1);
+        }
+        */
+        int go_iter; // gameobject (reversables) iterator
         while (frame_iter >= 0) {
             // START TAKE OUT OF UNNECESSARY FRAMES
             bool anyDiff = false;
             go_iter = 0;
             foreach (GameObject go in reversables)
             {
-                if (go != null)
+                if (go != null/* && paths[go_iter].Count < frame_iter*/)
                 {
                     currInfo = paths[go_iter][frame_iter];
                     if (frame_iter < paths[go_iter].Count - 1) { prevInfo = paths[go_iter][frame_iter + 1]; }
@@ -167,7 +172,7 @@ public class ReverseTime : MonoBehaviour
             go_iter = 0;
             foreach (GameObject go in reversables)
             {
-                if (go != null && !go.tag.Equals("Frozen"))
+                if (go != null && !go.tag.Equals("Frozen") /* && paths[go_iter].Count < frame_iter*/)
                 {
                     datum = paths[go_iter][frame_iter]; // datum.pos will be pos, datum.rot will be rot
                     GlobalMethods.VelocityMove(go, datum.pos, datum.rot);
