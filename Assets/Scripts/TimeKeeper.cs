@@ -7,16 +7,28 @@ public class TimeKeeper : MonoBehaviour
 {
     private Text textObj;
 
+    private bool timerOn;
+
     private void Start()
     {
         textObj = GetComponent<Text>();
+        timerOn = false;
     }
     private void Update()
     {
         float t = TimeKeep.GetTime();
-        if (t != -1.0f)
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            timerOn = !timerOn;
+        }
+        if (t != -1.0f && timerOn)
         {
             textObj.text = BuildOutput(t);
+        }
+        else
+        {
+            textObj.text = "";
         }
     }
 
