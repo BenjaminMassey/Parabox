@@ -51,7 +51,7 @@ public class Highlighter : MonoBehaviour
             else if (!holding)
             {
                 //GameObject obj = TestHit(); // looks 3 units straight from where looking
-                GameObject obj = GlobalMethods.TestHit(transform, 5.0f, 0.25f);
+                GameObject obj = GlobalMethods.TestHit(transform, 4.0f, 0.25f);
 
                 // TODO: If an object flies in front of the camera while highlighting, probably will not unhighlight the original
                 // highlighted box (impossible to occur atm i think)

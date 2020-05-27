@@ -29,12 +29,11 @@ public class Pickup : MonoBehaviour
         forward = rt.GetTimeForward();
         if (forward)
         {
-
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse0) || TooFar())
             {
                 if (!holding)
                 {
-                    GameObject obj = GlobalMethods.TestHit(transform, 5.0f, 0.25f);
+                    GameObject obj = GlobalMethods.TestHit(transform, 4.0f, 0.25f);
                     if (GlobalMethods.ObjectInArray(obj, GlobalMethods.GetPickupables()))
                     {
                         Debug.Log("Got " + obj.name);
@@ -107,6 +106,13 @@ public class Pickup : MonoBehaviour
             heldObj.gameObject.GetComponent<Rigidbody>().useGravity = true;
             heldObj = null;
         }
+    }
+
+    private bool TooFar()
+    {
+        if (heldObj == null) { return false; }
+        float dist = (heldObj.transform.position - transform.position).sqrMagnitude;
+        return dist > Mathf.Pow(6.0f, 2f);
     }
 
     public bool IsHolding()
