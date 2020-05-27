@@ -63,7 +63,7 @@ public class Highlighter : MonoBehaviour
                 }
                 else if (obj != null && highlightedObj == null)
                 {
-                    Debug.Log("hi");
+                    //Debug.Log("hi");
                     if (GlobalMethods.ObjectInArray(obj, GlobalMethods.GetReversables())) // TODO: add functionality for nonpickupables, and for frozen objects
                                                                                           // (need another material for all possible cases)
                     {
@@ -82,7 +82,7 @@ public class Highlighter : MonoBehaviour
 
     void Highlight(GameObject obj)
     {
-        Debug.Log("highlighted " + obj.name);
+        //Debug.Log("highlighted " + obj.name);
         //origMat = obj.GetComponent<Renderer>().material;
         //obj.GetComponent<Renderer>().material = highlightMat;
         int childCount = obj.GetComponent<Transform>().childCount;
@@ -104,7 +104,7 @@ public class Highlighter : MonoBehaviour
 
     void Unhighlight()
     {
-        Debug.Log("unhighlighted " + highlightedObj.name);
+        //Debug.Log("unhighlighted " + highlightedObj.name);
         //highlightedObj.GetComponent<Renderer>().material = origMat;
         //origMat = null;
 

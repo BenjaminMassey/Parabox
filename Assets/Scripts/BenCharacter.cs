@@ -5,7 +5,7 @@ using UnityEngine;
 public class BenCharacter : MonoBehaviour
 {
     public float moveSpeed = 1.0f;
-    public float jumpForce = 45.0f;
+    public float jumpForce = 40.0f;
 
     private Rigidbody rb;
     private bool grounded;

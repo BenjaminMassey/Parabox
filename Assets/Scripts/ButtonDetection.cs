@@ -118,8 +118,8 @@ public class ButtonDetection : MonoBehaviour
         }
         foreach (GameObject door in doors)
         {
-            Debug.Log(door.name);
-            Debug.Log(door.transform.childCount);
+            //Debug.Log(door.name);
+            //Debug.Log(door.transform.childCount);
             for (int i = 0; i < door.transform.childCount; i++)
             {
                 Transform child = door.transform.GetChild(i);

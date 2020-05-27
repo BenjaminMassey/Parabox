@@ -74,21 +74,32 @@ public class ReverseTime : MonoBehaviour
     // 30 times a second
     void FixedUpdate()
     {
-        
+
         if (timeFoward)
         {
+            // START TAKE OUT OF UNNECESSARY FRAMES
             bool anyDiff = false;
-            int i = 0;
+
+            (Vector3 pos, Quaternion rot) lastStored; // only used in taking out unnecessary frames
+            (Vector3 pos, Quaternion rot) currentSpot; // only used in taking out unnecessary frames
+
+            int go_iter = 0;
             foreach (GameObject go in reversables)
             {
-                if (!go.transform.position.ToString().Equals(starts[i].pos.ToString()) ||
-                    !go.transform.rotation.ToString().Equals(starts[i].rot.ToString()))
+                if (go != null/* && paths[go_iter].Count < frame_iter*/)
                 {
-                    anyDiff = true;
-                    break;
+                    lastStored = paths[go_iter][paths[go_iter].Count - 1];
+                    currentSpot = (go.transform.position, go.transform.rotation);
+                    if (!lastStored.pos.ToString().Equals(currentSpot.pos.ToString()) ||
+                        !lastStored.rot.Equals(currentSpot.rot))
+                    {
+                        anyDiff = true;
+                        break;
+                    }
+                    go_iter++;
                 }
-                i++;
             }
+            // END TAKE OUT UNNECESSARY FRAMES
             if (anyDiff)
             {
                 //Debug.Log("AHHHH");
@@ -102,6 +113,7 @@ public class ReverseTime : MonoBehaviour
                     {
                         instance = (go.transform.position, go.transform.rotation);
                         paths[j].Add(instance);
+                        //Debug.Log("storing " + paths[j].Count);
                     }
                     j++;
                 }
@@ -110,6 +122,40 @@ public class ReverseTime : MonoBehaviour
             {
                 //GameObject.Find("Text").GetComponent<Text>().text = "WOOOO";
             }
+        }
+        else
+        {
+            // START FROZEN CHECK FOR ADDING FRAMES
+
+            bool diff = false;
+
+            (Vector3 pos, Quaternion rot) lastStored; // only used in taking out unnecessary frames
+            (Vector3 pos, Quaternion rot) currentSpot; // only used in taking out unnecessary frames
+            currentSpot = (Vector3.zero, new Quaternion(0, 0, 0, 0));
+
+            int go_iter = 0;
+            foreach (GameObject go in reversables)
+            {
+                if (go != null && go.tag.Equals("Frozen"))
+                {
+                    lastStored = paths[go_iter][paths[go_iter].Count - 1];
+                    currentSpot = (go.transform.position, go.transform.rotation);
+                    if (!lastStored.pos.ToString().Equals(currentSpot.pos.ToString()) ||
+                        !lastStored.rot.Equals(currentSpot.rot))
+                    {
+                        diff = true;
+                        break;
+                    }
+                }
+                go_iter++;
+            }
+            if (diff)
+            {
+                //Debug.Log("FREEZE STORING " + paths[go_iter].Count + " TO " + reversables[go_iter].tag);
+                paths[go_iter].Add(currentSpot);
+            }
+
+            // END FROZEN CHECK FOR ADDING FRAMES
         }
     }
 
@@ -128,36 +174,38 @@ public class ReverseTime : MonoBehaviour
         //  to go back through what happened in time
         // TODO: perhaps not all frames? might be diff length for different objects?
         (Vector3 pos, Quaternion rot) datum; // main path data used throughout
-        (Vector3 pos, Quaternion rot) currInfo; // only used in taking out unnecessary frames
-        (Vector3 pos, Quaternion rot) prevInfo; // only used in taking out unnecessary frames
-        int frame_iter = paths[0].Count - 1; // number of captured frames
-        /*
-        int frame_iter = 0; // 
+        //int frame_iter = paths[0].Count - 1; // number of captured frames
+        
+        int frame_iter = 0;
         for(int i = 0; i < reversables.Length; i++)
         {
+            //Debug.Log("Possible frames: " + paths[i].Count + "(" + i + ") [" + reversables[i].tag + "]");
             frame_iter = Mathf.Max(frame_iter, paths[i].Count - 1);
         }
-        */
+
+        Debug.Log("Started off with " + frame_iter + " frames");
+        
         int go_iter; // gameobject (reversables) iterator
-        while (frame_iter >= 0) {
-            // START TAKE OUT OF UNNECESSARY FRAMES
+        while (frame_iter >= 2) {
+            // START TAKE OUT UNNECCESSARY FREEZE FRAMES
+            /*
             bool anyDiff = false;
+
+            (Vector3 pos, Quaternion rot) lastStored; // only used in taking out unnecessary frames
+            (Vector3 pos, Quaternion rot) currentSpot; // only used in taking out unnecessary frames
+
             go_iter = 0;
             foreach (GameObject go in reversables)
             {
-                if (go != null/* && paths[go_iter].Count < frame_iter*/)
+                if (go != null && !go.tag.Equals("Frozen") && frame_iter + 1 < paths[go_iter].Count)
                 {
-                    currInfo = paths[go_iter][frame_iter];
-                    if (frame_iter < paths[go_iter].Count - 1) { prevInfo = paths[go_iter][frame_iter + 1]; }
-                    else { continue; }
-                    if (!currInfo.pos.ToString().Equals(prevInfo.pos.ToString()) ||
-                        !currInfo.rot.Equals(prevInfo.rot))
+                    lastStored = paths[go_iter][frame_iter + 1];
+                    currentSpot = paths[go_iter][frame_iter];
+                    if (!lastStored.pos.ToString().Equals(currentSpot.pos.ToString()) ||
+                        !lastStored.rot.Equals(currentSpot.rot))
                     {
-                        if (!go.tag.Equals("Frozen"))
-                        {
-                            anyDiff = true;
-                            break;
-                        }
+                        anyDiff = true;
+                        break;
                     }
                     go_iter++;
                 }
@@ -167,15 +215,17 @@ public class ReverseTime : MonoBehaviour
                 frame_iter--;
                 continue;
             }
-            // END TAKE OUT OF UNNECESSARY FRAMES
-            
+            */
+            // END TAKE OUT OF UNNECESSARY FREEZE FRAMES
+
             go_iter = 0;
             foreach (GameObject go in reversables)
             {
-                if (go != null && !go.tag.Equals("Frozen") /* && paths[go_iter].Count < frame_iter*/)
+                if (go != null && !go.tag.Equals("Frozen") && paths[go_iter].Count - 1 >= frame_iter)
                 {
                     datum = paths[go_iter][frame_iter]; // datum.pos will be pos, datum.rot will be rot
                     GlobalMethods.VelocityMove(go, datum.pos, datum.rot);
+                    //Debug.Log("move " + frame_iter);
                 }
                 go_iter++;
             }
@@ -202,8 +252,20 @@ public class ReverseTime : MonoBehaviour
                 paths[go_iter].Clear(); // would rather have removed, see above
                 //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
                 // teleport to position: LAZY
-                go.transform.position = starts[go_iter].pos;
-                go.transform.rotation = starts[go_iter].rot;
+
+                
+
+                float distToStart = Vector3.Distance(go.transform.position, starts[go_iter].pos);
+                if (distToStart < 0.5f)
+                {
+                    go.transform.position = starts[go_iter].pos;
+                    go.transform.rotation = starts[go_iter].rot;
+                }
+
+                (Vector3 pos, Quaternion rot) currSpot = (go.transform.position, go.transform.rotation);
+
+                starts[go_iter] = currSpot;
+                paths[go_iter].Add(starts[go_iter]);
 
                 /* Attempts at non teleport end
                 GlobalMethods.VelocityMove(go, starts[go_iter].pos, starts[go_iter].rot);
