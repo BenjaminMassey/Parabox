@@ -65,6 +65,11 @@ public class BenCharacter : MonoBehaviour
 
     private void UpdateGrounded()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, distanceToGround);
+        RaycastHit rch;
+        grounded = Physics.Raycast(transform.position, Vector3.down, out rch, distanceToGround);
+        if (rch.collider != null && rch.collider.gameObject.layer == 8)
+        {
+            grounded = false;
+        }
     }
 }

@@ -2041,6 +2041,11 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 8410425681113773197, guid: 5e9e851c0e142814dac026a256ba2ac0,
+        type: 3}
+      propertyPath: AlwaysVisibleShader
+      value: 
+      objectReference: {fileID: 4800000, guid: c6bfa8e864336c842bab42ec92ba47be, type: 3}
     - target: {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0,
         type: 3}
       propertyPath: m_Enabled
@@ -2051,11 +2056,6 @@ PrefabInstance:
       propertyPath: jumpForce
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 8410425681113773197, guid: 5e9e851c0e142814dac026a256ba2ac0,
-        type: 3}
-      propertyPath: AlwaysVisibleShader
-      value: 
-      objectReference: {fileID: 4800000, guid: c6bfa8e864336c842bab42ec92ba47be, type: 3}
     - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
       propertyPath: m_UseHeadBob
       value: 0
@@ -3572,6 +3572,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Blue Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300829941929381590, guid: 8b899ec9405bb3745b8e92d0e177492a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1300829941929381589, guid: 8b899ec9405bb3745b8e92d0e177492a,
         type: 3}

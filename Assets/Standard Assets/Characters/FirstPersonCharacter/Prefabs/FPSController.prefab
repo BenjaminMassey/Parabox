@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8200000}
   - component: {fileID: 7259133334972291820}
   - component: {fileID: 8410425681113773197}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FPSController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 8100000}
   - component: {fileID: 12474086}
   - component: {fileID: 5348161626136978481}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: FirstPersonCharacter
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
