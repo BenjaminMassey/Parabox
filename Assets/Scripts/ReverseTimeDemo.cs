@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -61,7 +61,7 @@ public class ReverseTimeDemo : MonoBehaviour
     // 30 times a second
     void FixedUpdate()
     {
-        
+        Debug.Log("asdlfkj");
         if (timeFoward)
         {
             bool anyDiff = false;
@@ -199,6 +199,7 @@ public class ReverseTimeDemo : MonoBehaviour
                 go.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
                 paths[go_iter].Clear(); // would rather have removed, see above
+               
                 //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
                 // teleport to position: LAZY
                 for (int i = 0; i < 60; i++)
@@ -223,7 +224,6 @@ public class ReverseTimeDemo : MonoBehaviour
             }
             go_iter++;
         }
-
         stopAlwaysVisible();
         timeFoward = true;
     }
