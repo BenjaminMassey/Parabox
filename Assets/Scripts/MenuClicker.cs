@@ -41,11 +41,16 @@ public class MenuClicker : MonoBehaviour
                         lvlname = "Tutorial";
                         verified = true;
                     }
-                    else if (objectHit.name.Contains("Level"))
+                    if (objectHit.name.Contains("Level"))
                     {
                         string x = objectHit.name.Replace(" ", "");
                         x = x.Replace("Collider", "");
                         lvlname = x;
+                        verified = true;
+                    }
+                    if (objectHit.name.Contains("Controls"))
+                    {
+                        lvlname = "Controls";
                         verified = true;
                     }
                     if (objectHit.name.Contains("Go Back"))
