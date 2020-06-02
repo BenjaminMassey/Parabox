@@ -13,7 +13,7 @@ public class TutorialMessage : MonoBehaviour
         if (col.gameObject.name == "Player")
         {
             text = text.Replace("<br>", "\n");
-            FancyTextHandler.Message(text, 3f, true);
+            FancyTextHandler.Message(text, 5f, true);
             Destroy(gameObject);
         }
     }
