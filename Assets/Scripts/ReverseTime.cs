@@ -179,7 +179,7 @@ public class ReverseTime : MonoBehaviour
         int frame_iter = 0;
         for(int i = 0; i < reversables.Length; i++)
         {
-            //Debug.Log("Possible frames: " + paths[i].Count + "(" + i + ") [" + reversables[i].tag + "]");
+            Debug.Log("Possible frames: " + paths[i].Count + "(" + i + ") [" + reversables[i].tag + "]");
             frame_iter = Mathf.Max(frame_iter, paths[i].Count - 1);
         }
 

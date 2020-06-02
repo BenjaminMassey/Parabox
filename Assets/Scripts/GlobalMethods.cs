@@ -45,10 +45,12 @@ public static class GlobalMethods
 
     public static void VelocityMove(GameObject go, Vector3 dest, Quaternion desiredRot)
     {
+        /*
         if (!go.name.Equals("Player"))
         {
             Debug.Log("VelocityMove gets called on " + go.name);
         }
+        */
 
         // if want no new rotation, then run with an all zero quaternion
         Vector3 start = go.transform.position;
