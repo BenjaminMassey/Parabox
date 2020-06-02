@@ -18,11 +18,12 @@ public class FancyText : MonoBehaviour
 
     private void Start()
     {
-        bg.enabled = false;
-        text.enabled = false;
+        //bg.enabled = false;
+        //text.enabled = false;
     }
 
     public bool Message(string s, float time, bool force = false) {
+        Debug.Log("Got here");
         if (force)
         {
             StopAllCoroutines();
@@ -109,6 +110,7 @@ public class FancyText : MonoBehaviour
 public static class FancyTextHandler {
     public static bool Message(string msg, float time, bool force = false)
     {
+        Debug.Log("Sending FancyText message: \"" + msg + "\"");
         return GameObject.Find("Canvas").GetComponent<FancyText>().Message(msg, time, force);
     }
 }

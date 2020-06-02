@@ -15,7 +15,7 @@ public class MenuClicker : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void Update()
@@ -72,6 +72,11 @@ public class MenuClicker : MonoBehaviour
         // Use obj to change back
         obj.GetComponent<Renderer>().material.color = orig_col;
         yield return new WaitForSecondsRealtime(1.0f / 10.0f);
+        if (lvlname.Equals("Tutorial"))
+        {
+            Debug.Log("Started Timer");
+            TimeKeep.Start();
+        }
         SceneManager.LoadScene(lvlname);
     }
 }

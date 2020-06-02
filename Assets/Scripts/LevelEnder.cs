@@ -58,6 +58,8 @@ public class LevelEnder : MonoBehaviour
         }
         else if (SceneManager.GetActiveScene().name == "Level5")
         {
+            Debug.Log("Ended Timer");
+            TimeKeep.End();
             Cursor.lockState = CursorLockMode.None;
             SceneManager.LoadScene("MainMenu");
         }
