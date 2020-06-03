@@ -4,22 +4,20 @@ using UnityEngine;
 
 public class Freezer : MonoBehaviour
 {
+    // Allows the player to freeze an object in time with right-click
+    // Should be attached to camera-containing sub-object of Player.prefab
 
-    //public Material frozenMat;
-
-    private bool hasFrozen;
-    private GameObject frozenObj;
-    //private Material origMat;
-    private ReverseTime rt;
-    private bool forward;
-    private Color frozenColor;
+    private bool hasFrozen; // some object has been frozen
+    private GameObject frozenObj; // which object has been frozen (null if none)
+    private ReverseTime rt; // reference in order to see time direction
+    private bool forward; // time direction
+    private Color frozenColor; // how to graphically change frozen object
 
     // Start is called before the first frame update
     void Start()
     {
         hasFrozen = false;
         frozenObj = null;
-        //origMat = null;
         rt = GameObject.Find("Player").GetComponent<ReverseTime>();
         forward = true;
         frozenColor = new Color(0.0f, 1.0f, 1.0f, 0.0f);
@@ -47,13 +45,11 @@ public class Freezer : MonoBehaviour
                     frozenObj = null;
                 }
 
-                if (!hasFrozen && unfrozenObj != obj) // TODO: better than just == name check
+                if (!hasFrozen && unfrozenObj != obj)
                 {
                     // freezes
-                    //origMat = obj.GetComponent<Renderer>().material;
                     Renderer r_obj = obj.GetComponent<Renderer>();
                     r_obj.material.SetColor("_Color", r_obj.material.color + frozenColor);
-                    //obj.GetComponent<Renderer>().material = frozenMat;
                     hasFrozen = true;
                     frozenObj = obj;
                     frozenObj.tag = "Frozen";

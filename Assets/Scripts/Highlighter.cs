@@ -4,26 +4,21 @@ using UnityEngine;
 
 public class Highlighter : MonoBehaviour
 {
-
-    // Attached to player camera
-
-    //public Material highlightMat;
-    //private Material origMat;
+    // Adds a highlight effect to boxes being pointed at by player
+    // Should be attached to camera-containing sub-object of Player.prefab
+    // Note: objects do not highlight if time is reversing or if the player is holding something
 
     private GameObject highlightedObj; // what object is being highlighted (null if nothing)
-    // objects do not highlight if time is reversing or if the player is holding something
-    
-    private ReverseTime rt;
-    private bool forward;
-    private Pickup pu;
-    private bool holding;
-    private Color highlightColor;
+    private ReverseTime rt; // reference to see time direction
+    private bool forward; // time direction
+    private Pickup pu; // reference to see if holding
+    private bool holding; // whether player is holding an object
+    private Color highlightColor; // how to graphically change highlighted object
 
     // Start is called before the first frame update
     void Start()
     {
         highlightedObj = null;
-        //origMat = null;
         rt = GameObject.Find("Player").GetComponent<ReverseTime>();
         pu = GameObject.Find("FirstPersonCharacter").GetComponent<Pickup>();
         forward = true;
@@ -50,12 +45,11 @@ public class Highlighter : MonoBehaviour
             }
             else if (!holding)
             {
-                //GameObject obj = TestHit(); // looks 3 units straight from where looking
                 GameObject obj = GlobalMethods.TestHit(transform, 4.0f, 0.25f);
 
                 // TODO: If an object flies in front of the camera while highlighting, probably will not unhighlight the original
                 // highlighted box (impossible to occur atm i think)
-                // can fix this by just storing what obje
+                // can fix this by just storing what object
             
                 if (obj != highlightedObj && highlightedObj != null)
                 {
@@ -63,9 +57,7 @@ public class Highlighter : MonoBehaviour
                 }
                 else if (obj != null && highlightedObj == null)
                 {
-                    //Debug.Log("hi");
-                    if (GlobalMethods.ObjectInArray(obj, GlobalMethods.GetReversables())) // TODO: add functionality for nonpickupables, and for frozen objects
-                                                                                          // (need another material for all possible cases)
+                    if (GlobalMethods.ObjectInArray(obj, GlobalMethods.GetReversables()))
                     {
                         Highlight(obj);
                     }
@@ -82,9 +74,8 @@ public class Highlighter : MonoBehaviour
 
     void Highlight(GameObject obj)
     {
-        //Debug.Log("highlighted " + obj.name);
-        //origMat = obj.GetComponent<Renderer>().material;
-        //obj.GetComponent<Renderer>().material = highlightMat;
+        // Boxes are fairly complicated, with many planes (for their outline effect)
+            // so make sure to look at Box.prefab to see why this makes sense
         int childCount = obj.GetComponent<Transform>().childCount;
         for (int side_iter = 0; side_iter < childCount; side_iter++)
         {
@@ -98,15 +89,13 @@ public class Highlighter : MonoBehaviour
             }
         }
         highlightedObj = obj;
-        //highlightedObj.GetComponent<Renderer>().material.SetColor("__EmissionColor", Color.red);
 
     }
 
     void Unhighlight()
     {
-        //Debug.Log("unhighlighted " + highlightedObj.name);
-        //highlightedObj.GetComponent<Renderer>().material = origMat;
-        //origMat = null;
+        // Boxes are fairly complicated, with many planes (for their outline effect)
+        // so make sure to look at Box.prefab to see why this makes sense
 
         GameObject obj = highlightedObj;
 

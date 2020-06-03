@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class ObjectLists : MonoBehaviour
 {
-    // Changed these to lists so that I could use Contains method
-    // List of interactable objects with frozen object(s) excluded
-    public GameObject[] Reversables; // set in ReverseTime
-    //public GameObject FrozenObject; // Don't think this makes much sense as non Freezer.cs handling should be by tag
+    // Container to dump related objects into
+    // Should be attached to an empty GameObject
+        // (generally called "GlobalLists")
+    // All of this will be functionally used by other scripts
+        // in GlobalMethods.cs
+    
+    public GameObject[] Reversables;
     public GameObject[] Pickupables;
+
     // Start is called before the first frame update
     void Start()
     {
-        GlobalMethods.OL = gameObject.GetComponent<ObjectLists>();//this;
+        GlobalMethods.OL = gameObject.GetComponent<ObjectLists>();
     }
 
     // Update is called once per frame

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BenCharacter : MonoBehaviour
 {
+    // Currently our main script for movement
+    // Applied on Player.prefab
+
     public float moveSpeed = 1.0f;
     public float jumpForce = 40.0f;
 

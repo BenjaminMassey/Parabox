@@ -5,7 +5,14 @@ using UnityEngine.UI;
 
 public static class TimeKeep
 {
-    public static bool first = true;
+    // Handles keeping track of the amount of time it has taken
+        // the player to beat the game
+    
+    // MenuClicker.cs uses Start() to start the timer
+    // LevelEnder.cs uses End() to end the timer
+    // TimerDisplay.cs uses GetTime() to display the time
+
+    public static bool first = true; // timer never started: used by TimerDisplay.cs
 
     private static float start = -1.0f; // by fixed frames
     private static float end = -1.0f;

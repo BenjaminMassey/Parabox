@@ -5,15 +5,12 @@ using UnityEngine;
 public class Pickup : MonoBehaviour
 {
     // Allows the player to pickup boxes
-    // TODO: change this entire script to be pushing instead?
-
-    // Attached to player camera
-
+    // Should be attached to camera-containing sub-object of Player.prefab
 
     private bool holding; // whether player is holding something
     private GameObject heldObj; // what player is holding (null if nothing)
-    private ReverseTime rt;
-    private bool forward;
+    private ReverseTime rt; // reference to see time direction
+    private bool forward; // time direction
 
     // Start is called before the first frame update
     void Start()
@@ -40,8 +37,6 @@ public class Pickup : MonoBehaviour
                         heldObj = obj;
                         heldObj.gameObject.GetComponent<Rigidbody>().useGravity = false;
                         heldObj.layer = 8;
-                        //heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = true;
-                        // want object to be able to be moved around freely, so no physics stuff
 
                     }
                 }
@@ -50,8 +45,6 @@ public class Pickup : MonoBehaviour
                 {
                     heldObj.gameObject.GetComponent<Rigidbody>().useGravity = true;
                     heldObj.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-                    //heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = false;
-                    // object can have physics again, now that not in hand
                     heldObj.layer = 0;
                     heldObj = null;
                 }
@@ -85,16 +78,11 @@ public class Pickup : MonoBehaviour
             Vector3 desiredPos = t.position;
             transform.position = origPos;
 
-            Vector3 calc = /*Vector3.Normalize(*/(desiredPos - objectsPos/*)*/) / Time.deltaTime;
+            Vector3 calc = (desiredPos - objectsPos) / Time.deltaTime;
             calc = calc * 0.3f;
             heldObj.GetComponent<Rigidbody>().velocity = calc;
 
             heldObj.transform.LookAt(transform);
-            /*
-            heldObj.transform.position = transform.position;
-            heldObj.transform.rotation = transform.rotation;
-            heldObj.transform.Translate(Vector3.forward * 3.0f);
-            */
         }
     }
 
@@ -110,6 +98,7 @@ public class Pickup : MonoBehaviour
 
     private bool TooFar()
     {
+        // Used to drop object if it has gotten too far away from the player
         if (heldObj == null) { return false; }
         float dist = (heldObj.transform.position - transform.position).sqrMagnitude;
         return dist > Mathf.Pow(6.0f, 2f);

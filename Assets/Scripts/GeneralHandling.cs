@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class GeneralHandling : MonoBehaviour
 {
+    // Some random handling: generally unique input conditions
+
     // Start is called before the first frame update
     void Start()
     {

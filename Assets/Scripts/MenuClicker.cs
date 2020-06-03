@@ -5,13 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class MenuClicker : MonoBehaviour
 {
+    // Allows player to click menu items in 3D space like 2D
+    // Used in MainMenu, LevelSelect and Controls scenes
+
     // https://docs.unity3d.com/Manual/CameraRays.html
 
-    public Camera cam;
+    public Camera cam; // main camera, gonna click around this
 
-    private string lvlname;
-    private Transform obj;
-    private bool verified;
+    private string lvlname; // what level we want to load
+    private Transform obj; // collider obj (BG of text) used for effects
+    private bool verified; // whether the thing clicked is something we care about
 
     void Start()
     {
@@ -71,10 +74,10 @@ public class MenuClicker : MonoBehaviour
     {
         Color orig_col = obj.GetComponent<Renderer>().material.color;
         Color new_col = Color.white;
-        // Use obj to change to press color
+        // Click highlight
         obj.GetComponent<Renderer>().material.color = new_col;
         yield return new WaitForSecondsRealtime(1.0f / 10.0f);
-        // Use obj to change back
+        // Click unhighlight
         obj.GetComponent<Renderer>().material.color = orig_col;
         yield return new WaitForSecondsRealtime(1.0f / 10.0f);
         if (lvlname.Equals("Tutorial"))

@@ -5,10 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class LevelEnder : MonoBehaviour
 {
-    // Script to handle hitting the end of level
-    // Currently barebones: just get rid of end marker
-    
-    // Attached to end marker
+    // Script to handle hitting the end of level and take to next
+    // Attached to a portal (sub-object of some "End Gate.prefab")
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +17,7 @@ public class LevelEnder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P)) // for debugging
         {
             NextLevel();
         }
