@@ -47,7 +47,7 @@ public static class GlobalMethods
     {
         if (!go.name.Equals("Player"))
         {
-            Debug.Log("VelocityMove gets called on " + go.name);
+            //Debug.Log("VelocityMove gets called on " + go.name);
         }
 
         // if want no new rotation, then run with an all zero quaternion

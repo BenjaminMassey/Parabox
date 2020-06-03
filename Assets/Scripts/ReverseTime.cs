@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.Characters.FirstPerson;
-using UnityEngine.SceneManagement;
 
 public class ReverseTime : MonoBehaviour
 {
@@ -64,10 +63,6 @@ public class ReverseTime : MonoBehaviour
             {
                 StartCoroutine("Reverse");
             }
-        }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
@@ -179,44 +174,34 @@ public class ReverseTime : MonoBehaviour
         int frame_iter = 0;
         for(int i = 0; i < reversables.Length; i++)
         {
-            Debug.Log("Possible frames: " + paths[i].Count + "(" + i + ") [" + reversables[i].tag + "]");
-            frame_iter = Mathf.Max(frame_iter, paths[i].Count - 1);
+            //Debug.Log("Possible frames: " + paths[i].Count + "(" + i + ") [" + reversables[i].tag + "]");
+            if (!reversables[i].tag.Equals("Frozen"))
+            {
+                frame_iter = Mathf.Max(frame_iter, paths[i].Count - 1);
+            }
         }
 
         Debug.Log("Started off with " + frame_iter + " frames");
         
         int go_iter; // gameobject (reversables) iterator
         while (frame_iter >= 2) {
-            // START TAKE OUT UNNECCESSARY FREEZE FRAMES
-            /*
-            bool anyDiff = false;
 
-            (Vector3 pos, Quaternion rot) lastStored; // only used in taking out unnecessary frames
-            (Vector3 pos, Quaternion rot) currentSpot; // only used in taking out unnecessary frames
-
-            go_iter = 0;
-            foreach (GameObject go in reversables)
+            bool nonFrozenChanged = false;
+            for (int i = 0; i < reversables.Length; i++)
             {
-                if (go != null && !go.tag.Equals("Frozen") && frame_iter + 1 < paths[go_iter].Count)
+                if (frame_iter + 1 >= paths[i].Count) { // array out-of-bounds: just do it
+                    nonFrozenChanged = true;
+                    break;
+                }
+                if (!paths[i][frame_iter].pos.ToString().Equals(paths[i][frame_iter + 1].pos.ToString()))
                 {
-                    lastStored = paths[go_iter][frame_iter + 1];
-                    currentSpot = paths[go_iter][frame_iter];
-                    if (!lastStored.pos.ToString().Equals(currentSpot.pos.ToString()) ||
-                        !lastStored.rot.Equals(currentSpot.rot))
+                    if (!reversables[i].tag.Equals("Frozen"))
                     {
-                        anyDiff = true;
+                        nonFrozenChanged = true;
                         break;
                     }
-                    go_iter++;
                 }
             }
-            if (!anyDiff)
-            {
-                frame_iter--;
-                continue;
-            }
-            */
-            // END TAKE OUT OF UNNECESSARY FREEZE FRAMES
 
             go_iter = 0;
             foreach (GameObject go in reversables)
@@ -229,13 +214,12 @@ public class ReverseTime : MonoBehaviour
                 }
                 go_iter++;
             }
-            
-            if (Input.GetKey(KeyCode.F))
+            //if (Input.GetKey(KeyCode.F)) { frame_iter -= 2; } // super speed (questionable?)
+
+            if (nonFrozenChanged)
             {
-                frame_iter -= 2; // super speed (questionable?)
+                yield return new WaitForFixedUpdate();
             }
-            //yield return new WaitForSeconds(1.0f / 30.0f); // wait 1/30th sec (same time as FixedUpdate IE our capture)
-            yield return new WaitForFixedUpdate(); // ooooo
             
             frame_iter--;
         }
