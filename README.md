@@ -2,7 +2,7 @@
 
 ## Overview
 
-Made by Benjamin Massey, Emily Struble and Michael Welch for UO CIS 410 Spring Term 2020.
+Made by Benjamin Massey, Emily Struble, and Michael Welch for UO CIS 410 Spring Term 2020.
 
 A first person puzzle game based around the ability to reverse time.
 
