@@ -7,6 +7,9 @@ public class Pickup : MonoBehaviour
     // Allows the player to pickup boxes
     // TODO: change this entire script to be pushing instead?
 
+    // SOUND FX
+    public AudioSource s_pickup;
+
     // Attached to player camera
 
 
@@ -42,7 +45,7 @@ public class Pickup : MonoBehaviour
                         heldObj.layer = 8;
                         //heldObj.gameObject.GetComponent<Rigidbody>().isKinematic = true;
                         // want object to be able to be moved around freely, so no physics stuff
-
+                        s_pickup.Play();
                     }
                 }
 
@@ -54,6 +57,7 @@ public class Pickup : MonoBehaviour
                     // object can have physics again, now that not in hand
                     heldObj.layer = 0;
                     heldObj = null;
+                    s_pickup.Play();
                 }
             }
             HandleHolding();

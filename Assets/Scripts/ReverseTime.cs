@@ -13,6 +13,9 @@ public class ReverseTime : MonoBehaviour
     // Will get position of every reversable 30 seconds every frame
     // Reversing time handled in coroutine, see Reverse()
 
+    // SOUND FX
+    public AudioSource s_reverseTime;
+
     // Attached to player
 
     public Shader AlwaysVisibleShader;
@@ -164,6 +167,7 @@ public class ReverseTime : MonoBehaviour
 
         GameObject.Find("Text").GetComponent<Text>().text = "REVERSING TIME";
         timeFoward = false;
+        s_reverseTime.Play();
         FreezePlayer(true);
         startAlwaysVisible();
 
@@ -284,6 +288,8 @@ public class ReverseTime : MonoBehaviour
         stopAlwaysVisible();
 
         GameObject.Find("Text").GetComponent<Text>().text = "Done!";
+
+        s_reverseTime.Play();
 
         yield return new WaitForSeconds(1.0f); // just an extra second of frozen since I think it's nice
         // Note: objects will do their physics from their original position

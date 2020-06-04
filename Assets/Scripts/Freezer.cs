@@ -7,6 +7,9 @@ public class Freezer : MonoBehaviour
 
     //public Material frozenMat;
 
+    // SOUND FX
+    public AudioSource s_freeze;
+
     private bool hasFrozen;
     private GameObject frozenObj;
     //private Material origMat;
@@ -45,6 +48,7 @@ public class Freezer : MonoBehaviour
                     hasFrozen = false;
                     unfrozenObj = frozenObj;
                     frozenObj = null;
+                    s_freeze.Play();
                 }
 
                 if (!hasFrozen && unfrozenObj != obj) // TODO: better than just == name check
@@ -57,6 +61,7 @@ public class Freezer : MonoBehaviour
                     hasFrozen = true;
                     frozenObj = obj;
                     frozenObj.tag = "Frozen";
+                    s_freeze.Play();
                 }
 
             }
