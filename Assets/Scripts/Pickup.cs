@@ -7,6 +7,9 @@ public class Pickup : MonoBehaviour
     // Allows the player to pickup boxes
     // Should be attached to camera-containing sub-object of Player.prefab
 
+    // SOUND FX
+    public AudioSource s_pickup;
+
     private bool holding; // whether player is holding something
     private GameObject heldObj; // what player is holding (null if nothing)
     private ReverseTime rt; // reference to see time direction
@@ -37,7 +40,7 @@ public class Pickup : MonoBehaviour
                         heldObj = obj;
                         heldObj.gameObject.GetComponent<Rigidbody>().useGravity = false;
                         heldObj.layer = 8;
-
+                        s_pickup.Play();
                     }
                 }
 
@@ -47,6 +50,7 @@ public class Pickup : MonoBehaviour
                     heldObj.gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     heldObj.layer = 0;
                     heldObj = null;
+                    s_pickup.Play();
                 }
             }
             HandleHolding();

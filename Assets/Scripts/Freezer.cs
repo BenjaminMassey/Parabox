@@ -13,6 +13,9 @@ public class Freezer : MonoBehaviour
     private bool forward; // time direction
     private Color frozenColor; // how to graphically change frozen object
 
+    // SOUND FX
+    public AudioSource s_freeze;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,6 +46,7 @@ public class Freezer : MonoBehaviour
                     hasFrozen = false;
                     unfrozenObj = frozenObj;
                     frozenObj = null;
+                    s_freeze.Play();
                 }
 
                 if (!hasFrozen && unfrozenObj != obj)
@@ -53,6 +57,7 @@ public class Freezer : MonoBehaviour
                     hasFrozen = true;
                     frozenObj = obj;
                     frozenObj.tag = "Frozen";
+                    s_freeze.Play();
                 }
 
             }
