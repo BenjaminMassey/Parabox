@@ -153,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Reversables:
   - {fileID: 1434811859}
+  - {fileID: 143851779}
   Pickupables:
   - {fileID: 1434811859}
 --- !u!4 &25385109
@@ -330,6 +331,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e27bfdbacf14a340bd6c9e208a026c7, type: 3}
+--- !u!1 &143851779 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7457205069976534821, guid: 2e27bfdbacf14a340bd6c9e208a026c7,
+    type: 3}
+  m_PrefabInstance: {fileID: 143851778}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &182037305
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1297,16 +1304,6 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0,
-        type: 3}
-      propertyPath: jumpForce
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 8410425681113773197, guid: 5e9e851c0e142814dac026a256ba2ac0,
         type: 3}
       propertyPath: AlwaysVisibleShader
@@ -1316,6 +1313,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 221433001681024835, guid: 5e9e851c0e142814dac026a256ba2ac0,
+        type: 3}
+      propertyPath: jumpForce
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 5e9e851c0e142814dac026a256ba2ac0, type: 3}
       propertyPath: m_UseHeadBob

@@ -8,12 +8,11 @@ using UnityEngine.SceneManagement;
 
 public class ReverseTimeDemo : MonoBehaviour
 {
-    // Handles the main time travel mechanic
-    // Will only be keeping position-over-time info of objects placed into reversables
-    // Will get position of every reversable 30 seconds every frame
-    // Reversing time handled in coroutine, see Reverse()
-
-    // Attached to player
+    // Demo version of ReverseTime.cs
+    // Will reverse time every 12 seconds
+    // Put into MainMenu for effect
+    // An old version of time reversal, doesn't matter though
+    // Mainly ignore this script
 
     public Shader AlwaysVisibleShader;
     

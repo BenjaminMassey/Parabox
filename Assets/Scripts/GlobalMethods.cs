@@ -4,11 +4,13 @@ using UnityEngine;
 
 public static class GlobalMethods
 {
+    // A collection of useful functions
 
     public static ObjectLists OL = null;
 
     public static Vector3 GetVectorInDirection(Transform t, float amount, Vector3 direction)
     {
+        // Returns a position <amount> units <direction> of <transform>'s position
         Vector3 origPos = t.position;
         Quaternion origRot = t.rotation;
         t.Translate(direction * amount);
@@ -45,12 +47,11 @@ public static class GlobalMethods
 
     public static void VelocityMove(GameObject go, Vector3 dest, Quaternion desiredRot)
     {
-        if (!go.name.Equals("Player"))
-        {
-            Debug.Log("VelocityMove gets called on " + go.name);
-        }
-
+        // Moves <go> to <dest> position (with <desiredRot> rotation) using physics
         // if want no new rotation, then run with an all zero quaternion
+
+        //if (!go.name.Equals("Player")) { Debug.Log("VelocityMove gets called on " + go.name); }
+
         Vector3 start = go.transform.position;
 
         Vector3 calc = (dest - start) / Time.deltaTime;
@@ -82,6 +83,7 @@ public static class GlobalMethods
     }
 
     public static bool ObjectInArray<T>(T a, T[] b) {
+        // Like List.Contains but for arrays
         for (int i = 0; i < b.Length; i++)
         {
             if (b[i].Equals(a))

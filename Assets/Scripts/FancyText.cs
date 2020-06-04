@@ -6,8 +6,9 @@ using System;
 
 public class FancyText : MonoBehaviour
 {
+    // Implements pop-up text messages for the player
     // To be placed on Canvas named "Canvas"
-    // To be used by other methods via FancyTextHandler (below)
+    // To be used by other scripts via FancyTextHandler (below)
 
     public Image bg;
     public Text text;
@@ -18,11 +19,12 @@ public class FancyText : MonoBehaviour
 
     private void Start()
     {
-        bg.enabled = false;
-        text.enabled = false;
+        //bg.enabled = false;
+        //text.enabled = false;
     }
 
     public bool Message(string s, float time, bool force = false) {
+        Debug.Log("Got here");
         if (force)
         {
             StopAllCoroutines();
@@ -43,6 +45,7 @@ public class FancyText : MonoBehaviour
 
     private IEnumerator PostMessage()
     {
+        // setup
         inUse = true;
 
         Color bgc = bg.color;
@@ -58,6 +61,7 @@ public class FancyText : MonoBehaviour
 
         text.text = message;
 
+        // size correctly
         string[] lines = message.Split('\n');
         int numLines = lines.Length;
         int maxLength = 0;
@@ -73,10 +77,10 @@ public class FancyText : MonoBehaviour
 
         int framesToFade = 45;
         float val;
-        for (int i = 1; i <= framesToFade; i++) // fade in
+        // fade in
+        for (int i = 1; i <= framesToFade; i++) 
         {
             val = (i * (255f / framesToFade)) / 255f;
-            //Debug.Log("ALPHA VALUE: " + val);
             bgc.a = val;
             bg.color = bgc;
             tc.a = val;
@@ -84,12 +88,13 @@ public class FancyText : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
 
+        // display
         yield return new WaitForSeconds(hangtime);
 
-        for (int i = framesToFade; i > 0; i--) // fade out
+        // fade out
+        for (int i = framesToFade; i > 0; i--)
         {
             val = (i * (255f / framesToFade)) / 255f;
-            //Debug.Log("ALPHA VALUE: " + val);
             bgc.a = val;
             bg.color = bgc;
             tc.a = val;
@@ -97,6 +102,7 @@ public class FancyText : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
 
+        // cleanup
         text.text = "";
 
         bg.enabled = false;
@@ -109,6 +115,7 @@ public class FancyText : MonoBehaviour
 public static class FancyTextHandler {
     public static bool Message(string msg, float time, bool force = false)
     {
+        Debug.Log("Sending FancyText message: \"" + msg + "\"");
         return GameObject.Find("Canvas").GetComponent<FancyText>().Message(msg, time, force);
     }
 }

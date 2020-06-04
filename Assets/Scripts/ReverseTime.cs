@@ -4,22 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityStandardAssets.Characters.FirstPerson;
-using UnityEngine.SceneManagement;
 
 public class ReverseTime : MonoBehaviour
 {
     // Handles the main time travel mechanic
     // Will only be keeping position-over-time info of objects placed into reversables
-    // Will get position of every reversable 30 seconds every frame
+    // Will get position of every reversable 50 times each second (FixedUpdate)
     // Reversing time handled in coroutine, see Reverse()
 
     // Attached to player
 
-    public Shader AlwaysVisibleShader;
+    public Shader AlwaysVisibleShader; // used for highlighted/see-thru-walls effect
     
-    private GameObject[] reversables;
+    private GameObject[] reversables; // list of everything we will try to reverse
 
-    private Shader[] origShaders;
+    private Shader[] origShaders; // original shaders to revert back to from AlwaysVisibleShader
 
     private bool timeFoward; // whether time is normal or being reversed
 
@@ -31,7 +30,6 @@ public class ReverseTime : MonoBehaviour
     private List<(Vector3 pos, Quaternion rot)> starts; // starting positions of all reversables
     // see paths for structure
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -41,6 +39,7 @@ public class ReverseTime : MonoBehaviour
         paths = new List<(Vector3 pos, Quaternion rot)>[reversables.Length];
         starts = new List<(Vector3 pos, Quaternion rot)>(reversables.Length);
 
+        // Set up our starting positions
         (Vector3 pos, Quaternion rot) instance;
         int i = 0;
         foreach (GameObject go in reversables)
@@ -65,19 +64,15 @@ public class ReverseTime : MonoBehaviour
                 StartCoroutine("Reverse");
             }
         }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
     }
 
     // 30 times a second
     void FixedUpdate()
     {
-
+        // While time is forward, will keep track of all movement
         if (timeFoward)
         {
-            // START TAKE OUT OF UNNECESSARY FRAMES
+            // START IGNORE OF UNNECESSARY FRAMES
             bool anyDiff = false;
 
             (Vector3 pos, Quaternion rot) lastStored; // only used in taking out unnecessary frames
@@ -86,7 +81,7 @@ public class ReverseTime : MonoBehaviour
             int go_iter = 0;
             foreach (GameObject go in reversables)
             {
-                if (go != null/* && paths[go_iter].Count < frame_iter*/)
+                if (go != null)
                 {
                     lastStored = paths[go_iter][paths[go_iter].Count - 1];
                     currentSpot = (go.transform.position, go.transform.rotation);
@@ -99,12 +94,10 @@ public class ReverseTime : MonoBehaviour
                     go_iter++;
                 }
             }
-            // END TAKE OUT UNNECESSARY FRAMES
+            // END IGNORE UNNECESSARY FRAMES
+            // Now we can actually store our frame data, if proven necessary
             if (anyDiff)
             {
-                //Debug.Log("AHHHH");
-                //String textStr = "WEEEE" + " : " + reversables[0].transform.position + " vs " + (Vector3) startPoses[0][0] + " : " + reversables[0].transform.rotation + " vs " + (Quaternion) startPoses[0][1];
-                //GameObject.Find("Text").GetComponent<Text>().text = textStr;
                 (Vector3 pos, Quaternion rot) instance;
                 int j = 0;
                 foreach (GameObject go in reversables)
@@ -118,21 +111,16 @@ public class ReverseTime : MonoBehaviour
                     j++;
                 }
             }
-            else
-            {
-                //GameObject.Find("Text").GetComponent<Text>().text = "WOOOO";
-            }
         }
+        // While time is backward, will only keep track of frozen objects
+            // (perhaps being moved by others: would have to remember)
         else
         {
-            // START FROZEN CHECK FOR ADDING FRAMES
-
+            // START IGNORE OF UNNECESSARY FRAMES
             bool diff = false;
-
             (Vector3 pos, Quaternion rot) lastStored; // only used in taking out unnecessary frames
             (Vector3 pos, Quaternion rot) currentSpot; // only used in taking out unnecessary frames
             currentSpot = (Vector3.zero, new Quaternion(0, 0, 0, 0));
-
             int go_iter = 0;
             foreach (GameObject go in reversables)
             {
@@ -149,75 +137,72 @@ public class ReverseTime : MonoBehaviour
                 }
                 go_iter++;
             }
+            // END IGNORE UNNECESSARY FRAMES
+            // Now we can store this special frozen info, if necessary
             if (diff)
             {
                 //Debug.Log("FREEZE STORING " + paths[go_iter].Count + " TO " + reversables[go_iter].tag);
                 paths[go_iter].Add(currentSpot);
             }
-
-            // END FROZEN CHECK FOR ADDING FRAMES
         }
     }
 
     IEnumerator Reverse()
     {
+        // This is where we do the main thing: reversing time
+        // We will see how many frames have been collected
+            // (max count of frames from objects) start at 
+            // that number, and work our way down to zero
 
+        // Setup
         GameObject.Find("Text").GetComponent<Text>().text = "REVERSING TIME";
         timeFoward = false;
         FreezePlayer(true);
         startAlwaysVisible();
 
+        // Drop object if one is being held
         Pickup p = GameObject.Find("FirstPersonCharacter").GetComponent<Pickup>();
         if (p != null) { p.StopHolding(); }
 
         // Now we are going to cycle through all our captured frames
         //  to go back through what happened in time
-        // TODO: perhaps not all frames? might be diff length for different objects?
         (Vector3 pos, Quaternion rot) datum; // main path data used throughout
-        //int frame_iter = paths[0].Count - 1; // number of captured frames
         
+        // Figure out how many frames to use
         int frame_iter = 0;
         for(int i = 0; i < reversables.Length; i++)
         {
             //Debug.Log("Possible frames: " + paths[i].Count + "(" + i + ") [" + reversables[i].tag + "]");
-            frame_iter = Mathf.Max(frame_iter, paths[i].Count - 1);
+            if (!reversables[i].tag.Equals("Frozen"))
+            {
+                frame_iter = Mathf.Max(frame_iter, paths[i].Count - 1);
+            }
         }
 
         Debug.Log("Started off with " + frame_iter + " frames");
         
-        int go_iter; // gameobject (reversables) iterator
+        // Main loop :)
+        int go_iter; // gameobject (reversables) iterator (reused frequently)
         while (frame_iter >= 2) {
-            // START TAKE OUT UNNECCESSARY FREEZE FRAMES
-            /*
-            bool anyDiff = false;
-
-            (Vector3 pos, Quaternion rot) lastStored; // only used in taking out unnecessary frames
-            (Vector3 pos, Quaternion rot) currentSpot; // only used in taking out unnecessary frames
-
-            go_iter = 0;
-            foreach (GameObject go in reversables)
+            // See if any (non-frozen) objects have actually changed
+            bool nonFrozenChanged = false;
+            for (int i = 0; i < reversables.Length; i++)
             {
-                if (go != null && !go.tag.Equals("Frozen") && frame_iter + 1 < paths[go_iter].Count)
+                if (frame_iter + 1 >= paths[i].Count) { // array out-of-bounds: just do it
+                    nonFrozenChanged = true;
+                    break;
+                }
+                if (!paths[i][frame_iter].pos.ToString().Equals(paths[i][frame_iter + 1].pos.ToString()))
                 {
-                    lastStored = paths[go_iter][frame_iter + 1];
-                    currentSpot = paths[go_iter][frame_iter];
-                    if (!lastStored.pos.ToString().Equals(currentSpot.pos.ToString()) ||
-                        !lastStored.rot.Equals(currentSpot.rot))
+                    if (!reversables[i].tag.Equals("Frozen"))
                     {
-                        anyDiff = true;
+                        nonFrozenChanged = true;
                         break;
                     }
-                    go_iter++;
                 }
             }
-            if (!anyDiff)
-            {
-                frame_iter--;
-                continue;
-            }
-            */
-            // END TAKE OUT OF UNNECESSARY FREEZE FRAMES
 
+            // Actually move our objects
             go_iter = 0;
             foreach (GameObject go in reversables)
             {
@@ -229,13 +214,12 @@ public class ReverseTime : MonoBehaviour
                 }
                 go_iter++;
             }
-            
-            if (Input.GetKey(KeyCode.F))
+
+            // Wait the same time we recorded, if there was a change we care about
+            if (nonFrozenChanged)
             {
-                frame_iter -= 2; // super speed (questionable?)
+                yield return new WaitForFixedUpdate();
             }
-            //yield return new WaitForSeconds(1.0f / 30.0f); // wait 1/30th sec (same time as FixedUpdate IE our capture)
-            yield return new WaitForFixedUpdate(); // ooooo
             
             frame_iter--;
         }
@@ -250,11 +234,8 @@ public class ReverseTime : MonoBehaviour
                 go.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
                 paths[go_iter].Clear(); // would rather have removed, see above
-                //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
-                // teleport to position: LAZY
 
-                
-
+                // If close enough to previous start, then teleport there
                 float distToStart = Vector3.Distance(go.transform.position, starts[go_iter].pos);
                 if (distToStart < 0.5f)
                 {
@@ -262,19 +243,10 @@ public class ReverseTime : MonoBehaviour
                     go.transform.rotation = starts[go_iter].rot;
                 }
 
+                // Store our new start (should be the same if above happened)
                 (Vector3 pos, Quaternion rot) currSpot = (go.transform.position, go.transform.rotation);
-
                 starts[go_iter] = currSpot;
                 paths[go_iter].Add(starts[go_iter]);
-
-                /* Attempts at non teleport end
-                GlobalMethods.VelocityMove(go, starts[go_iter].pos, starts[go_iter].rot);
-
-                go.GetComponent<Rigidbody>().velocity = Vector3.zero;
-
-                (Vector3 pos, Quaternion rot) instance = (go.transform.position, go.transform.rotation);
-                starts[go_iter] = instance;
-                */
 
                 go.GetComponent<Rigidbody>().useGravity = true;
             }
@@ -295,6 +267,9 @@ public class ReverseTime : MonoBehaviour
 
     void FreezePlayer(bool freeze)
     {
+        // Makes sure the player cannot move during time freeze
+            // (but can look around)
+        
         Rigidbody rb = GetComponent<Rigidbody>();
         
         if (freeze)
@@ -315,6 +290,7 @@ public class ReverseTime : MonoBehaviour
 
     void startAlwaysVisible()
     {
+        // Has the reversing objects highlighted/seen-thru-walls
         foreach (GameObject go in reversables)
         {
             go.GetComponent<Renderer>().sharedMaterial.shader = AlwaysVisibleShader;
@@ -323,12 +299,9 @@ public class ReverseTime : MonoBehaviour
 
     void stopAlwaysVisible()
     {
-
+        // Stops the reversing objects highlighted/seen-thru-walls
         foreach (GameObject go in reversables)
         {
-            //go.GetComponent<Renderer>().sharedMaterial.EnableKeyword("_ALPHATEST_ON");
-            //go.GetComponent<Renderer>().sharedMaterial.EnableKeyword("_ALPHABLEND_ON");
-
             go.GetComponent<Renderer>().sharedMaterial.shader = Shader.Find("Standard");
             go.GetComponent<Renderer>().sharedMaterial.EnableKeyword("_ALPHAPREMULTIPLY_ON");
             go.GetComponent<Renderer>().sharedMaterial.renderQueue = 3000;
