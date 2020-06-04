@@ -14,6 +14,7 @@ public class ReverseTime : MonoBehaviour
 
     // SOUND FX
     public AudioSource s_reverseTime;
+    public AudioSource s_reverseTimeB;
 
     // Attached to player
 
@@ -261,7 +262,7 @@ public class ReverseTime : MonoBehaviour
 
         GameObject.Find("Text").GetComponent<Text>().text = "Done!";
 
-        s_reverseTime.Play();
+        s_reverseTimeB.Play();
 
         yield return new WaitForSeconds(1.0f); // just an extra second of frozen since I think it's nice
         // Note: objects will do their physics from their original position
