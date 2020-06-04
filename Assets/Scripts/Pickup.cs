@@ -73,19 +73,8 @@ public class Pickup : MonoBehaviour
         // Move held object in front of player so they can move it
         if (holding)
         {
-            Vector3 objectsVelocity = heldObj.GetComponent<Rigidbody>().velocity;
-            Vector3 objectsPos = heldObj.transform.position;
-
-            Vector3 origPos = transform.position;
-            Transform t = transform;
-            t.Translate(Vector3.forward * 3.0f);
-            Vector3 desiredPos = t.position;
-            transform.position = origPos;
-
-            Vector3 calc = (desiredPos - objectsPos) / Time.deltaTime;
-            calc = calc * 0.3f;
-            heldObj.GetComponent<Rigidbody>().velocity = calc;
-
+            Vector3 spot = GlobalMethods.GetVectorInFront(transform, 3.0f);
+            GlobalMethods.VelocityMove(heldObj, spot, new Quaternion(0, 0, 0, 0), 0.1f);
             heldObj.transform.LookAt(transform);
         }
     }

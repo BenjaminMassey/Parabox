@@ -45,7 +45,7 @@ public static class GlobalMethods
         }
     }
 
-    public static void VelocityMove(GameObject go, Vector3 dest, Quaternion desiredRot)
+    public static void VelocityMove(GameObject go, Vector3 dest, Quaternion desiredRot, float force = 0.3f)
     {
         // Moves <go> to <dest> position (with <desiredRot> rotation) using physics
         // if want no new rotation, then run with an all zero quaternion
@@ -55,7 +55,7 @@ public static class GlobalMethods
         Vector3 start = go.transform.position;
 
         Vector3 calc = (dest - start) / Time.deltaTime;
-        calc = calc * 0.3f; // arbitrary force amount
+        calc = calc * force;
         go.GetComponent<Rigidbody>().velocity = calc;
 
         if (!desiredRot.Equals(new Quaternion(0, 0, 0, 0)))

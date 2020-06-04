@@ -237,6 +237,7 @@ public class ReverseTime : MonoBehaviour
             {
 
                 go.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                go.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
                 paths[go_iter].Clear(); // would rather have removed, see above
 
