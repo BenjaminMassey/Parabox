@@ -7,6 +7,8 @@ public class ButtonDetection : MonoBehaviour
     // Gives buttons functionality, including a hook up to door
 
     // Attached to any button pokey bit (IE "Button" child of "Red Button")
+    public AudioSource s_buttonDown;
+    public AudioSource s_buttonUp;
 
     public GameObject[] pressables; // all objects that are allowed to press this button IE Player, Box...
     public Material pressedMat; // for different color when pressed (optional)
@@ -72,6 +74,7 @@ public class ButtonDetection : MonoBehaviour
         pressed = true;
         transform.position = pressedPos;
         GetComponent<Renderer>().material = pressedMat;
+        s_buttonDown.Play();
 
         StartCoroutine("OpenDoor");
         
@@ -82,12 +85,18 @@ public class ButtonDetection : MonoBehaviour
         pressed = false;
         transform.position = unpressedPos;
         GetComponent<Renderer>().material = unpressedMat;
+        s_buttonUp.Play();
 
         StartCoroutine("CloseDoor");
     }
 
     IEnumerator OpenDoor()
     {
+        foreach (GameObject door in doors)
+        {
+            door.GetComponent<AudioSource>().Play();
+        }
+
         float seconds = 0.0005f;
         float length = 2.25f;
         float rate = 10.0f;
@@ -100,6 +109,11 @@ public class ButtonDetection : MonoBehaviour
 
     IEnumerator CloseDoor()
     {
+        foreach (GameObject door in doors)
+        {
+            door.GetComponent<AudioSource>().Play();
+        }
+
         float seconds = 0.0005f;
         float length = 2.25f;
         float rate = 10.0f;
