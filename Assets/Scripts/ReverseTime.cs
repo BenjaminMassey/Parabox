@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 using UnityStandardAssets.Characters.FirstPerson;
 
@@ -11,6 +12,9 @@ public class ReverseTime : MonoBehaviour
     // Will only be keeping position-over-time info of objects placed into reversables
     // Will get position of every reversable 50 times each second (FixedUpdate)
     // Reversing time handled in coroutine, see Reverse()
+
+    // VISUAL FX
+    public GameObject globalPostVolume; // holds our post processing
 
     // SOUND FX
     public AudioSource s_reverseTime;
@@ -159,11 +163,12 @@ public class ReverseTime : MonoBehaviour
             // that number, and work our way down to zero
 
         // Setup
-        GameObject.Find("Text").GetComponent<Text>().text = "REVERSING TIME";
+        //GameObject.Find("Text").GetComponent<Text>().text = "REVERSING TIME";
         timeFoward = false;
         s_reverseTime.Play();
         FreezePlayer(true);
         startAlwaysVisible();
+        StartCoroutine("EnablePostProcessing");
 
         // Drop object if one is being held
         Pickup p = GameObject.Find("Camera").GetComponent<Pickup>();
@@ -260,15 +265,16 @@ public class ReverseTime : MonoBehaviour
         }
 
         stopAlwaysVisible();
+        StartCoroutine("DisablePostProcessing");
 
-        GameObject.Find("Text").GetComponent<Text>().text = "Done!";
+        //GameObject.Find("Text").GetComponent<Text>().text = "Done!";
 
         s_reverseTimeB.Play();
 
         yield return new WaitForSeconds(1.0f); // just an extra second of frozen since I think it's nice
         // Note: objects will do their physics from their original position
 
-        GameObject.Find("Text").GetComponent<Text>().text = "";
+        //GameObject.Find("Text").GetComponent<Text>().text = "";
         timeFoward = true;
         FreezePlayer(false);
     }
@@ -316,6 +322,31 @@ public class ReverseTime : MonoBehaviour
 
         }
     }
+
+    IEnumerator EnablePostProcessing()
+    {
+        PostProcessVolume ppv = globalPostVolume.GetComponent<PostProcessVolume>();
+        ppv.weight = 0;
+        for (int i = 0; i < 10; i++)
+        {
+            ppv.weight += (1f / 10f);
+            yield return new WaitForFixedUpdate();
+        }
+        ppv.weight = 1;
+    }
+
+    IEnumerator DisablePostProcessing()
+    {
+        PostProcessVolume ppv = globalPostVolume.GetComponent<PostProcessVolume>();
+        ppv.weight = 1;
+        for (int i = 0; i < 10; i++)
+        {
+            ppv.weight -= (1f / 10f);
+            yield return new WaitForFixedUpdate();
+        }
+        ppv.weight = 0;
+    }
+
 
     public bool GetTimeForward()
     {

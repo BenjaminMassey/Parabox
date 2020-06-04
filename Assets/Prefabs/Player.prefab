@@ -445,6 +445,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424a7191bf7e0c94ebe8c0b8ab302784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  globalPostVolume: {fileID: 3141037826754215052}
   s_reverseTime: {fileID: 5113333289639194041}
   s_reverseTimeB: {fileID: 9180684198284637932}
   AlwaysVisibleShader: {fileID: 4800000, guid: c6bfa8e864336c842bab42ec92ba47be, type: 3}
