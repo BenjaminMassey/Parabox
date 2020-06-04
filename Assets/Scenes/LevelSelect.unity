@@ -473,7 +473,7 @@ TextMesh:
   m_FontSize: 500
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -494,7 +494,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -523,7 +523,7 @@ Transform:
   m_GameObject: {fileID: 278628009}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -3.5, y: 5, z: 5}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.045, y: 0.045, z: 0.045}
   m_Children: []
   m_Father: {fileID: 1684977920}
   m_RootOrder: 0
@@ -818,7 +818,7 @@ Transform:
   m_GameObject: {fileID: 467587327}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 13.5, y: 1, z: 5}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.045, y: 0.045, z: 0.045}
   m_Children: []
   m_Father: {fileID: 16916256}
   m_RootOrder: 0
@@ -841,7 +841,7 @@ TextMesh:
   m_FontSize: 500
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -862,7 +862,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1627,7 +1627,7 @@ Transform:
   m_GameObject: {fileID: 1069465069}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 13.5, y: 5, z: 5}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.045, y: 0.045, z: 0.045}
   m_Children: []
   m_Father: {fileID: 2074643263}
   m_RootOrder: 0
@@ -1650,7 +1650,7 @@ TextMesh:
   m_FontSize: 500
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -1671,7 +1671,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1815,7 +1815,7 @@ Transform:
   m_GameObject: {fileID: 1161068299}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -3.5, y: 1, z: 5}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.045, y: 0.045, z: 0.045}
   m_Children: []
   m_Father: {fileID: 135641121}
   m_RootOrder: 0
@@ -1838,7 +1838,7 @@ TextMesh:
   m_FontSize: 500
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -1859,7 +1859,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2240,7 +2240,7 @@ Transform:
   m_GameObject: {fileID: 1779264374}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 5, y: -7, z: 5}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.045, y: 0.045, z: 0.045}
   m_Children: []
   m_Father: {fileID: 540471758}
   m_RootOrder: 0
@@ -2263,7 +2263,7 @@ TextMesh:
   m_FontSize: 500
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -2284,7 +2284,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2397,7 +2397,7 @@ Transform:
   m_GameObject: {fileID: 1937912768}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -3.5, y: -3, z: 5}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.045, y: 0.045, z: 0.045}
   m_Children: []
   m_Father: {fileID: 1367496652}
   m_RootOrder: 0
@@ -2420,7 +2420,7 @@ TextMesh:
   m_FontSize: 500
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -2441,7 +2441,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

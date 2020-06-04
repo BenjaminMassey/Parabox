@@ -61,6 +61,7 @@ public class FancyText : MonoBehaviour
 
         text.text = message;
 
+        
         // size correctly
         string[] lines = message.Split('\n');
         int numLines = lines.Length;
@@ -70,7 +71,7 @@ public class FancyText : MonoBehaviour
             maxLength = Mathf.Max(maxLength, line.Length);
         }
         RectTransform rt = bg.GetComponent<RectTransform>();
-        Vector2 size = new Vector3(30.0f, 110.0f); // 30px per char, 110px per line
+        Vector2 size = new Vector2(12.5f, 40.0f); // 60px per char, 110px per line
         size.x *= maxLength;
         size.y *= numLines;
         rt.sizeDelta = size;

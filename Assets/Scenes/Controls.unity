@@ -308,8 +308,8 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 278628009}
-  m_Text: "WASD: move\t\t\t\t\tMouse: look\nSpace: jump\t\t\t\t\tLeft-Click: pickup\nRight-Click:
-    freeze\t\t\tR: reverse-time\nG: restart-level\t\t\t\t\tM: main-menu"
+  m_Text: "WASD: move\t\t\t\tMouse: look\nSpace: jump\t\t\t\tLeft-Click: pickup\nRight-Click:
+    freeze\t\tR: reverse-time\nG: restart-level\t\tM: main-menu"
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -319,7 +319,7 @@ TextMesh:
   m_FontSize: 500
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -340,7 +340,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -368,8 +368,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 278628009}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5, y: 1, z: 5}
-  m_LocalScale: {x: 0.04, y: 0.04, z: 0.04}
+  m_LocalPosition: {x: 5.01, y: 1, z: 5}
+  m_LocalScale: {x: 0.035, y: 0.035, z: 0.035}
   m_Children: []
   m_Father: {fileID: 1684977920}
   m_RootOrder: 0
@@ -1003,7 +1003,7 @@ Transform:
   m_GameObject: {fileID: 800712399}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 5, y: 1, z: 5}
-  m_LocalScale: {x: 40, y: 10, z: 1}
+  m_LocalScale: {x: 42, y: 10, z: 1}
   m_Children: []
   m_Father: {fileID: 1684977920}
   m_RootOrder: 1
@@ -1508,7 +1508,7 @@ Transform:
   m_GameObject: {fileID: 1779264374}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 5, y: -7, z: 5}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.045, y: 0.045, z: 0.045}
   m_Children: []
   m_Father: {fileID: 540471758}
   m_RootOrder: 0
@@ -1531,7 +1531,7 @@ TextMesh:
   m_FontSize: 500
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Font: {fileID: 12800000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
@@ -1552,7 +1552,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10100, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 605644387307d564e9a01ea7ad523e09, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
