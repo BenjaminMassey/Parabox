@@ -20,7 +20,7 @@ public class Highlighter : MonoBehaviour
     {
         highlightedObj = null;
         rt = GameObject.Find("Player").GetComponent<ReverseTime>();
-        pu = GameObject.Find("FirstPersonCharacter").GetComponent<Pickup>();
+        pu = GameObject.Find("Camera").GetComponent<Pickup>();
         forward = true;
         holding = false;
         highlightColor = new Color(0.25f, 0.25f, 0.25f, 0.0f);

@@ -165,7 +165,7 @@ public class ReverseTime : MonoBehaviour
         startAlwaysVisible();
 
         // Drop object if one is being held
-        Pickup p = GameObject.Find("FirstPersonCharacter").GetComponent<Pickup>();
+        Pickup p = GameObject.Find("Camera").GetComponent<Pickup>();
         if (p != null) { p.StopHolding(); }
 
         // Now we are going to cycle through all our captured frames

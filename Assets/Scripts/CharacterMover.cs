@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BenCharacter : MonoBehaviour
+public class CharacterMover : MonoBehaviour
 {
     // Currently our main script for movement
     // Applied on Player.prefab
