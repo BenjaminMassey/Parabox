@@ -304,17 +304,26 @@ public class ReverseTime : MonoBehaviour
         
         if (freeze)
         {
-            
+            // Player can no longer interact with objects
+            foreach (GameObject go in reversables)
+            {
+                go.layer = 11;
+            }
             rb.constraints = RigidbodyConstraints.FreezePosition;
             rb.isKinematic = true;
-            GetComponent<CapsuleCollider>().enabled = false;
+            //GetComponent<CapsuleCollider>().enabled = false;
         }
         else
         {
+            // Player can now interact with objects again
+            foreach (GameObject go in reversables)
+            {
+                go.layer = 0;
+            }
             rb.constraints = RigidbodyConstraints.None;
             rb.constraints = RigidbodyConstraints.FreezeRotation;
             rb.isKinematic = false;
-            GetComponent<CapsuleCollider>().enabled = true;
+            //GetComponent<CapsuleCollider>().enabled = true;
         }
     }
 
