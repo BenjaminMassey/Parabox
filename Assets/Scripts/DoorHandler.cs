@@ -25,6 +25,11 @@ public class DoorHandler : MonoBehaviour
     public void SubtractButton()
     {
         numPressed -= 1;
+        if (numPressed < 0)
+        {
+            Debug.Log("ERROR IN \"DoorHandler.SubtractButton()\"");
+            numPressed = 0;
+        }
     }
 
     public int GetNumPressed()
