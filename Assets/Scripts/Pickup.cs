@@ -74,7 +74,7 @@ public class Pickup : MonoBehaviour
         if (holding)
         {
             Vector3 spot = GlobalMethods.GetVectorInFront(transform, 3.0f);
-            GlobalMethods.VelocityMove(heldObj, spot, new Quaternion(0, 0, 0, 0), 0.1f);
+            GlobalMethods.VelocityMove(heldObj, spot, new Quaternion(0, 0, 0, 0), .3f);
             heldObj.transform.LookAt(transform);
         }
     }

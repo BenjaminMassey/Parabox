@@ -51,7 +51,7 @@ public class ButtonDetection : MonoBehaviour
             press = false;
             foreach (Collider col in cols)
             {
-                if (!col.gameObject.name.Equals("Button") && !col.gameObject.name.Contains("Floor"))
+                if (!col.gameObject.name.Equals("Button") && !col.gameObject.name.Contains("Floor") && !col.gameObject.name.Contains("Platform"))
                 {
                     press = true;
                     break;
@@ -75,8 +75,21 @@ public class ButtonDetection : MonoBehaviour
         transform.position = pressedPos;
         GetComponent<Renderer>().material = pressedMat;
         s_buttonDown.Play();
+        bool openDoor = false;
+        foreach (GameObject door in doors)
+        {
+            door.GetComponent<DoorHandler>().AddButton();
+            if (door.GetComponent<DoorHandler>().GetNumPressed() == 1)
+            {
+                openDoor = true; 
+            }
+        }
 
-        StartCoroutine("OpenDoor");
+        if (openDoor)
+        {
+            StartCoroutine("OpenDoor");
+        }
+
         
     }
 
@@ -86,8 +99,19 @@ public class ButtonDetection : MonoBehaviour
         transform.position = unpressedPos;
         GetComponent<Renderer>().material = unpressedMat;
         s_buttonUp.Play();
-
-        StartCoroutine("CloseDoor");
+        bool closeDoor = false;
+        foreach (GameObject door in doors)
+        {
+            door.GetComponent<DoorHandler>().SubtractButton();
+            if (door.GetComponent<DoorHandler>().GetNumPressed() == 0)
+            {
+                closeDoor = true;
+            }
+        }
+        if (closeDoor)
+        {
+            StartCoroutine("CloseDoor");
+        }
     }
 
     IEnumerator OpenDoor()
