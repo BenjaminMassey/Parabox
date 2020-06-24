@@ -105,6 +105,7 @@ MonoBehaviour:
   s_grab: {fileID: 566053856119840324}
   pickupPower: 0.3
   pusherPower: 0.1
+  VFX_ref: {fileID: 0}
 --- !u!82 &566053856119840324
 AudioSource:
   m_ObjectHideFlags: 0

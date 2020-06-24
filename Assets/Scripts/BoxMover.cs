@@ -13,6 +13,8 @@ public class BoxMover : MonoBehaviour
     public float pickupPower = 0.3f;
     public float pusherPower = 0.1f;
 
+    public GameObject VFX_ref;
+
     private bool grabbed; // whether player has grabbed something
     private GameObject movingObj; // what player is grabbed (null if nothing)
     private bool movingObjPush;
@@ -21,6 +23,7 @@ public class BoxMover : MonoBehaviour
     private float defaultMoveSpeed;
     private float defaultJumpForce;
     private bool forward; // time direction
+    private GameObject VFX;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +36,7 @@ public class BoxMover : MonoBehaviour
         defaultMoveSpeed = cm.moveSpeed;
         defaultJumpForce = cm.jumpForce;
         forward = true;
+        VFX = null;
     }
 
     // Update is called once per frame
@@ -63,6 +67,7 @@ public class BoxMover : MonoBehaviour
                         movingObj.layer = 8;
                         grabbed = true;
                         s_grab.Play();
+                        StartVFX();
                     }
                 }
 
@@ -82,6 +87,7 @@ public class BoxMover : MonoBehaviour
                     movingObj = null;
                     grabbed = false;
                     s_grab.Play();
+                    EndVFX();
                 }
             }
             if (grabbed)
@@ -104,6 +110,7 @@ public class BoxMover : MonoBehaviour
         Vector3 spot = GlobalMethods.GetVectorInFront(transform, 3.0f);
         GlobalMethods.VelocityMove(movingObj, spot, new Quaternion(0, 0, 0, 0), pickupPower);
         movingObj.transform.LookAt(transform);
+        UpdateVFX();
     }
 
     void HandlePushing()
@@ -112,6 +119,39 @@ public class BoxMover : MonoBehaviour
         Vector3 spot = GlobalMethods.GetVectorInFront(transform, 3.0f);
         spot = new Vector3(spot.x, movingObj.transform.position.y, spot.z); // preserve y coord
         GlobalMethods.VelocityMove(movingObj, spot, new Quaternion(0, 0, 0, 0), pusherPower);
+        UpdateVFX();
+    }
+
+    void StartVFX()
+    {
+        if (VFX_ref != null)
+        {
+            VFX = Instantiate(VFX_ref);
+            UpdateVFX();
+        }
+    }
+
+    void UpdateVFX()
+    {
+        if (VFX_ref != null)
+        {
+            Transform t = transform;
+            Vector3 origPos = t.position;
+            t.position = new Vector3(origPos.x, origPos.y - 1.0f, origPos.z);
+            VFX.transform.position = GlobalMethods.GetVectorInFront(t, 0.25f);
+            t.position = origPos;
+            Vector3 spot = GlobalMethods.GetVectorInFront(transform, 3.0f);
+            VFX.transform.LookAt(spot);
+        }
+    }
+
+    void EndVFX()
+    {
+        if (VFX_ref != null)
+        {
+            Destroy(VFX);
+            VFX = null;
+        }
     }
 
     public void StopGrabbing()
