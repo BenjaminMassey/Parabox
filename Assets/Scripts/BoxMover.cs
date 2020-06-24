@@ -53,7 +53,7 @@ public class BoxMover : MonoBehaviour
                         movingObjPush = obj.name.Contains("Push");
                         if (movingObjPush)
                         {
-                            cm.moveSpeed = defaultJumpForce / 2.0f;
+                            cm.moveSpeed = defaultJumpForce / 1.75f;
                             cm.jumpForce = 0.0f;
                         }
                         else
