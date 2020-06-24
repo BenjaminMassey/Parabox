@@ -13,7 +13,10 @@ public class Highlighter : MonoBehaviour
     private bool forward; // time direction
     private BoxMover bm; // reference to see if holding
     private bool holding; // whether player is holding an object
+    private Color origColor; // color before highlight
     private Color highlightColor; // how to graphically change highlighted object
+
+    private Color dummyColor = new Color(0.13f, 0.13f, 0.13f, 0.13f);
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +26,7 @@ public class Highlighter : MonoBehaviour
         bm = GameObject.Find("Camera").GetComponent<BoxMover>();
         forward = true;
         holding = false;
+        origColor = dummyColor;
         highlightColor = new Color(0.25f, 0.25f, 0.25f, 0.0f);
         InvokeRepeating("CheckHighlight", 0.0f, 1.0f / 15.0f);
     }
@@ -85,7 +89,12 @@ public class Highlighter : MonoBehaviour
             {
                 GameObject sidePart = side.GetComponent<Transform>().GetChild(sidePart_iter).gameObject;
                 Renderer r_sp = sidePart.GetComponent<Renderer>();
-                r_sp.material.SetColor("_Color", r_sp.material.color + highlightColor);
+                if (origColor == dummyColor)
+                {
+                    origColor = r_sp.material.GetColor("_BaseColor");
+                }
+                //r_sp.material.SetColor("_BaseColor", r_sp.material.color + highlightColor);
+                r_sp.material.SetColor("_BaseColor", origColor + highlightColor);
             }
         }
         highlightedObj = obj;
@@ -108,7 +117,8 @@ public class Highlighter : MonoBehaviour
             {
                 GameObject sidePart = side.GetComponent<Transform>().GetChild(sidePart_iter).gameObject;
                 Renderer r_sp = sidePart.GetComponent<Renderer>();
-                r_sp.material.SetColor("_Color", r_sp.material.color - highlightColor);
+                //r_sp.material.SetColor("_BaseColor", r_sp.material.color - highlightColor);
+                r_sp.material.SetColor("_BaseColor", origColor);
             }
         }
 
