@@ -38,6 +38,9 @@ public class ReverseTime : MonoBehaviour
     private List<(Vector3 pos, Quaternion rot)> starts; // starting positions of all reversables
     // see paths for structure
 
+    // Used as "null" spots in our data
+    private (Vector3 pos, Quaternion rot) dummy = (new Vector3(99.0f, 99.0f, 99.0f), new Quaternion(99.0f, 99.0f, 99.0f, 99.0f));
+
     // Start is called before the first frame update
     void Start()
     {
@@ -219,7 +222,7 @@ public class ReverseTime : MonoBehaviour
 
                 if (go != null && !go.tag.Equals("Frozen") && paths[go_iter].Count - 1 >= frame_iter)
                 {
-                    if (paths[go_iter][frame_iter].pos != new Vector3 (69.0f, 69.0f, 69.0f))
+                    if (paths[go_iter][frame_iter] != dummy)
                     {
                         datum = paths[go_iter][frame_iter]; // datum.pos will be pos, datum.rot will be rot
                         GlobalMethods.VelocityMove(go, datum.pos, datum.rot);
@@ -237,6 +240,17 @@ public class ReverseTime : MonoBehaviour
             
             frame_iter--;
         }
+        /*
+        // Clear paths: needs own loop
+        go_iter = 0;
+        foreach (GameObject go in reversables)
+        {
+            if (go != null && !go.tag.Equals("Frozen"))
+            {
+                paths[go_iter].Clear();
+            }
+        }
+        */
 
         // Reset things for our next time reversal
         go_iter = 0;
@@ -247,7 +261,7 @@ public class ReverseTime : MonoBehaviour
                 go.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 go.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
-                paths[go_iter].Clear(); // would rather have removed, see above
+                paths[go_iter].Clear();
 
                 // If close enough to previous start, then teleport there
                 float distToStart = Vector3.Distance(go.transform.position, starts[go_iter].pos);
@@ -268,11 +282,11 @@ public class ReverseTime : MonoBehaviour
                 {
                     max = Mathf.Max(max, paths[i].Count);
                 }
-                Debug.Log("Max: "+max);
+                Debug.Log("Max: " + max);
                 paths[go_iter].Add(starts[go_iter]);
                 for (int i = 0; i < max; i++)
                 {
-                    paths[go_iter].Add((new Vector3 (69.0f,69.0f,69.0f), new Quaternion (69.0f, 69.0f, 69.0f, 69.0f)));
+                    paths[go_iter].Add(dummy);
                 }
 
                 go.GetComponent<Rigidbody>().useGravity = true;
