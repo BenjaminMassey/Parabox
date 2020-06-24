@@ -360,15 +360,18 @@ public class ReverseTime : MonoBehaviour
     void startAlwaysVisible()
     {
         // Has the reversing objects highlighted/seen-thru-walls
+        /*
         foreach (GameObject go in reversables)
         {
             go.GetComponent<Renderer>().sharedMaterial.shader = AlwaysVisibleShader;
         }
+        */
     }
 
     void stopAlwaysVisible()
     {
         // Stops the reversing objects highlighted/seen-thru-walls
+        /*
         foreach (GameObject go in reversables)
         {
             go.GetComponent<Renderer>().sharedMaterial.shader = Shader.Find("Standard");
@@ -376,6 +379,7 @@ public class ReverseTime : MonoBehaviour
             go.GetComponent<Renderer>().sharedMaterial.renderQueue = 3000;
 
         }
+        */
     }
 
     IEnumerator EnablePostProcessing()
