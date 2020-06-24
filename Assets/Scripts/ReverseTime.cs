@@ -183,8 +183,8 @@ public class ReverseTime : MonoBehaviour
         StartCoroutine("EnablePostProcessing");
 
         // Drop object if one is being held
-        Pickup p = GameObject.Find("Camera").GetComponent<Pickup>();
-        if (p != null) { p.StopHolding(); }
+        BoxMover p = GameObject.Find("Camera").GetComponent<BoxMover>();
+        if (p != null) { p.StopGrabbing(); }
 
         // Now we are going to cycle through all our captured frames
         //  to go back through what happened in time

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pickup : MonoBehaviour
+public class Pusher : MonoBehaviour
 {
     // Allows the player to pickup boxes
     // Should be attached to camera-containing sub-object of Player.prefab
@@ -29,7 +29,7 @@ public class Pickup : MonoBehaviour
         forward = rt.GetTimeForward();
         if (forward)
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0) || TooFar())
+            if (Input.GetKeyDown(KeyCode.E) || TooFar())
             {
                 if (!holding)
                 {

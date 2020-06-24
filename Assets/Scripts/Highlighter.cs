@@ -11,7 +11,7 @@ public class Highlighter : MonoBehaviour
     private GameObject highlightedObj; // what object is being highlighted (null if nothing)
     private ReverseTime rt; // reference to see time direction
     private bool forward; // time direction
-    private Pickup pu; // reference to see if holding
+    private BoxMover bm; // reference to see if holding
     private bool holding; // whether player is holding an object
     private Color highlightColor; // how to graphically change highlighted object
 
@@ -20,7 +20,7 @@ public class Highlighter : MonoBehaviour
     {
         highlightedObj = null;
         rt = GameObject.Find("Player").GetComponent<ReverseTime>();
-        pu = GameObject.Find("Camera").GetComponent<Pickup>();
+        bm = GameObject.Find("Camera").GetComponent<BoxMover>();
         forward = true;
         holding = false;
         highlightColor = new Color(0.25f, 0.25f, 0.25f, 0.0f);
@@ -32,15 +32,15 @@ public class Highlighter : MonoBehaviour
         forward = rt.GetTimeForward();
         if (forward)
         {
-            if (pu != null)
+            if (bm != null)
             {
-                holding = pu.IsHolding();
+                holding = bm.HasGrabbed();
             }
             if (holding)
             {
                 if (highlightedObj == null)
                 {
-                    Highlight(pu.getHeldObj());
+                    Highlight(bm.GetMovingObj());
                 }
             }
             else if (!holding)
