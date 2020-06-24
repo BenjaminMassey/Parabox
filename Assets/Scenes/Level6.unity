@@ -262,7 +262,7 @@ PrefabInstance:
     - target: {fileID: 7457205069976534821, guid: 2e27bfdbacf14a340bd6c9e208a026c7,
         type: 3}
       propertyPath: m_Name
-      value: Push Box Left
+      value: Push Box Right
       objectReference: {fileID: 0}
     - target: {fileID: 7457205069976534824, guid: 2e27bfdbacf14a340bd6c9e208a026c7,
         type: 3}
@@ -2007,7 +2007,7 @@ PrefabInstance:
     - target: {fileID: 7457205069976534821, guid: 2e27bfdbacf14a340bd6c9e208a026c7,
         type: 3}
       propertyPath: m_Name
-      value: Push Box Right
+      value: Push Box Left
       objectReference: {fileID: 0}
     - target: {fileID: 7457205069976534824, guid: 2e27bfdbacf14a340bd6c9e208a026c7,
         type: 3}

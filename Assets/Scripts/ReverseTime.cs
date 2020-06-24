@@ -41,6 +41,8 @@ public class ReverseTime : MonoBehaviour
     // Used as "null" spots in our data
     private (Vector3 pos, Quaternion rot) dummy = (new Vector3(99.0f, 99.0f, 99.0f), new Quaternion(99.0f, 99.0f, 99.0f, 99.0f));
 
+    private bool keep_time;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -62,6 +64,9 @@ public class ReverseTime : MonoBehaviour
             i++;
         }
 
+        keep_time = false;
+        StartCoroutine("KeepTimeDelay");
+
         stopAlwaysVisible();
     }
 
@@ -80,6 +85,10 @@ public class ReverseTime : MonoBehaviour
     // 30 times a second
     void FixedUpdate()
     {
+        if (!keep_time)
+        {
+            return;
+        }
         // While time is forward, will keep track of all movement
         if (timeFoward)
         {
@@ -117,7 +126,7 @@ public class ReverseTime : MonoBehaviour
                     {
                         instance = (go.transform.position, go.transform.rotation);
                         paths[j].Add(instance);
-                        //Debug.Log("storing " + paths[j].Count);
+                        Debug.Log("storing for \"" + go.name + "\" (count " + paths[j].Count + ")");
                     }
                     j++;
                 }
@@ -240,17 +249,21 @@ public class ReverseTime : MonoBehaviour
             
             frame_iter--;
         }
-        /*
-        // Clear paths: needs own loop
+
+        // Clear paths: needs own loop (also grab max while at it)
+        int max_paths_size = 0;
         go_iter = 0;
         foreach (GameObject go in reversables)
         {
             if (go != null && !go.tag.Equals("Frozen"))
             {
+                Debug.Log("clear");
                 paths[go_iter].Clear();
             }
+            max_paths_size = Mathf.Max(max_paths_size, paths[go_iter].Count);
+            go_iter++;
         }
-        */
+        Debug.Log("Max: " + max_paths_size);
 
         // Reset things for our next time reversal
         go_iter = 0;
@@ -261,7 +274,7 @@ public class ReverseTime : MonoBehaviour
                 go.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 go.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
-                paths[go_iter].Clear();
+                //paths[go_iter].Clear(); MOVED TO BEFORE
 
                 // If close enough to previous start, then teleport there
                 float distToStart = Vector3.Distance(go.transform.position, starts[go_iter].pos);
@@ -269,22 +282,17 @@ public class ReverseTime : MonoBehaviour
                 {
                     go.transform.position = starts[go_iter].pos;
                     go.transform.rotation = starts[go_iter].rot;
-                    Debug.Log("object" + go + "returned to location" + starts[go_iter].pos);
+                    //Debug.Log("object" + go + "returned to location" + starts[go_iter].pos);
                 }
 
                 // Store our new start (should be the same if above happened)
                 (Vector3 pos, Quaternion rot) currSpot = (go.transform.position, go.transform.rotation);
 
                 starts[go_iter] = currSpot;
-                Debug.Log("object" + go + "now starts at location" + starts[go_iter].pos);
-                int max = 0;
-                for (int i = 0; i < reversables.Length; i++)
-                {
-                    max = Mathf.Max(max, paths[i].Count);
-                }
-                Debug.Log("Max: " + max);
+                //Debug.Log("object" + go + "now starts at location" + starts[go_iter].pos);
+                
                 paths[go_iter].Add(starts[go_iter]);
-                for (int i = 0; i < max; i++)
+                for (int i = 0; i < max_paths_size; i++)
                 {
                     paths[go_iter].Add(dummy);
                 }
@@ -307,6 +315,14 @@ public class ReverseTime : MonoBehaviour
         //GameObject.Find("Text").GetComponent<Text>().text = "";
         timeFoward = true;
         FreezePlayer(false);
+
+        go_iter = 0;
+        foreach (GameObject go in reversables)
+        {
+            Debug.Log("Size [" + go_iter + "]: " + paths[go_iter].Count);
+            go_iter++;
+        }
+
     }
 
     void FreezePlayer(bool freeze)
@@ -386,6 +402,19 @@ public class ReverseTime : MonoBehaviour
         ppv.weight = 0;
     }
 
+    // TODO: this shouldn't be needed with correct logic,
+        // but for some reason there are around ~20 dummy
+        // frames upon game start (which are ignored, but
+        // they are scary so don't want them at all)
+    IEnumerator KeepTimeDelay()
+    {
+        for (int _ = 0; _ < 25; _++)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        keep_time = true;
+        Debug.Log("Keeping time as of now!");
+    }
 
     public bool GetTimeForward()
     {
