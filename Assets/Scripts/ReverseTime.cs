@@ -180,8 +180,8 @@ public class ReverseTime : MonoBehaviour
         timeFoward = false;
         s_reverseTime.Play();
         FreezePlayer(true);
-        
-        StartCoroutine("EnablePostProcessing");
+
+        SetVFX(true);
 
         // Drop object if one is being held
         BoxMover p = GameObject.Find("Camera").GetComponent<BoxMover>();
@@ -302,8 +302,6 @@ public class ReverseTime : MonoBehaviour
             }
             go_iter++;
         }
-        
-        StartCoroutine("DisablePostProcessing");
 
         //GameObject.Find("Text").GetComponent<Text>().text = "Done!";
 
@@ -316,12 +314,7 @@ public class ReverseTime : MonoBehaviour
         timeFoward = true;
         FreezePlayer(false);
 
-        go_iter = 0;
-        foreach (GameObject go in reversables)
-        {
-            Debug.Log("Size [" + go_iter + "]: " + paths[go_iter].Count);
-            go_iter++;
-        }
+        SetVFX(false);
 
     }
 
@@ -354,6 +347,27 @@ public class ReverseTime : MonoBehaviour
             rb.constraints = RigidbodyConstraints.FreezeRotation;
             rb.isKinematic = false;
             //GetComponent<CapsuleCollider>().enabled = true;
+        }
+    }
+
+    void SetVFX(bool VFX_on)
+    {
+        // Trail effect
+        foreach (GameObject go in reversables)
+        {
+            TrailRenderer TR = go.GetComponent<TrailRenderer>();
+            if (TR != null)
+            {
+                TR.enabled = VFX_on;
+            }
+        }
+        if (VFX_on)
+        {
+            StartCoroutine("EnablePostProcessing");
+        }
+        else
+        {
+            StartCoroutine("DisablePostProcessing");
         }
     }
 
