@@ -20,11 +20,12 @@ public class ReverseTime : MonoBehaviour
     public AudioSource s_reverseTime;
     public AudioSource s_reverseTimeB;
 
+    public Material brown_mat;
+    public Material clearbrown_mat;
+
     // Attached to player
     
     private GameObject[] reversables; // list of everything we will try to reverse
-
-    private Shader[] origShaders; // original shaders to revert back to from AlwaysVisibleShader
 
     private bool timeFoward; // whether time is normal or being reversed
 
@@ -359,6 +360,15 @@ public class ReverseTime : MonoBehaviour
             if (TR != null)
             {
                 TR.enabled = VFX_on;
+            }
+            Renderer R = go.GetComponent<Renderer>();
+            if (VFX_on)
+            {
+                R.material = brown_mat;
+            }
+            else
+            {
+                R.material = clearbrown_mat;
             }
         }
         if (VFX_on)

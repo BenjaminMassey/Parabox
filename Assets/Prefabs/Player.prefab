@@ -456,6 +456,8 @@ MonoBehaviour:
   globalPostVolume: {fileID: 3141037826754215052}
   s_reverseTime: {fileID: 5113333289639194041}
   s_reverseTimeB: {fileID: 9180684198284637932}
+  brown_mat: {fileID: 2100000, guid: 629fb13f62a95b84fa871bae9dd8fba7, type: 2}
+  clearbrown_mat: {fileID: 2100000, guid: e96299186de98f14fa656286f0449f1a, type: 2}
 --- !u!82 &5113333289639194041
 AudioSource:
   m_ObjectHideFlags: 0
