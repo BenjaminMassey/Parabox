@@ -24,6 +24,7 @@ public class GeneralHandling : MonoBehaviour
             FancyTextHandler.Message("Mouse Is Free", 10, true);
         }
         */
+        /* HANDLED VIA PAUSE MENU
         if (Input.GetKeyDown(KeyCode.G))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -34,5 +35,6 @@ public class GeneralHandling : MonoBehaviour
             TimeKeep.first = true; // workaround for timer
             SceneManager.LoadScene("MainMenu");
         }
+        */
     }
 }
