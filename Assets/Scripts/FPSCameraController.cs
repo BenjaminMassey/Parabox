@@ -6,7 +6,10 @@ public class FPSCameraController : MonoBehaviour
 {
     public Transform player;
 
-    public float mouseSensitivity = 10.0f;
+    public float EditorMouseSensitivity = 1.0f;
+    public float ReleaseMouseSensitivity = 0.35f;
+
+    private float mouseSensitivity;
 
     private float mouseX;
     private float mouseY;
@@ -18,6 +21,15 @@ public class FPSCameraController : MonoBehaviour
     {
         active = true;
         Cursor.lockState = CursorLockMode.Locked;
+
+        if (Application.platform.Equals(RuntimePlatform.WindowsEditor))
+        {
+            mouseSensitivity = EditorMouseSensitivity;
+        }
+        else
+        {
+            mouseSensitivity = ReleaseMouseSensitivity;
+        }
     }
 
     private void Update()
@@ -50,4 +62,14 @@ public class FPSCameraController : MonoBehaviour
 
     // http://answers.unity.com/answers/1681937/view.html
     bool IsMouseOverGameWindow { get { return !(0 > Input.mousePosition.x || 0 > Input.mousePosition.y || Screen.width < Input.mousePosition.x || Screen.height < Input.mousePosition.y); } }
+
+    public float GetMouseSens()
+    {
+        return mouseSensitivity;
+    }
+
+    public void SetMouseSens(float s)
+    {
+        mouseSensitivity = s;
+    }
 }

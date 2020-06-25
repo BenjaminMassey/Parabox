@@ -30,7 +30,7 @@ public class PauseMenu : MonoBehaviour
 
         defaultMoveSpeed = cm.moveSpeed;
         defaultJumpForce = cm.jumpForce;
-        defaultMouseSens = cc.mouseSensitivity;
+        defaultMouseSens = cc.GetMouseSens();
 
         SetUIComponents(false);
 
@@ -95,13 +95,13 @@ public class PauseMenu : MonoBehaviour
         {
             cm.moveSpeed = defaultMoveSpeed;
             cm.jumpForce = defaultJumpForce;
-            cc.mouseSensitivity = defaultMouseSens;
+            cc.SetMouseSens(defaultMouseSens);
         }
         else
         {
             cm.moveSpeed = 0.0f;
             cm.jumpForce = 0.0f;
-            cc.mouseSensitivity = 0.0f;
+            cc.SetMouseSens(0.0f);
         }
     }
 
