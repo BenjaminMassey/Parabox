@@ -71,4 +71,9 @@ public class Freezer : MonoBehaviour
             }
         }
     }
+
+    public Color GetFrozenColor()
+    {
+        return frozenColor;
+    }
 }

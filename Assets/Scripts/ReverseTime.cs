@@ -370,6 +370,12 @@ public class ReverseTime : MonoBehaviour
             {
                 R.material = clearbrown_mat;
             }
+            if (go.tag.Equals("Frozen"))
+            {
+                Color currColor = R.material.GetColor("_BaseColor");
+                Freezer f = GameObject.Find("Camera").GetComponent<Freezer>();
+                R.material.SetColor("_BaseColor", currColor + f.GetFrozenColor());
+            }
         }
         if (VFX_on)
         {
