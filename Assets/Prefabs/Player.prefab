@@ -105,7 +105,12 @@ MonoBehaviour:
   s_grab: {fileID: 566053856119840324}
   pickupPower: 0.3
   pusherPower: 0.1
-  VFX_ref: {fileID: 0}
+  VFX_lightning_ref: {fileID: 8189347097623005334, guid: bf6a091ae59dc98498966f0ef2282f43,
+    type: 3}
+  VFX_box_glowing_ref: {fileID: 8189347097623005334, guid: 34d22d76a639e264589c0b90ac7ad527,
+    type: 3}
+  VFX_pushbox_glowing_ref: {fileID: 8189347097623005334, guid: 58e219e460195b04589b251d599803e1,
+    type: 3}
 --- !u!82 &566053856119840324
 AudioSource:
   m_ObjectHideFlags: 0
@@ -451,7 +456,6 @@ MonoBehaviour:
   globalPostVolume: {fileID: 3141037826754215052}
   s_reverseTime: {fileID: 5113333289639194041}
   s_reverseTimeB: {fileID: 9180684198284637932}
-  AlwaysVisibleShader: {fileID: 4800000, guid: c6bfa8e864336c842bab42ec92ba47be, type: 3}
 --- !u!82 &5113333289639194041
 AudioSource:
   m_ObjectHideFlags: 0

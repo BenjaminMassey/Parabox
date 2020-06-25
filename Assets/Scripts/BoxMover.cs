@@ -13,7 +13,9 @@ public class BoxMover : MonoBehaviour
     public float pickupPower = 0.3f;
     public float pusherPower = 0.1f;
 
-    public GameObject VFX_ref;
+    public GameObject VFX_lightning_ref;
+    public GameObject VFX_box_glowing_ref;
+    public GameObject VFX_pushbox_glowing_ref;
 
     private bool grabbed; // whether player has grabbed something
     private GameObject movingObj; // what player is grabbed (null if nothing)
@@ -23,7 +25,8 @@ public class BoxMover : MonoBehaviour
     private float defaultMoveSpeed;
     private float defaultJumpForce;
     private bool forward; // time direction
-    private GameObject VFX;
+    private GameObject VFX_lightning;
+    private GameObject VFX_glowing;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +39,8 @@ public class BoxMover : MonoBehaviour
         defaultMoveSpeed = cm.moveSpeed;
         defaultJumpForce = cm.jumpForce;
         forward = true;
-        VFX = null;
+        VFX_lightning = null;
+        VFX_glowing = null;
     }
 
     // Update is called once per frame
@@ -124,33 +128,54 @@ public class BoxMover : MonoBehaviour
 
     void StartVFX()
     {
-        if (VFX_ref != null)
+        if (VFX_lightning_ref != null)
         {
-            VFX = Instantiate(VFX_ref);
-            UpdateVFX();
+            VFX_lightning = Instantiate(VFX_lightning_ref);
         }
+        if (VFX_box_glowing_ref != null && VFX_pushbox_glowing_ref != null)
+        {
+            if (movingObjPush)
+            {
+                VFX_glowing = Instantiate(VFX_pushbox_glowing_ref);
+            }
+            else
+            {
+                VFX_glowing = Instantiate(VFX_box_glowing_ref);
+            }
+        }
+        UpdateVFX();
     }
 
     void UpdateVFX()
     {
-        if (VFX_ref != null)
+        if (VFX_lightning_ref != null)
         {
             Transform t = transform;
             Vector3 origPos = t.position;
-            t.position = new Vector3(origPos.x, origPos.y - 1.0f, origPos.z);
-            VFX.transform.position = GlobalMethods.GetVectorInFront(t, 0.25f);
+            t.position = new Vector3(origPos.x, origPos.y - 0.5f, origPos.z);
+            VFX_lightning.transform.position = GlobalMethods.GetVectorInFront(t, 1.5f);
             t.position = origPos;
-            Vector3 spot = GlobalMethods.GetVectorInFront(transform, 3.0f);
-            VFX.transform.LookAt(spot);
+            //Vector3 spot = GlobalMethods.GetVectorInFront(transform, 3.0f);
+            //VFX.transform.LookAt(spot);
+            VFX_lightning.transform.LookAt(movingObj.transform);
+        }
+        if (VFX_box_glowing_ref != null && VFX_pushbox_glowing_ref != null)
+        {
+            VFX_glowing.transform.position = movingObj.transform.position;
         }
     }
 
     void EndVFX()
     {
-        if (VFX_ref != null)
+        if (VFX_lightning_ref != null)
         {
-            Destroy(VFX);
-            VFX = null;
+            Destroy(VFX_lightning);
+            VFX_lightning = null;
+        }
+        if (VFX_box_glowing_ref != null && VFX_pushbox_glowing_ref != null)
+        {
+            Destroy(VFX_glowing);
+            VFX_glowing = null;
         }
     }
 
