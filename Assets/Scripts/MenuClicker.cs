@@ -37,7 +37,7 @@ public class MenuClicker : MonoBehaviour
                     obj = objectHit;
                     if (objectHit.name.Contains("Box"))
                     {
-                        objectHit.gameObject.GetComponent<Renderer>().material.color = new Color(1.0f, 0.0f, 0.0f);
+                        objectHit.gameObject.GetComponent<Renderer>().material.SetColor("_BaseColor", new Color(1.0f, 0.0f, 0.0f));
                     }
                     if (objectHit.name.Contains("New Game"))
                     {
@@ -72,13 +72,13 @@ public class MenuClicker : MonoBehaviour
 
     IEnumerator Press()
     {
-        Color orig_col = obj.GetComponent<Renderer>().material.color;
+        Color orig_col = obj.GetComponent<Renderer>().material.GetColor("_BaseColor");
         Color new_col = Color.white;
         // Click highlight
-        obj.GetComponent<Renderer>().material.color = new_col;
+        obj.GetComponent<Renderer>().material.SetColor("_BaseColor", new_col);
         yield return new WaitForSecondsRealtime(1.0f / 10.0f);
         // Click unhighlight
-        obj.GetComponent<Renderer>().material.color = orig_col;
+        obj.GetComponent<Renderer>().material.SetColor("_BaseColor", orig_col);
         yield return new WaitForSecondsRealtime(1.0f / 10.0f);
         if (lvlname.Equals("Tutorial"))
         {
