@@ -1072,7 +1072,7 @@ PrefabInstance:
     - target: {fileID: 8846668530234234500, guid: 7fcb6841fbf4e974b9f6dd5597ff914b,
         type: 3}
       propertyPath: text
-      value: Just in case,<br>you can press G<br>to reset the level
+      value: If you need to reset,<br>use the pause menu by<br>pressing Escape
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7fcb6841fbf4e974b9f6dd5597ff914b, type: 3}

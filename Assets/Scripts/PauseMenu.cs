@@ -8,7 +8,9 @@ public class PauseMenu : MonoBehaviour
 {
     // Attached to canvas of pause menu
 
-    public KeyCode PauseKey;
+    public KeyCode DebugPauseKey;
+
+    private KeyCode PauseKey;
 
     private bool paused;
 
@@ -31,11 +33,21 @@ public class PauseMenu : MonoBehaviour
         defaultMouseSens = cc.mouseSensitivity;
 
         SetUIComponents(false);
+
+        if (Application.platform.Equals(RuntimePlatform.WindowsEditor))
+        {
+            PauseKey = DebugPauseKey;
+        }
+        else
+        {
+            PauseKey = KeyCode.Escape;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         if (Input.GetKeyDown(PauseKey))
         {
             TogglePause();
