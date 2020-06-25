@@ -21,8 +21,6 @@ public class ReverseTime : MonoBehaviour
     public AudioSource s_reverseTimeB;
 
     // Attached to player
-
-    public Shader AlwaysVisibleShader; // used for highlighted/see-thru-walls effect
     
     private GameObject[] reversables; // list of everything we will try to reverse
 
@@ -48,6 +46,11 @@ public class ReverseTime : MonoBehaviour
     {
         reversables = GlobalMethods.GetReversables();
 
+        foreach (GameObject go in reversables)
+        {
+            go.layer = 0;
+        }
+
         timeFoward = true;
         paths = new List<(Vector3 pos, Quaternion rot)>[reversables.Length];
         starts = new List<(Vector3 pos, Quaternion rot)>(reversables.Length);
@@ -66,8 +69,6 @@ public class ReverseTime : MonoBehaviour
 
         keep_time = false;
         StartCoroutine("KeepTimeDelay");
-
-        stopAlwaysVisible();
     }
 
     // Every frame
@@ -179,7 +180,7 @@ public class ReverseTime : MonoBehaviour
         timeFoward = false;
         s_reverseTime.Play();
         FreezePlayer(true);
-        startAlwaysVisible();
+        
         StartCoroutine("EnablePostProcessing");
 
         // Drop object if one is being held
@@ -301,8 +302,7 @@ public class ReverseTime : MonoBehaviour
             }
             go_iter++;
         }
-
-        stopAlwaysVisible();
+        
         StartCoroutine("DisablePostProcessing");
 
         //GameObject.Find("Text").GetComponent<Text>().text = "Done!";
@@ -357,31 +357,6 @@ public class ReverseTime : MonoBehaviour
         }
     }
 
-    void startAlwaysVisible()
-    {
-        // Has the reversing objects highlighted/seen-thru-walls
-        /*
-        foreach (GameObject go in reversables)
-        {
-            go.GetComponent<Renderer>().sharedMaterial.shader = AlwaysVisibleShader;
-        }
-        */
-    }
-
-    void stopAlwaysVisible()
-    {
-        // Stops the reversing objects highlighted/seen-thru-walls
-        /*
-        foreach (GameObject go in reversables)
-        {
-            go.GetComponent<Renderer>().sharedMaterial.shader = Shader.Find("Standard");
-            go.GetComponent<Renderer>().sharedMaterial.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-            go.GetComponent<Renderer>().sharedMaterial.renderQueue = 3000;
-
-        }
-        */
-    }
-
     IEnumerator EnablePostProcessing()
     {
         PostProcessVolume ppv = globalPostVolume.GetComponent<PostProcessVolume>();
@@ -423,10 +398,5 @@ public class ReverseTime : MonoBehaviour
     public bool GetTimeForward()
     {
         return timeFoward;
-    }
-
-    private void OnApplicationQuit()
-    {
-        stopAlwaysVisible();
     }
 }

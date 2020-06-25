@@ -1403,7 +1403,7 @@ GameObject:
   - component: {fileID: 7457205069976534826}
   - component: {fileID: 7457205069976534827}
   - component: {fileID: 7457205069976534820}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1455,7 +1455,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e96299186de98f14fa656286f0449f1a, type: 2}
+  - {fileID: 2100000, guid: 629fb13f62a95b84fa871bae9dd8fba7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
