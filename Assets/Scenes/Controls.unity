@@ -400,7 +400,7 @@ TextMesh:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 278628009}
   m_Text: "WASD: move\t\t\t\tMouse: look\nSpace: jump\t\t\t\tLeft-Click: move box\nRight-Click:
-    freeze\t\tR: reverse time\nEscape: pause menu"
+    freeze\t\tR: reverse time\nP: pause menu"
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1.2

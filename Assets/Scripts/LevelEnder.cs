@@ -17,7 +17,7 @@ public class LevelEnder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P)) // for debugging
+        if (Input.GetKeyDown(KeyCode.Semicolon)) // for debugging
         {
             NextLevel();
         }

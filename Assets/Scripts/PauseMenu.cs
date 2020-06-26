@@ -40,7 +40,7 @@ public class PauseMenu : MonoBehaviour
         }
         else
         {
-            PauseKey = KeyCode.Escape;
+            PauseKey = KeyCode.P;
         }
     }
 
@@ -109,6 +109,7 @@ public class PauseMenu : MonoBehaviour
 
     public void ResetLevel()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
