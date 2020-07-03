@@ -86,6 +86,11 @@ public class PauseMenu : MonoBehaviour
             {
                 c.GetComponent<Text>().enabled = on;
             }
+            if (c.name.Contains("Button"))
+            {
+                c.GetComponent<Button>().enabled = on;
+                c.GetComponent<Image>().enabled = on;
+            }
         }
     }
 

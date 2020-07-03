@@ -1099,7 +1099,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85cd6121d0830c46a847b4df76383fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DebugPauseKey: 8
+  DebugPauseKey: 112
 --- !u!1 &8874522422919731621
 GameObject:
   m_ObjectHideFlags: 0
