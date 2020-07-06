@@ -189,6 +189,7 @@ public class BoxMover : MonoBehaviour
                 movingObj.gameObject.GetComponent<Rigidbody>().useGravity = true;
             }
             movingObj = null;
+            EndVFX();
         }
     }
 

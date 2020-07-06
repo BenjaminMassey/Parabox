@@ -128,7 +128,7 @@ public class ReverseTime : MonoBehaviour
                     {
                         instance = (go.transform.position, go.transform.rotation);
                         paths[j].Add(instance);
-                        Debug.Log("storing for \"" + go.name + "\" (count " + paths[j].Count + ")");
+                        //Debug.Log("storing for \"" + go.name + "\" (count " + paths[j].Count + ")");
                     }
                     j++;
                 }
@@ -185,8 +185,8 @@ public class ReverseTime : MonoBehaviour
         SetVFX(true);
 
         // Drop object if one is being held
-        BoxMover p = GameObject.Find("Camera").GetComponent<BoxMover>();
-        if (p != null) { p.StopGrabbing(); }
+        BoxMover bm = GameObject.Find("Camera").GetComponent<BoxMover>();
+        if (bm != null) { bm.StopGrabbing(); }
 
         // Now we are going to cycle through all our captured frames
         //  to go back through what happened in time
@@ -428,5 +428,39 @@ public class ReverseTime : MonoBehaviour
     public bool GetTimeForward()
     {
         return timeFoward;
+    }
+
+    // Below func could prob be used in place of reuse elswhere
+    // Used by TimeLimit.cs
+    public int GetNumFramesRecorded()
+    {
+        int max_paths_size = 0;
+        int go_iter = 0;
+        foreach (GameObject go in reversables)
+        {
+            max_paths_size = Mathf.Max(max_paths_size, paths[go_iter].Count);
+            go_iter++;
+        }
+        return max_paths_size;
+    }
+
+    // Used by TimeLimit.cs
+    public IEnumerator Warning()
+    {
+        SetVFX(true);
+        for (int i = 0; i < 25; i++)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        SetVFX(false);
+    }
+
+    public void OutsideReverse()
+    {
+        if (timeFoward)
+        {
+            StopAllCoroutines();
+            StartCoroutine("Reverse");
+        }
     }
 }

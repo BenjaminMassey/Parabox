@@ -329,7 +329,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1508961077323631147}
-  mouseSensitivity: 0.75
+  EditorMouseSensitivity: 1
+  ReleaseMouseSensitivity: 0.35
 --- !u!114 &9132879859403543853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -418,6 +419,7 @@ GameObject:
   - component: {fileID: 3998340925480035055}
   - component: {fileID: 5045818602755269235}
   - component: {fileID: 5089736652800234294}
+  - component: {fileID: 5416668185970886620}
   m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
@@ -704,6 +706,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3daeae6ce50840743b49355081c55e07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5416668185970886620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1508961077323631151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c7e2e6ad50eb35499460b4e1aa7fadc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3141037826754215052

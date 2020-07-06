@@ -134,6 +134,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tutorial Trigger
       objectReference: {fileID: 0}
+    - target: {fileID: 8846668530234234503, guid: 7fcb6841fbf4e974b9f6dd5597ff914b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8846668530234234502, guid: 7fcb6841fbf4e974b9f6dd5597ff914b,
         type: 3}
       propertyPath: m_LocalPosition.x
