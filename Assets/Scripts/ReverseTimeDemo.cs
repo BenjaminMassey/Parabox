@@ -2,23 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 using UnityStandardAssets.Characters.FirstPerson;
-using UnityEngine.SceneManagement;
 
 public class ReverseTimeDemo : MonoBehaviour
 {
-    // Demo version of ReverseTime.cs
-    // Will reverse time every 12 seconds
-    // Put into MainMenu for effect
-    // An old version of time reversal, doesn't matter though
-    // Mainly ignore this script
+    // DEMO VERSION: simply reverses on a time loop
+    // Handles the main time travel mechanic
+    // Will only be keeping position-over-time info of objects placed into reversables
+    // Will get position of every reversable 50 times each second (FixedUpdate)
+    // Reversing time handled in coroutine, see Reverse()
 
-    public Shader AlwaysVisibleShader;
-    
-    private GameObject[] reversables;
+    public float demo_loop_time = 6.5f; // number of seconds before each reverse
 
-    private Shader[] origShaders;
+    public Material brown_mat;
+    public Material clearbrown_mat;
+
+    // Attached to player
+
+    private GameObject[] reversables; // list of everything we will try to reverse
 
     private bool timeFoward; // whether time is normal or being reversed
 
@@ -30,16 +33,26 @@ public class ReverseTimeDemo : MonoBehaviour
     private List<(Vector3 pos, Quaternion rot)> starts; // starting positions of all reversables
     // see paths for structure
 
+    // Used as "null" spots in our data
+    private (Vector3 pos, Quaternion rot) dummy = (new Vector3(99.0f, 99.0f, 99.0f), new Quaternion(99.0f, 99.0f, 99.0f, 99.0f));
+
+    private bool keep_time;
 
     // Start is called before the first frame update
     void Start()
     {
         reversables = GlobalMethods.GetReversables();
 
+        foreach (GameObject go in reversables)
+        {
+            go.layer = 0;
+        }
+
         timeFoward = true;
         paths = new List<(Vector3 pos, Quaternion rot)>[reversables.Length];
         starts = new List<(Vector3 pos, Quaternion rot)>(reversables.Length);
 
+        // Set up our starting positions
         (Vector3 pos, Quaternion rot) instance;
         int i = 0;
         foreach (GameObject go in reversables)
@@ -51,35 +64,54 @@ public class ReverseTimeDemo : MonoBehaviour
             i++;
         }
 
-        stopAlwaysVisible();
+        keep_time = false;
+        StartCoroutine("KeepTimeDelay");
 
-        StartCoroutine("ResetPos");
-        InvokeRepeating("Demo", 7.5f, 12.0f);
+        //InvokeRepeating("Demo", 7.5f, 12.0f);
+        Invoke("Demo", demo_loop_time);
+    }
+
+    void Demo()
+    {
+        StartCoroutine("Reverse");
     }
 
     // 30 times a second
     void FixedUpdate()
     {
-        
+        if (!keep_time)
+        {
+            return;
+        }
+        // While time is forward, will keep track of all movement
         if (timeFoward)
         {
+            // START IGNORE OF UNNECESSARY FRAMES
             bool anyDiff = false;
-            int i = 0;
+
+            (Vector3 pos, Quaternion rot) lastStored; // only used in taking out unnecessary frames
+            (Vector3 pos, Quaternion rot) currentSpot; // only used in taking out unnecessary frames
+
+            int go_iter = 0;
             foreach (GameObject go in reversables)
             {
-                if (!go.transform.position.ToString().Equals(starts[i].pos.ToString()) ||
-                    !go.transform.rotation.ToString().Equals(starts[i].rot.ToString()))
+                if (go != null)
                 {
-                    anyDiff = true;
-                    break;
+                    lastStored = paths[go_iter][paths[go_iter].Count - 1];
+                    currentSpot = (go.transform.position, go.transform.rotation);
+                    if (!lastStored.pos.ToString().Equals(currentSpot.pos.ToString()) ||
+                        !lastStored.rot.Equals(currentSpot.rot))
+                    {
+                        anyDiff = true;
+                        break;
+                    }
+                    go_iter++;
                 }
-                i++;
             }
+            // END IGNORE UNNECESSARY FRAMES
+            // Now we can actually store our frame data, if proven necessary
             if (anyDiff)
             {
-                //Debug.Log("AHHHH");
-                //String textStr = "WEEEE" + " : " + reversables[0].transform.position + " vs " + (Vector3) startPoses[0][0] + " : " + reversables[0].transform.rotation + " vs " + (Quaternion) startPoses[0][1];
-                //GameObject.Find("Text").GetComponent<Text>().text = textStr;
                 (Vector3 pos, Quaternion rot) instance;
                 int j = 0;
                 foreach (GameObject go in reversables)
@@ -88,195 +120,262 @@ public class ReverseTimeDemo : MonoBehaviour
                     {
                         instance = (go.transform.position, go.transform.rotation);
                         paths[j].Add(instance);
+                        Debug.Log("storing for \"" + go.name + "\" (count " + paths[j].Count + ")");
                     }
                     j++;
                 }
             }
-            else
-            {
-                //GameObject.Find("Text").GetComponent<Text>().text = "WOOOO";
-            }
         }
-    }
-
-    void Demo()
-    {
-        StartCoroutine("Reverse");
-    }
-
-    IEnumerator ResetPos()
-    {
-        int go_iter = 0;
-        foreach (GameObject go in reversables)
+        // While time is backward, will only keep track of frozen objects
+        // (perhaps being moved by others: would have to remember)
+        else
         {
-            for (int i = 0; i < 60; i++)
+            // START IGNORE OF UNNECESSARY FRAMES
+            bool diff = false;
+            (Vector3 pos, Quaternion rot) lastStored; // only used in taking out unnecessary frames
+            (Vector3 pos, Quaternion rot) currentSpot; // only used in taking out unnecessary frames
+            currentSpot = (Vector3.zero, new Quaternion(0, 0, 0, 0));
+            int go_iter = 0;
+            foreach (GameObject go in reversables)
             {
-                go.transform.position = starts[go_iter].pos;
-                go.transform.rotation = starts[go_iter].rot;
-                go.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                go.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-                yield return new WaitForFixedUpdate();
+                if (go != null && go.tag.Equals("Frozen"))
+                {
+                    lastStored = paths[go_iter][paths[go_iter].Count - 1];
+                    currentSpot = (go.transform.position, go.transform.rotation);
+                    if (!lastStored.pos.ToString().Equals(currentSpot.pos.ToString()) ||
+                        !lastStored.rot.Equals(currentSpot.rot))
+                    {
+                        diff = true;
+                        break;
+                    }
+                }
+                go_iter++;
             }
-            go_iter++;
+            // END IGNORE UNNECESSARY FRAMES
+            // Now we can store this special frozen info, if necessary
+            if (diff)
+            {
+                //Debug.Log("FREEZE STORING " + paths[go_iter].Count + " TO " + reversables[go_iter].tag);
+                paths[go_iter].Add(currentSpot);
+            }
         }
     }
 
     IEnumerator Reverse()
     {
+        while (true) // Demo, so keep doing
+        {
+            // This is where we do the main thing: reversing time
+            // We will see how many frames have been collected
+            // (max count of frames from objects) start at 
+            // that number, and work our way down to zero
 
-        timeFoward = false;
-        
-        // Now we are going to cycle through all our captured frames
-        //  to go back through what happened in time
-        // TODO: perhaps not all frames? might be diff length for different objects?
-        (Vector3 pos, Quaternion rot) datum; // main path data used throughout
-        (Vector3 pos, Quaternion rot) currInfo; // only used in taking out unnecessary frames
-        (Vector3 pos, Quaternion rot) prevInfo; // only used in taking out unnecessary frames
-        int go_iter; // gameobject (reversables) iterator
-        int frame_iter = paths[0].Count - 1; // number of captured frames
+            // Setup
+            //GameObject.Find("Text").GetComponent<Text>().text = "REVERSING TIME";
+            timeFoward = false;
 
-        startAlwaysVisible();
+            FreezePlayer(true);
 
-        while (frame_iter >= 0) {
-            // START TAKE OUT OF UNNECESSARY FRAMES
-            bool anyDiff = false;
-            go_iter = 0;
-            foreach (GameObject go in reversables)
+            SetVFX(true);
+
+            // Drop object if one is being held
+            BoxMover p = GameObject.Find("Camera").GetComponent<BoxMover>();
+            if (p != null) { p.StopGrabbing(); }
+
+            // Now we are going to cycle through all our captured frames
+            //  to go back through what happened in time
+            (Vector3 pos, Quaternion rot) datum; // main path data used throughout
+
+            // Figure out how many frames to use
+            int frame_iter = 0;
+            for (int i = 0; i < reversables.Length; i++)
             {
-                if (go != null)
+                //Debug.Log("Possible frames: " + paths[i].Count + "(" + i + ") [" + reversables[i].tag + "]");
+                if (!reversables[i].tag.Equals("Frozen"))
                 {
-                    currInfo = paths[go_iter][frame_iter];
-                    if (frame_iter < paths[go_iter].Count - 1) { prevInfo = paths[go_iter][frame_iter + 1]; }
-                    else { continue; }
-                    if (!currInfo.pos.ToString().Equals(prevInfo.pos.ToString()) ||
-                        !currInfo.rot.Equals(prevInfo.rot))
+                    frame_iter = Mathf.Max(frame_iter, paths[i].Count - 1);
+                }
+            }
+
+            Debug.Log("Started off with " + frame_iter + " frames");
+
+            // Main loop :)
+            int go_iter; // gameobject (reversables) iterator (reused frequently)
+            while (frame_iter >= 2)
+            {
+                // See if any (non-frozen) objects have actually changed
+                bool nonFrozenChanged = false;
+                for (int i = 0; i < reversables.Length; i++)
+                {
+                    if (frame_iter + 1 >= paths[i].Count)
+                    { // array out-of-bounds: just do it
+                        nonFrozenChanged = true;
+                        break;
+                    }
+                    if (!paths[i][frame_iter].pos.ToString().Equals(paths[i][frame_iter + 1].pos.ToString()))
                     {
-                        if (!go.tag.Equals("Frozen"))
+                        if (!reversables[i].tag.Equals("Frozen"))
                         {
-                            anyDiff = true;
+                            nonFrozenChanged = true;
                             break;
+                        }
+                    }
+                }
+
+                // Actually move our objects
+                go_iter = 0;
+                foreach (GameObject go in reversables)
+                {
+
+                    if (go != null && !go.tag.Equals("Frozen") && paths[go_iter].Count - 1 >= frame_iter)
+                    {
+                        if (paths[go_iter][frame_iter] != dummy)
+                        {
+                            datum = paths[go_iter][frame_iter]; // datum.pos will be pos, datum.rot will be rot
+                            GlobalMethods.VelocityMove(go, datum.pos, datum.rot);
+                            //Debug.Log("move " + frame_iter);
                         }
                     }
                     go_iter++;
                 }
-            }
-            if (!anyDiff)
-            {
+
+                // Wait the same time we recorded, if there was a change we care about
+                if (nonFrozenChanged)
+                {
+                    yield return new WaitForFixedUpdate();
+                }
+
                 frame_iter--;
-                continue;
             }
-            // END TAKE OUT OF UNNECESSARY FRAMES
-            
+
+            // Clear paths: needs own loop (also grab max while at it)
+            int max_paths_size = 0;
             go_iter = 0;
             foreach (GameObject go in reversables)
             {
                 if (go != null && !go.tag.Equals("Frozen"))
                 {
-                    datum = paths[go_iter][frame_iter]; // datum.pos will be pos, datum.rot will be rot
-                    GlobalMethods.VelocityMove(go, datum.pos, datum.rot);
+                    Debug.Log("clear");
+                    paths[go_iter].Clear();
+                }
+                max_paths_size = Mathf.Max(max_paths_size, paths[go_iter].Count);
+                go_iter++;
+            }
+            Debug.Log("Max: " + max_paths_size);
+
+            // Reset things for our next time reversal
+            go_iter = 0;
+            foreach (GameObject go in reversables)
+            {
+                if (go != null && !go.tag.Equals("Frozen"))
+                {
+                    go.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                    go.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
+                    //paths[go_iter].Clear(); MOVED TO BEFORE
+
+                    // If close enough to previous start, then teleport there
+                    float distToStart = Vector3.Distance(go.transform.position, starts[go_iter].pos);
+                    if (distToStart < 0.5f)
+                    {
+                        go.transform.position = starts[go_iter].pos;
+                        go.transform.rotation = starts[go_iter].rot;
+                        //Debug.Log("object" + go + "returned to location" + starts[go_iter].pos);
+                    }
+
+                    // Store our new start (should be the same if above happened)
+                    (Vector3 pos, Quaternion rot) currSpot = (go.transform.position, go.transform.rotation);
+
+                    starts[go_iter] = currSpot;
+                    //Debug.Log("object" + go + "now starts at location" + starts[go_iter].pos);
+
+                    paths[go_iter].Add(starts[go_iter]);
+                    for (int i = 0; i < max_paths_size; i++)
+                    {
+                        paths[go_iter].Add(dummy);
+                    }
+
+                    go.GetComponent<Rigidbody>().useGravity = true;
                 }
                 go_iter++;
             }
+
+            //GameObject.Find("Text").GetComponent<Text>().text = "Done!";
+
             
-            if (Input.GetKey(KeyCode.F))
-            {
-                frame_iter -= 2; // super speed (questionable?)
-            }
-            //yield return new WaitForSeconds(1.0f / 30.0f); // wait 1/30th sec (same time as FixedUpdate IE our capture)
-            yield return new WaitForFixedUpdate(); // ooooo
-            
-            frame_iter--;
+            //GameObject.Find("Text").GetComponent<Text>().text = "";
+            timeFoward = true;
+            FreezePlayer(false);
+
+            SetVFX(false);
+
+            yield return new WaitForSeconds(demo_loop_time); // demo_loop_time extra seconds for demo
+                                                             // Note: objects will do their physics from their original position
+
         }
-
-        // Reset things for our next time reversal
-        go_iter = 0;
-        foreach (GameObject go in reversables)
-        {
-            if (go != null && !go.tag.Equals("Frozen"))
-            {
-
-                go.GetComponent<Rigidbody>().velocity = Vector3.zero;
-
-                paths[go_iter].Clear(); // would rather have removed, see above
-                //Debug.Log("This should be 0: " + paths[k].Count); // was failing earlier
-                // teleport to position: LAZY
-                for (int i = 0; i < 60; i++)
-                {
-                    go.transform.position = starts[go_iter].pos;
-                    go.transform.rotation = starts[go_iter].rot;
-                    go.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                    go.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-                    yield return new WaitForFixedUpdate();
-                }
-
-                /* Attempts at non teleport end
-                GlobalMethods.VelocityMove(go, starts[go_iter].pos, starts[go_iter].rot);
-
-                go.GetComponent<Rigidbody>().velocity = Vector3.zero;
-
-                (Vector3 pos, Quaternion rot) instance = (go.transform.position, go.transform.rotation);
-                starts[go_iter] = instance;
-                */
-
-                go.GetComponent<Rigidbody>().useGravity = true;
-            }
-            go_iter++;
-        }
-
-        stopAlwaysVisible();
-        timeFoward = true;
     }
 
     void FreezePlayer(bool freeze)
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
-        
+        // Makes sure the player cannot move during time freeze
+        // (but can look around)
+
         if (freeze)
         {
-            
-            rb.constraints = RigidbodyConstraints.FreezePosition;
-            rb.isKinematic = true;
-            GetComponent<CapsuleCollider>().enabled = false;
+            // Player can no longer interact with objects
+            foreach (GameObject go in reversables)
+            {
+                go.layer = 11;
+            }
         }
         else
         {
-            rb.constraints = RigidbodyConstraints.None;
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
-            rb.isKinematic = false;
-            GetComponent<CapsuleCollider>().enabled = true;
+            // Player can now interact with objects again
+            foreach (GameObject go in reversables)
+            {
+                go.layer = 0;
+            }
         }
     }
 
-    void startAlwaysVisible()
+    void SetVFX(bool VFX_on)
     {
+        // Trail effect
         foreach (GameObject go in reversables)
         {
-            go.GetComponent<Renderer>().sharedMaterial.shader = AlwaysVisibleShader;
+            TrailRenderer TR = go.GetComponent<TrailRenderer>();
+            if (TR != null)
+            {
+                TR.enabled = VFX_on;
+            }
+            Renderer R = go.GetComponent<Renderer>();
+            if (VFX_on)
+            {
+                R.material = brown_mat;
+            }
+            else
+            {
+                R.material = clearbrown_mat;
+            }
         }
     }
 
-    void stopAlwaysVisible()
+    // TODO: this shouldn't be needed with correct logic,
+    // but for some reason there are around ~20 dummy
+    // frames upon game start (which are ignored, but
+    // they are scary so don't want them at all)
+    IEnumerator KeepTimeDelay()
     {
-
-        foreach (GameObject go in reversables)
+        for (int _ = 0; _ < 25; _++)
         {
-            //go.GetComponent<Renderer>().sharedMaterial.EnableKeyword("_ALPHATEST_ON");
-            //go.GetComponent<Renderer>().sharedMaterial.EnableKeyword("_ALPHABLEND_ON");
-
-            go.GetComponent<Renderer>().sharedMaterial.shader = Shader.Find("Standard");
-            go.GetComponent<Renderer>().sharedMaterial.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-            go.GetComponent<Renderer>().sharedMaterial.renderQueue = 3000;
-
+            yield return new WaitForFixedUpdate();
         }
+        keep_time = true;
+        Debug.Log("Keeping time as of now!");
     }
 
     public bool GetTimeForward()
     {
         return timeFoward;
-    }
-    
-    private void OnApplicationQuit()
-    {
-        stopAlwaysVisible();
     }
 }

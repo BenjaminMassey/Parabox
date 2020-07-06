@@ -20,13 +20,12 @@ public class ReverseTime : MonoBehaviour
     public AudioSource s_reverseTime;
     public AudioSource s_reverseTimeB;
 
-    // Attached to player
+    public Material brown_mat;
+    public Material clearbrown_mat;
 
-    public Shader AlwaysVisibleShader; // used for highlighted/see-thru-walls effect
+    // Attached to player
     
     private GameObject[] reversables; // list of everything we will try to reverse
-
-    private Shader[] origShaders; // original shaders to revert back to from AlwaysVisibleShader
 
     private bool timeFoward; // whether time is normal or being reversed
 
@@ -38,10 +37,20 @@ public class ReverseTime : MonoBehaviour
     private List<(Vector3 pos, Quaternion rot)> starts; // starting positions of all reversables
     // see paths for structure
 
+    // Used as "null" spots in our data
+    private (Vector3 pos, Quaternion rot) dummy = (new Vector3(99.0f, 99.0f, 99.0f), new Quaternion(99.0f, 99.0f, 99.0f, 99.0f));
+
+    private bool keep_time;
+
     // Start is called before the first frame update
     void Start()
     {
         reversables = GlobalMethods.GetReversables();
+
+        foreach (GameObject go in reversables)
+        {
+            go.layer = 0;
+        }
 
         timeFoward = true;
         paths = new List<(Vector3 pos, Quaternion rot)>[reversables.Length];
@@ -59,7 +68,8 @@ public class ReverseTime : MonoBehaviour
             i++;
         }
 
-        stopAlwaysVisible();
+        keep_time = false;
+        StartCoroutine("KeepTimeDelay");
     }
 
     // Every frame
@@ -77,6 +87,10 @@ public class ReverseTime : MonoBehaviour
     // 30 times a second
     void FixedUpdate()
     {
+        if (!keep_time)
+        {
+            return;
+        }
         // While time is forward, will keep track of all movement
         if (timeFoward)
         {
@@ -114,7 +128,7 @@ public class ReverseTime : MonoBehaviour
                     {
                         instance = (go.transform.position, go.transform.rotation);
                         paths[j].Add(instance);
-                        //Debug.Log("storing " + paths[j].Count);
+                        //Debug.Log("storing for \"" + go.name + "\" (count " + paths[j].Count + ")");
                     }
                     j++;
                 }
@@ -167,12 +181,12 @@ public class ReverseTime : MonoBehaviour
         timeFoward = false;
         s_reverseTime.Play();
         FreezePlayer(true);
-        startAlwaysVisible();
-        StartCoroutine("EnablePostProcessing");
+
+        SetVFX(true);
 
         // Drop object if one is being held
-        Pickup p = GameObject.Find("Camera").GetComponent<Pickup>();
-        if (p != null) { p.StopHolding(); }
+        BoxMover bm = GameObject.Find("Camera").GetComponent<BoxMover>();
+        if (bm != null) { bm.StopGrabbing(); }
 
         // Now we are going to cycle through all our captured frames
         //  to go back through what happened in time
@@ -219,7 +233,7 @@ public class ReverseTime : MonoBehaviour
 
                 if (go != null && !go.tag.Equals("Frozen") && paths[go_iter].Count - 1 >= frame_iter)
                 {
-                    if (paths[go_iter][frame_iter].pos != new Vector3 (69.0f, 69.0f, 69.0f))
+                    if (paths[go_iter][frame_iter] != dummy)
                     {
                         datum = paths[go_iter][frame_iter]; // datum.pos will be pos, datum.rot will be rot
                         GlobalMethods.VelocityMove(go, datum.pos, datum.rot);
@@ -238,6 +252,21 @@ public class ReverseTime : MonoBehaviour
             frame_iter--;
         }
 
+        // Clear paths: needs own loop (also grab max while at it)
+        int max_paths_size = 0;
+        go_iter = 0;
+        foreach (GameObject go in reversables)
+        {
+            if (go != null && !go.tag.Equals("Frozen"))
+            {
+                Debug.Log("clear");
+                paths[go_iter].Clear();
+            }
+            max_paths_size = Mathf.Max(max_paths_size, paths[go_iter].Count);
+            go_iter++;
+        }
+        Debug.Log("Max: " + max_paths_size);
+
         // Reset things for our next time reversal
         go_iter = 0;
         foreach (GameObject go in reversables)
@@ -247,7 +276,7 @@ public class ReverseTime : MonoBehaviour
                 go.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 go.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
-                paths[go_iter].Clear(); // would rather have removed, see above
+                //paths[go_iter].Clear(); MOVED TO BEFORE
 
                 // If close enough to previous start, then teleport there
                 float distToStart = Vector3.Distance(go.transform.position, starts[go_iter].pos);
@@ -255,33 +284,25 @@ public class ReverseTime : MonoBehaviour
                 {
                     go.transform.position = starts[go_iter].pos;
                     go.transform.rotation = starts[go_iter].rot;
-                    Debug.Log("object" + go + "returned to location" + starts[go_iter].pos);
+                    //Debug.Log("object" + go + "returned to location" + starts[go_iter].pos);
                 }
 
                 // Store our new start (should be the same if above happened)
                 (Vector3 pos, Quaternion rot) currSpot = (go.transform.position, go.transform.rotation);
 
                 starts[go_iter] = currSpot;
-                Debug.Log("object" + go + "now starts at location" + starts[go_iter].pos);
-                int max = 0;
-                for (int i = 0; i < reversables.Length; i++)
-                {
-                    max = Mathf.Max(max, paths[i].Count);
-                }
-                Debug.Log("Max: "+max);
+                //Debug.Log("object" + go + "now starts at location" + starts[go_iter].pos);
+                
                 paths[go_iter].Add(starts[go_iter]);
-                for (int i = 0; i < max; i++)
+                for (int i = 0; i < max_paths_size; i++)
                 {
-                    paths[go_iter].Add((new Vector3 (69.0f,69.0f,69.0f), new Quaternion (69.0f, 69.0f, 69.0f, 69.0f)));
+                    paths[go_iter].Add(dummy);
                 }
 
                 go.GetComponent<Rigidbody>().useGravity = true;
             }
             go_iter++;
         }
-
-        stopAlwaysVisible();
-        StartCoroutine("DisablePostProcessing");
 
         //GameObject.Find("Text").GetComponent<Text>().text = "Done!";
 
@@ -293,6 +314,9 @@ public class ReverseTime : MonoBehaviour
         //GameObject.Find("Text").GetComponent<Text>().text = "";
         timeFoward = true;
         FreezePlayer(false);
+
+        SetVFX(false);
+
     }
 
     void FreezePlayer(bool freeze)
@@ -327,24 +351,39 @@ public class ReverseTime : MonoBehaviour
         }
     }
 
-    void startAlwaysVisible()
+    void SetVFX(bool VFX_on)
     {
-        // Has the reversing objects highlighted/seen-thru-walls
+        // Trail effect
         foreach (GameObject go in reversables)
         {
-            go.GetComponent<Renderer>().sharedMaterial.shader = AlwaysVisibleShader;
+            TrailRenderer TR = go.GetComponent<TrailRenderer>();
+            if (TR != null)
+            {
+                TR.enabled = VFX_on;
+            }
+            Renderer R = go.GetComponent<Renderer>();
+            if (VFX_on)
+            {
+                R.material = brown_mat;
+            }
+            else
+            {
+                R.material = clearbrown_mat;
+            }
+            if (go.tag.Equals("Frozen"))
+            {
+                Color currColor = R.material.GetColor("_BaseColor");
+                Freezer f = GameObject.Find("Camera").GetComponent<Freezer>();
+                R.material.SetColor("_BaseColor", currColor + f.GetFrozenColor());
+            }
         }
-    }
-
-    void stopAlwaysVisible()
-    {
-        // Stops the reversing objects highlighted/seen-thru-walls
-        foreach (GameObject go in reversables)
+        if (VFX_on)
         {
-            go.GetComponent<Renderer>().sharedMaterial.shader = Shader.Find("Standard");
-            go.GetComponent<Renderer>().sharedMaterial.EnableKeyword("_ALPHAPREMULTIPLY_ON");
-            go.GetComponent<Renderer>().sharedMaterial.renderQueue = 3000;
-
+            StartCoroutine("EnablePostProcessing");
+        }
+        else
+        {
+            StartCoroutine("DisablePostProcessing");
         }
     }
 
@@ -352,19 +391,19 @@ public class ReverseTime : MonoBehaviour
     {
         PostProcessVolume ppv = globalPostVolume.GetComponent<PostProcessVolume>();
         ppv.weight = 0;
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 7; i++)
         {
             ppv.weight += (1f / 10f);
             yield return new WaitForFixedUpdate();
         }
-        ppv.weight = 1;
+        //ppv.weight = 1;
     }
 
     IEnumerator DisablePostProcessing()
     {
         PostProcessVolume ppv = globalPostVolume.GetComponent<PostProcessVolume>();
-        ppv.weight = 1;
-        for (int i = 0; i < 10; i++)
+        //ppv.weight = 1;
+        for (int i = 0; i < 7; i++)
         {
             ppv.weight -= (1f / 10f);
             yield return new WaitForFixedUpdate();
@@ -372,14 +411,56 @@ public class ReverseTime : MonoBehaviour
         ppv.weight = 0;
     }
 
+    // TODO: this shouldn't be needed with correct logic,
+        // but for some reason there are around ~20 dummy
+        // frames upon game start (which are ignored, but
+        // they are scary so don't want them at all)
+    IEnumerator KeepTimeDelay()
+    {
+        for (int _ = 0; _ < 25; _++)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        keep_time = true;
+        Debug.Log("Keeping time as of now!");
+    }
 
     public bool GetTimeForward()
     {
         return timeFoward;
     }
 
-    private void OnApplicationQuit()
+    // Below func could prob be used in place of reuse elswhere
+    // Used by TimeLimit.cs
+    public int GetNumFramesRecorded()
     {
-        stopAlwaysVisible();
+        int max_paths_size = 0;
+        int go_iter = 0;
+        foreach (GameObject go in reversables)
+        {
+            max_paths_size = Mathf.Max(max_paths_size, paths[go_iter].Count);
+            go_iter++;
+        }
+        return max_paths_size;
+    }
+
+    // Used by TimeLimit.cs
+    public IEnumerator Warning()
+    {
+        SetVFX(true);
+        for (int i = 0; i < 25; i++)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        SetVFX(false);
+    }
+
+    public void OutsideReverse()
+    {
+        if (timeFoward)
+        {
+            StopAllCoroutines();
+            StartCoroutine("Reverse");
+        }
     }
 }

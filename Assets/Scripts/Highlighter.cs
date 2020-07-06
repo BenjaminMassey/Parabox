@@ -11,18 +11,22 @@ public class Highlighter : MonoBehaviour
     private GameObject highlightedObj; // what object is being highlighted (null if nothing)
     private ReverseTime rt; // reference to see time direction
     private bool forward; // time direction
-    private Pickup pu; // reference to see if holding
+    private BoxMover bm; // reference to see if holding
     private bool holding; // whether player is holding an object
+    private Color origColor; // color before highlight
     private Color highlightColor; // how to graphically change highlighted object
+
+    private Color dummyColor = new Color(0.13f, 0.13f, 0.13f, 0.13f);
 
     // Start is called before the first frame update
     void Start()
     {
         highlightedObj = null;
         rt = GameObject.Find("Player").GetComponent<ReverseTime>();
-        pu = GameObject.Find("Camera").GetComponent<Pickup>();
+        bm = GameObject.Find("Camera").GetComponent<BoxMover>();
         forward = true;
         holding = false;
+        origColor = dummyColor;
         highlightColor = new Color(0.25f, 0.25f, 0.25f, 0.0f);
         InvokeRepeating("CheckHighlight", 0.0f, 1.0f / 15.0f);
     }
@@ -32,15 +36,15 @@ public class Highlighter : MonoBehaviour
         forward = rt.GetTimeForward();
         if (forward)
         {
-            if (pu != null)
+            if (bm != null)
             {
-                holding = pu.IsHolding();
+                holding = bm.HasGrabbed();
             }
             if (holding)
             {
                 if (highlightedObj == null)
                 {
-                    Highlight(pu.getHeldObj());
+                    Highlight(bm.GetMovingObj());
                 }
             }
             else if (!holding)
@@ -85,7 +89,12 @@ public class Highlighter : MonoBehaviour
             {
                 GameObject sidePart = side.GetComponent<Transform>().GetChild(sidePart_iter).gameObject;
                 Renderer r_sp = sidePart.GetComponent<Renderer>();
-                r_sp.material.SetColor("_Color", r_sp.material.color + highlightColor);
+                if (origColor == dummyColor)
+                {
+                    origColor = r_sp.material.GetColor("_BaseColor");
+                }
+                //r_sp.material.SetColor("_BaseColor", r_sp.material.color + highlightColor);
+                r_sp.material.SetColor("_BaseColor", origColor + highlightColor);
             }
         }
         highlightedObj = obj;
@@ -108,7 +117,8 @@ public class Highlighter : MonoBehaviour
             {
                 GameObject sidePart = side.GetComponent<Transform>().GetChild(sidePart_iter).gameObject;
                 Renderer r_sp = sidePart.GetComponent<Renderer>();
-                r_sp.material.SetColor("_Color", r_sp.material.color - highlightColor);
+                //r_sp.material.SetColor("_BaseColor", r_sp.material.color - highlightColor);
+                r_sp.material.SetColor("_BaseColor", origColor);
             }
         }
 

@@ -11,7 +11,10 @@ public class Freezer : MonoBehaviour
     private GameObject frozenObj; // which object has been frozen (null if none)
     private ReverseTime rt; // reference in order to see time direction
     private bool forward; // time direction
+    private Color origColor; // color before highlight
     private Color frozenColor; // how to graphically change frozen object
+
+    private Color dummyColor = new Color(0.13f, 0.13f, 0.13f, 0.13f);
 
     // SOUND FX
     public AudioSource s_freeze;
@@ -23,6 +26,7 @@ public class Freezer : MonoBehaviour
         frozenObj = null;
         rt = GameObject.Find("Player").GetComponent<ReverseTime>();
         forward = true;
+        origColor = dummyColor;
         frozenColor = new Color(0.0f, 1.0f, 1.0f, 0.0f);
     }
 
@@ -41,7 +45,7 @@ public class Freezer : MonoBehaviour
                 {
                     // unfreezes
                     Renderer r_obj = frozenObj.GetComponent<Renderer>();
-                    r_obj.material.SetColor("_Color", r_obj.material.color - frozenColor);
+                    r_obj.material.SetColor("_BaseColor", origColor);
                     frozenObj.tag = "Untagged"; // TODO: store old, don't assume none
                     hasFrozen = false;
                     unfrozenObj = frozenObj;
@@ -53,7 +57,11 @@ public class Freezer : MonoBehaviour
                 {
                     // freezes
                     Renderer r_obj = obj.GetComponent<Renderer>();
-                    r_obj.material.SetColor("_Color", r_obj.material.color + frozenColor);
+                    if (origColor == dummyColor)
+                    {
+                        origColor = r_obj.material.GetColor("_BaseColor");
+                    }
+                    r_obj.material.SetColor("_BaseColor", origColor + frozenColor);
                     hasFrozen = true;
                     frozenObj = obj;
                     frozenObj.tag = "Frozen";
@@ -62,5 +70,10 @@ public class Freezer : MonoBehaviour
 
             }
         }
+    }
+
+    public Color GetFrozenColor()
+    {
+        return frozenColor;
     }
 }

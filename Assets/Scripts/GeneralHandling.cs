@@ -17,11 +17,14 @@ public class GeneralHandling : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /* Replaced with PauseMenu.cs
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Cursor.lockState = CursorLockMode.None;
             FancyTextHandler.Message("Mouse Is Free", 10, true);
         }
+        */
+        /* HANDLED VIA PAUSE MENU
         if (Input.GetKeyDown(KeyCode.G))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -32,5 +35,6 @@ public class GeneralHandling : MonoBehaviour
             TimeKeep.first = true; // workaround for timer
             SceneManager.LoadScene("MainMenu");
         }
+        */
     }
 }
