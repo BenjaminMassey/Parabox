@@ -391,19 +391,19 @@ public class ReverseTime : MonoBehaviour
     {
         PostProcessVolume ppv = globalPostVolume.GetComponent<PostProcessVolume>();
         ppv.weight = 0;
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 7; i++)
         {
             ppv.weight += (1f / 10f);
             yield return new WaitForFixedUpdate();
         }
-        ppv.weight = 1;
+        //ppv.weight = 1;
     }
 
     IEnumerator DisablePostProcessing()
     {
         PostProcessVolume ppv = globalPostVolume.GetComponent<PostProcessVolume>();
-        ppv.weight = 1;
-        for (int i = 0; i < 10; i++)
+        //ppv.weight = 1;
+        for (int i = 0; i < 7; i++)
         {
             ppv.weight -= (1f / 10f);
             yield return new WaitForFixedUpdate();
