@@ -8,6 +8,11 @@ Created by Benjamin Massey, Emily Struble, and Michael Welch.
 
 Originally a project for a game programming class, now just a game.
 
+## Screenshots
+
+![Title Screen](https://i.imgur.com/dK2YlBu.png)
+
+![Gameplay Shot](https://i.imgur.com/ixNzCsA.png)
 
 ## Play
 
